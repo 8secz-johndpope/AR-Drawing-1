@@ -12,7 +12,7 @@
         <!--View Controller-->
         <scene sceneID="tXr-a1-R10">
             <objects>
-                <viewController id="BV1-FR-VrT" customClass="ViewController" customModule="ARSCNScribble" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BV1-FR-VrT" customClass="ViewController" customModule="AR_Drawing" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="U0K-SW-4ec">
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -55,11 +55,29 @@
                                             </button>
                                         </subviews>
                                     </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="gXe-oi-Ng6">
+                                        <rect key="frame" x="10" y="638" width="80" height="80"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tZo-9i-cCO">
+                                                <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="tZo-9i-cCO" secondAttribute="height" multiplier="1:1" id="Ct9-yx-yWv"/>
+                                                </constraints>
+                                                <state key="normal" title="Button" image="undo-arrow"/>
+                                                <connections>
+                                                    <action selector="clickedUndoButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="3GL-Hb-ujI"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="0.23696082746478872" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="Izq-83-vlB" firstAttribute="leading" secondItem="7Jl-GI-BJp" secondAttribute="leading" constant="10" id="8Bk-OP-h62"/>
+                                    <constraint firstItem="gXe-oi-Ng6" firstAttribute="leading" secondItem="7Jl-GI-BJp" secondAttribute="leading" constant="10" id="9WA-Qe-wUr"/>
                                     <constraint firstAttribute="width" constant="100" id="EPe-UR-o4n"/>
+                                    <constraint firstAttribute="trailing" secondItem="gXe-oi-Ng6" secondAttribute="trailing" constant="10" id="XkZ-YQ-h1F"/>
+                                    <constraint firstAttribute="bottom" secondItem="gXe-oi-Ng6" secondAttribute="bottom" constant="50" id="fWo-YX-tN5"/>
                                     <constraint firstAttribute="trailing" secondItem="Izq-83-vlB" secondAttribute="trailing" constant="10" id="vyE-cF-Kqr"/>
                                     <constraint firstItem="Izq-83-vlB" firstAttribute="top" secondItem="7Jl-GI-BJp" secondAttribute="top" constant="90" id="zVX-VL-eAW"/>
                                 </constraints>
@@ -134,12 +152,13 @@
                     <connections>
                         <outlet property="brushSizeButton" destination="K3P-i1-Orz" id="JE3-hI-TtV"/>
                         <outlet property="button" destination="iOC-sJ-73Z" id="K1H-If-tur"/>
-                        <outlet property="colorBtn" destination="ue7-e5-kXY" id="SvV-fj-uba"/>
+                        <outlet property="colorButton" destination="ue7-e5-kXY" id="SvV-fj-uba"/>
                         <outlet property="debugLabel" destination="5vb-ke-nF0" id="nii-uZ-rVc"/>
                         <outlet property="infoLabel" destination="gdk-dW-dzr" id="CdG-GJ-4ff"/>
                         <outlet property="pinchGesture" destination="HQo-pc-BE3" id="j82-Ad-Aj9"/>
                         <outlet property="rotationGesture" destination="hDg-Vn-hBJ" id="uVD-Rt-Fty"/>
                         <outlet property="sceneView" destination="BrB-h1-WRS" id="5nT-qQ-ynl"/>
+                        <outlet property="undoButton" destination="tZo-9i-cCO" id="VLk-19-dId"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
@@ -154,11 +173,12 @@
                     </connections>
                 </rotationGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="26.5625" y="17.578125"/>
+            <point key="canvasLocation" x="26.3671875" y="17.1875"/>
         </scene>
     </scenes>
     <resources>
         <image name="brush-icon" width="512" height="512"/>
         <image name="img_411294" width="980" height="980"/>
+        <image name="undo-arrow" width="512" height="512"/>
     </resources>
 </document>

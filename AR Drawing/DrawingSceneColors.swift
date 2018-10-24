@@ -18,6 +18,12 @@ class DrawingSceneColors: SKScene {
     
     var isEnabled = true
     
+    var nodeCount: Int {
+        get {
+            return self.previewNodes.count
+        }
+    }
+    
     func initialize() {
         backgroundColor = UIColor.clear
     }
@@ -43,6 +49,12 @@ class DrawingSceneColors: SKScene {
         return previewNodes.count < 1
     }
     
+    func removeLastNode() {
+        if(previewNodes.count > 0) {
+            previewNodes.last?.removeFromParent()
+            previewNodes.removeLast()
+        }
+    }
     
     //MARK: Touch Methods
     

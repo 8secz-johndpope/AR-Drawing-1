@@ -13,9 +13,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     @IBOutlet var pinchGesture: UIPinchGestureRecognizer!
     @IBOutlet var rotationGesture: UIRotationGestureRecognizer!
     
-    @IBOutlet weak var colorBtn: UIButton!
+    @IBOutlet weak var colorButton: UIButton!
     @IBOutlet weak var brushSizeButton: UIButton!
-    
+    @IBOutlet weak var undoButton: UIButton!
     
     let defaultDistance = CGFloat(1.0)      // place scribble at ...m when no featurepoints or planes are detected
     
@@ -484,8 +484,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         else {
             toggleBrushSizeSlider()
         }
-    }
-    
+    }    
     
     @objc func brushSliderValueChanged(_ sender: UISlider) {
         print("slider value changed: \(sender.value)")
@@ -526,5 +525,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         UIGraphicsEndImageContext()
         
         return newImage!
+    }
+    
+    @IBAction func clickedUndoButton(_ sender: UIButton) {
+        guard let drawingScene = sceneView.overlaySKScene as? DrawingSceneColors else { return }
+        
+        drawingScene.removeLastNode()
     }
 }
