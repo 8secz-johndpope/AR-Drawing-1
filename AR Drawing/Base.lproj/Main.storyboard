@@ -48,7 +48,7 @@
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <inset key="contentEdgeInsets" minX="0.0" minY="-1" maxX="0.0" maxY="0.0"/>
-                                                <state key="normal" title="Button" image="brush-icon"/>
+                                                <state key="normal" title="Button" image="brush"/>
                                                 <connections>
                                                     <action selector="clickedBrushSizeButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="AB5-zR-QIh"/>
                                                 </connections>
@@ -65,13 +65,13 @@
                                                 </constraints>
                                                 <state key="normal" title="Button" image="undo-arrow"/>
                                                 <connections>
-                                                    <action selector="clickedUndoButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="3GL-Hb-ujI"/>
+                                                    <action selector="clickedUndoButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="k39-yn-5X3"/>
                                                 </connections>
                                             </button>
                                         </subviews>
                                     </stackView>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="0.23696082746478872" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="Izq-83-vlB" firstAttribute="leading" secondItem="7Jl-GI-BJp" secondAttribute="leading" constant="10" id="8Bk-OP-h62"/>
                                     <constraint firstItem="gXe-oi-Ng6" firstAttribute="leading" secondItem="7Jl-GI-BJp" secondAttribute="leading" constant="10" id="9WA-Qe-wUr"/>
@@ -83,15 +83,19 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iOC-sJ-73Z">
-                                <rect key="frame" x="493.5" y="664" width="37" height="84"/>
+                                <rect key="frame" x="487" y="698" width="50" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="DE8-bG-We5"/>
+                                    <constraint firstAttribute="width" secondItem="iOC-sJ-73Z" secondAttribute="height" multiplier="1:1" id="wGY-7B-GWR"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="60"/>
-                                <state key="normal" title="+"/>
+                                <state key="normal" image="plus-circle"/>
                                 <connections>
-                                    <action selector="btnPressed:" destination="BV1-FR-VrT" eventType="touchUpInside" id="fIf-hR-U3H"/>
+                                    <action selector="clickedAddButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="jaO-Co-Xgo"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wdL-dC-Fft">
-                                <rect key="frame" x="974" y="676" width="30" height="60"/>
+                                <rect key="frame" x="974" y="693" width="30" height="60"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -114,8 +118,8 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X61-fu-aeO">
-                                <rect key="frame" x="810" y="676" width="194" height="60"/>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X61-fu-aeO">
+                                <rect key="frame" x="810" y="693" width="194" height="60"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="Clear world">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -150,14 +154,15 @@
                         <viewLayoutGuide key="safeArea" id="fQZ-KI-GVf"/>
                     </view>
                     <connections>
+                        <outlet property="addButton" destination="iOC-sJ-73Z" id="tJs-jZ-yYz"/>
                         <outlet property="brushSizeButton" destination="K3P-i1-Orz" id="JE3-hI-TtV"/>
-                        <outlet property="button" destination="iOC-sJ-73Z" id="K1H-If-tur"/>
                         <outlet property="colorButton" destination="ue7-e5-kXY" id="SvV-fj-uba"/>
                         <outlet property="debugLabel" destination="5vb-ke-nF0" id="nii-uZ-rVc"/>
                         <outlet property="infoLabel" destination="gdk-dW-dzr" id="CdG-GJ-4ff"/>
                         <outlet property="pinchGesture" destination="HQo-pc-BE3" id="j82-Ad-Aj9"/>
                         <outlet property="rotationGesture" destination="hDg-Vn-hBJ" id="uVD-Rt-Fty"/>
                         <outlet property="sceneView" destination="BrB-h1-WRS" id="5nT-qQ-ynl"/>
+                        <outlet property="sidebar" destination="7Jl-GI-BJp" id="26R-Ld-P7B"/>
                         <outlet property="undoButton" destination="tZo-9i-cCO" id="VLk-19-dId"/>
                     </connections>
                 </viewController>
@@ -177,8 +182,9 @@
         </scene>
     </scenes>
     <resources>
-        <image name="brush-icon" width="512" height="512"/>
+        <image name="brush" width="512" height="512"/>
         <image name="img_411294" width="980" height="980"/>
+        <image name="plus-circle" width="512" height="512"/>
         <image name="undo-arrow" width="512" height="512"/>
     </resources>
 </document>

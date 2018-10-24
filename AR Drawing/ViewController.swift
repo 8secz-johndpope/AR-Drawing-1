@@ -7,12 +7,13 @@ import PDColorPicker
 class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDelegate, Dimmable {
 
     @IBOutlet var sceneView: ARSCNView!
-    @IBOutlet weak var button: UIButton!
     @IBOutlet weak var infoLabel: UILabel!
     @IBOutlet weak var debugLabel: UILabel!
     @IBOutlet var pinchGesture: UIPinchGestureRecognizer!
     @IBOutlet var rotationGesture: UIRotationGestureRecognizer!
+    @IBOutlet weak var sidebar: UIView!
     
+    @IBOutlet weak var addButton: UIButton!
     @IBOutlet weak var colorButton: UIButton!
     @IBOutlet weak var brushSizeButton: UIButton!
     @IBOutlet weak var undoButton: UIButton!
@@ -65,6 +66,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         configuration.planeDetection = [.horizontal, .vertical]
         
         sceneView.session.run(configuration)
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -292,6 +294,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
             currentState = ScribbleState.drawing
             debugLabel.isHidden = true
             pinchGesture.isEnabled = false
+            
+            toggleSideBar(visible: true)
         }
         else if(state == ScribbleState.placing) {
             if let drawingScene = sceneView.overlaySKScene as? DrawingSceneColors {
@@ -305,6 +309,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
             pinchGesture.isEnabled = true
             self.scaleFactor = 1.0
             self.rotation = 0.0
+            
+            toggleSideBar(visible: false)
         }
     }
     
@@ -333,9 +339,28 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         UIView.animate(withDuration: 0.3, animations: { slider.alpha = 1 })
     }
     
+    func toggleSideBar(visible: Bool) {
+        if visible == false {
+            //sidebar.isHidden = true
+            hideBrushSizeSlider()
+            UIView.animate(withDuration: 0.3, animations: {
+                self.sidebar.transform = CGAffineTransform(translationX: -self.sidebar.frame.width, y: 0)
+            }, completion: { (finished) in
+                self.sidebar.isHidden = true
+            })
+        } else {
+            self.sidebar.isHidden = false
+            UIView.animate(withDuration: 0.3, animations: {
+                self.sidebar.transform = .identity
+            })
+        }
+    }
+    
+    
+    
     //MARK: Actions
     
-    @IBAction func btnPressed(_ sender: UIButton) {
+    @IBAction func clickedAddButton(_ sender: UIButton) {
         
         if(currentState == ScribbleState.drawing) {
             // make preview node from screen scribble
