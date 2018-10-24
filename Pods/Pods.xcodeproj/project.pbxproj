@@ -1,0 +1,661 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0AE52DF72863B7642E39426697A0D1F8 /* Dimmable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799EEC41D4CC71CC70F432BA5F522A83 /* Dimmable.swift */; };
+		1A18235ECA1DD9E37BC3181CB18A5B00 /* PDBouncyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737E63FA272E43FBED1FC709E15A240F /* PDBouncyButton.swift */; };
+		2320EC8C2EDA564A4B169E25A08082D4 /* PDColorPickerAlphaSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB7F3C51C95D73896E2F30BA6E4162B /* PDColorPickerAlphaSliderView.swift */; };
+		2FD2753709852FD438EBF46BF036AEA1 /* PDSelectedColorLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FFD26E42D9942502B971ED93F2ABB99 /* PDSelectedColorLabel.swift */; };
+		387EB366AC18BFFEC9C0257C53F58841 /* PDTapGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941DE7E09EE2A8297409BC9A7135BB55 /* PDTapGestureRecognizer.swift */; };
+		437CFA69EE406B20CF38CB6EF62EDA3C /* UIView+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6F0E0B258284CDD703F267087DD3D6A /* UIView+Layout.swift */; };
+		467E5B17ABE5D27AE09265FFB2E5A9DE /* PDPanGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6FC2B7B5D5C52739831623B6F74260 /* PDPanGestureRecognizer.swift */; };
+		4A993D85BC25DDEFF06EECAF941EBA35 /* PDColorPicker-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 92242DC23CD821ACE1EBA0B8DABC8543 /* PDColorPicker-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		55F627D08125E42C74973F9CFC72E6C5 /* PDColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C363FEC59E9138E9DE2D20BE9DC7B3AF /* PDColor.swift */; };
+		5662A3D0F3200A25F714E8349B9BA114 /* PDColor+NamedColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED83318D745EC8660503DC048B77C7D /* PDColor+NamedColors.swift */; };
+		5BDDEA658A219DF967D2B6D9A92FCC9C /* PDColorPickerSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD042C46C2E86C053B368DA432B4D054 /* PDColorPickerSliderView.swift */; };
+		806992EA79AA3734FF4E4359139E46FD /* PDColorPicker-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5504F7AE02A5098D4E66510CA99FE3D9 /* PDColorPicker-dummy.m */; };
+		95F42857A2A7AA447A80AF2A358536C5 /* Pods-AR Drawing-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = E2F6D8D0568C49112126D94611C2E1D5 /* Pods-AR Drawing-dummy.m */; };
+		AF318C600AF285EC029D5BAA5BFCB828 /* PDRoundedRectButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 616E0FDD963D3753F970BE71E5C07260 /* PDRoundedRectButton.swift */; };
+		B20A7D4F644E74FB925E76E59C847AE1 /* Pods-AR Drawing-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D68AF051933DE54FEAEEEF08BAF35EB /* Pods-AR Drawing-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C3006BEE6A7E81AD2B15F39BC55D2132 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74E404AA6957590324067E330E0EC533 /* UIKit.framework */; };
+		CC886A0274A2C8D3D6D62BF63B8AFBDF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EFB40531CB700ADF867FEEE78561E78 /* Foundation.framework */; };
+		E20534C29DD13B9DAE2AE8C8804B4143 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EFB40531CB700ADF867FEEE78561E78 /* Foundation.framework */; };
+		E95BAACCCA7C2B6EAE1E006BA54EECD8 /* PDColorPickerGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CE09E628E4920B79594B1FF8FD83EF /* PDColorPickerGridView.swift */; };
+		FC8D9453D669A4E313F33E7AE0C990A3 /* PDColorPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED300B79D829FF74631651E089725F47 /* PDColorPickerViewController.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		AF8D77FA6B7F0BF4306E70EBB6D78714 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FD6452901F2E062055DAED1C2F02DC63;
+			remoteInfo = PDColorPicker;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		1200A569531BE1B5B7288B6F6B7B9089 /* Pods-AR Drawing.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-AR Drawing.modulemap"; sourceTree = "<group>"; };
+		1D335484554EFF071A4B835321BAEA5C /* Pods-AR Drawing-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-AR Drawing-acknowledgements.plist"; sourceTree = "<group>"; };
+		2EFB40531CB700ADF867FEEE78561E78 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		3D68AF051933DE54FEAEEEF08BAF35EB /* Pods-AR Drawing-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-AR Drawing-umbrella.h"; sourceTree = "<group>"; };
+		3FFD26E42D9942502B971ED93F2ABB99 /* PDSelectedColorLabel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PDSelectedColorLabel.swift; path = PDColorPicker/Classes/PDSelectedColorLabel.swift; sourceTree = "<group>"; };
+		44BD54421E39C27233374A2011E6D2CB /* Pods-AR Drawing-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-AR Drawing-acknowledgements.markdown"; sourceTree = "<group>"; };
+		52309983175C01FCDA3CA92C1E8ABB6B /* Pods-AR Drawing.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-AR Drawing.release.xcconfig"; sourceTree = "<group>"; };
+		5504F7AE02A5098D4E66510CA99FE3D9 /* PDColorPicker-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "PDColorPicker-dummy.m"; sourceTree = "<group>"; };
+		616E0FDD963D3753F970BE71E5C07260 /* PDRoundedRectButton.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PDRoundedRectButton.swift; path = PDColorPicker/Classes/PDRoundedRectButton.swift; sourceTree = "<group>"; };
+		6EDE37B065469A73C645FE082D9145CB /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		737E63FA272E43FBED1FC709E15A240F /* PDBouncyButton.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PDBouncyButton.swift; path = PDColorPicker/Classes/PDBouncyButton.swift; sourceTree = "<group>"; };
+		74E404AA6957590324067E330E0EC533 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		799EEC41D4CC71CC70F432BA5F522A83 /* Dimmable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Dimmable.swift; path = PDColorPicker/Classes/Dimmable.swift; sourceTree = "<group>"; };
+		7ED83318D745EC8660503DC048B77C7D /* PDColor+NamedColors.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PDColor+NamedColors.swift"; path = "PDColorPicker/Classes/PDColor+NamedColors.swift"; sourceTree = "<group>"; };
+		90CE09E628E4920B79594B1FF8FD83EF /* PDColorPickerGridView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PDColorPickerGridView.swift; path = PDColorPicker/Classes/PDColorPickerGridView.swift; sourceTree = "<group>"; };
+		92242DC23CD821ACE1EBA0B8DABC8543 /* PDColorPicker-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "PDColorPicker-umbrella.h"; sourceTree = "<group>"; };
+		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		941DE7E09EE2A8297409BC9A7135BB55 /* PDTapGestureRecognizer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PDTapGestureRecognizer.swift; path = PDColorPicker/Classes/PDTapGestureRecognizer.swift; sourceTree = "<group>"; };
+		96EB4B32FFB6B7712BB303F99C497DD3 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AD6FC2B7B5D5C52739831623B6F74260 /* PDPanGestureRecognizer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PDPanGestureRecognizer.swift; path = PDColorPicker/Classes/PDPanGestureRecognizer.swift; sourceTree = "<group>"; };
+		AE714CC43221356A3517307514B1307C /* PDColorPicker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = PDColorPicker.framework; path = PDColorPicker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AFB7F3C51C95D73896E2F30BA6E4162B /* PDColorPickerAlphaSliderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PDColorPickerAlphaSliderView.swift; path = PDColorPicker/Classes/PDColorPickerAlphaSliderView.swift; sourceTree = "<group>"; };
+		B7482B2AC47B00A4CA2083EA7EF0B229 /* PDColorPicker-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "PDColorPicker-prefix.pch"; sourceTree = "<group>"; };
+		BD3664C7A60A269BEE14E464A8E2FACF /* Pods-AR Drawing.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-AR Drawing.debug.xcconfig"; sourceTree = "<group>"; };
+		C363FEC59E9138E9DE2D20BE9DC7B3AF /* PDColor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PDColor.swift; path = PDColorPicker/Classes/PDColor.swift; sourceTree = "<group>"; };
+		C44E105B3B88170B7DD87ED06F6B2673 /* PDColorPicker.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = PDColorPicker.modulemap; sourceTree = "<group>"; };
+		C6F0E0B258284CDD703F267087DD3D6A /* UIView+Layout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIView+Layout.swift"; path = "PDColorPicker/Classes/UIView+Layout.swift"; sourceTree = "<group>"; };
+		C9FB46BB52730DFF339238D4398239F7 /* Pods_AR_Drawing.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_AR_Drawing.framework; path = "Pods-AR Drawing.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC15F4A56088C1C91246384784626CC2 /* Pods-AR Drawing-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-AR Drawing-frameworks.sh"; sourceTree = "<group>"; };
+		CD042C46C2E86C053B368DA432B4D054 /* PDColorPickerSliderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PDColorPickerSliderView.swift; path = PDColorPicker/Classes/PDColorPickerSliderView.swift; sourceTree = "<group>"; };
+		DB2F978E2771C5774190403EEFE66C25 /* Pods-AR Drawing-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-AR Drawing-resources.sh"; sourceTree = "<group>"; };
+		E2E7B32F59A6F147356BA9C5E29E6748 /* PDColorPicker.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = PDColorPicker.xcconfig; sourceTree = "<group>"; };
+		E2F6D8D0568C49112126D94611C2E1D5 /* Pods-AR Drawing-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-AR Drawing-dummy.m"; sourceTree = "<group>"; };
+		ED300B79D829FF74631651E089725F47 /* PDColorPickerViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PDColorPickerViewController.swift; path = PDColorPicker/Classes/PDColorPickerViewController.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C97AF463C8A1DE8CF8D4477E804782BC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E20534C29DD13B9DAE2AE8C8804B4143 /* Foundation.framework in Frameworks */,
+				C3006BEE6A7E81AD2B15F39BC55D2132 /* UIKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EB7309337283DA82FF344D6B09B48A15 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC886A0274A2C8D3D6D62BF63B8AFBDF /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0347BF624E74BC0CE3B23AF27481856D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AE714CC43221356A3517307514B1307C /* PDColorPicker.framework */,
+				C9FB46BB52730DFF339238D4398239F7 /* Pods_AR_Drawing.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		06CDD10DE71306278CF89108B3036DFD /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				2EFB40531CB700ADF867FEEE78561E78 /* Foundation.framework */,
+				74E404AA6957590324067E330E0EC533 /* UIKit.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		2300B76433EEF638DCEC8DDAE4E0A3D8 /* Pods-AR Drawing */ = {
+			isa = PBXGroup;
+			children = (
+				96EB4B32FFB6B7712BB303F99C497DD3 /* Info.plist */,
+				1200A569531BE1B5B7288B6F6B7B9089 /* Pods-AR Drawing.modulemap */,
+				44BD54421E39C27233374A2011E6D2CB /* Pods-AR Drawing-acknowledgements.markdown */,
+				1D335484554EFF071A4B835321BAEA5C /* Pods-AR Drawing-acknowledgements.plist */,
+				E2F6D8D0568C49112126D94611C2E1D5 /* Pods-AR Drawing-dummy.m */,
+				CC15F4A56088C1C91246384784626CC2 /* Pods-AR Drawing-frameworks.sh */,
+				DB2F978E2771C5774190403EEFE66C25 /* Pods-AR Drawing-resources.sh */,
+				3D68AF051933DE54FEAEEEF08BAF35EB /* Pods-AR Drawing-umbrella.h */,
+				BD3664C7A60A269BEE14E464A8E2FACF /* Pods-AR Drawing.debug.xcconfig */,
+				52309983175C01FCDA3CA92C1E8ABB6B /* Pods-AR Drawing.release.xcconfig */,
+			);
+			name = "Pods-AR Drawing";
+			path = "Target Support Files/Pods-AR Drawing";
+			sourceTree = "<group>";
+		};
+		433CD3331B6C3787F473C941B61FC68F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				06CDD10DE71306278CF89108B3036DFD /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		7DB346D0F39D3F0E887471402A8071AB = {
+			isa = PBXGroup;
+			children = (
+				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
+				433CD3331B6C3787F473C941B61FC68F /* Frameworks */,
+				9D44E07CA8A9E2294894FB96578D618A /* Pods */,
+				0347BF624E74BC0CE3B23AF27481856D /* Products */,
+				E993D3A3D7C980686621E66DD3943C1B /* Targets Support Files */,
+			);
+			sourceTree = "<group>";
+		};
+		9D44E07CA8A9E2294894FB96578D618A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9EBF8829DD9AD6035167AB69EB6CD095 /* PDColorPicker */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		9EBF8829DD9AD6035167AB69EB6CD095 /* PDColorPicker */ = {
+			isa = PBXGroup;
+			children = (
+				799EEC41D4CC71CC70F432BA5F522A83 /* Dimmable.swift */,
+				737E63FA272E43FBED1FC709E15A240F /* PDBouncyButton.swift */,
+				C363FEC59E9138E9DE2D20BE9DC7B3AF /* PDColor.swift */,
+				7ED83318D745EC8660503DC048B77C7D /* PDColor+NamedColors.swift */,
+				AFB7F3C51C95D73896E2F30BA6E4162B /* PDColorPickerAlphaSliderView.swift */,
+				90CE09E628E4920B79594B1FF8FD83EF /* PDColorPickerGridView.swift */,
+				CD042C46C2E86C053B368DA432B4D054 /* PDColorPickerSliderView.swift */,
+				ED300B79D829FF74631651E089725F47 /* PDColorPickerViewController.swift */,
+				AD6FC2B7B5D5C52739831623B6F74260 /* PDPanGestureRecognizer.swift */,
+				616E0FDD963D3753F970BE71E5C07260 /* PDRoundedRectButton.swift */,
+				3FFD26E42D9942502B971ED93F2ABB99 /* PDSelectedColorLabel.swift */,
+				941DE7E09EE2A8297409BC9A7135BB55 /* PDTapGestureRecognizer.swift */,
+				C6F0E0B258284CDD703F267087DD3D6A /* UIView+Layout.swift */,
+				D95619D6459FDDCD3C27C707B7FF3062 /* Support Files */,
+			);
+			name = PDColorPicker;
+			path = PDColorPicker;
+			sourceTree = "<group>";
+		};
+		D95619D6459FDDCD3C27C707B7FF3062 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				6EDE37B065469A73C645FE082D9145CB /* Info.plist */,
+				C44E105B3B88170B7DD87ED06F6B2673 /* PDColorPicker.modulemap */,
+				E2E7B32F59A6F147356BA9C5E29E6748 /* PDColorPicker.xcconfig */,
+				5504F7AE02A5098D4E66510CA99FE3D9 /* PDColorPicker-dummy.m */,
+				B7482B2AC47B00A4CA2083EA7EF0B229 /* PDColorPicker-prefix.pch */,
+				92242DC23CD821ACE1EBA0B8DABC8543 /* PDColorPicker-umbrella.h */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/PDColorPicker";
+			sourceTree = "<group>";
+		};
+		E993D3A3D7C980686621E66DD3943C1B /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				2300B76433EEF638DCEC8DDAE4E0A3D8 /* Pods-AR Drawing */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		40CEE32BE85D3A5D9DC256E2FA88E7D8 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A993D85BC25DDEFF06EECAF941EBA35 /* PDColorPicker-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		84B00FCBFD26A8B975E60EFD38DCB238 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B20A7D4F644E74FB925E76E59C847AE1 /* Pods-AR Drawing-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		AEF64634B76575E0C6E7EFDA8A10EBAD /* Pods-AR Drawing */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 13F4FED81682C6E46AFE609C20E39F05 /* Build configuration list for PBXNativeTarget "Pods-AR Drawing" */;
+			buildPhases = (
+				84B00FCBFD26A8B975E60EFD38DCB238 /* Headers */,
+				2595EF50DF7CE1A4A857A25A9B130C62 /* Sources */,
+				EB7309337283DA82FF344D6B09B48A15 /* Frameworks */,
+				AECE3BE51E2C72EBE0FD1E7AEC9A98B1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				62F8CC729349BD526EBF7D93CF73B7B1 /* PBXTargetDependency */,
+			);
+			name = "Pods-AR Drawing";
+			productName = "Pods-AR Drawing";
+			productReference = C9FB46BB52730DFF339238D4398239F7 /* Pods_AR_Drawing.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		FD6452901F2E062055DAED1C2F02DC63 /* PDColorPicker */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BF393845986F600D31AC7A2037233F67 /* Build configuration list for PBXNativeTarget "PDColorPicker" */;
+			buildPhases = (
+				40CEE32BE85D3A5D9DC256E2FA88E7D8 /* Headers */,
+				737195685E9C0B8DA463D91A910455B0 /* Sources */,
+				C97AF463C8A1DE8CF8D4477E804782BC /* Frameworks */,
+				E10E43EB3C298B949F5E1BA35CA3D868 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PDColorPicker;
+			productName = PDColorPicker;
+			productReference = AE714CC43221356A3517307514B1307C /* PDColorPicker.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D41D8CD98F00B204E9800998ECF8427E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0930;
+				LastUpgradeCheck = 0930;
+			};
+			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 7DB346D0F39D3F0E887471402A8071AB;
+			productRefGroup = 0347BF624E74BC0CE3B23AF27481856D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FD6452901F2E062055DAED1C2F02DC63 /* PDColorPicker */,
+				AEF64634B76575E0C6E7EFDA8A10EBAD /* Pods-AR Drawing */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AECE3BE51E2C72EBE0FD1E7AEC9A98B1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E10E43EB3C298B949F5E1BA35CA3D868 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2595EF50DF7CE1A4A857A25A9B130C62 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				95F42857A2A7AA447A80AF2A358536C5 /* Pods-AR Drawing-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		737195685E9C0B8DA463D91A910455B0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0AE52DF72863B7642E39426697A0D1F8 /* Dimmable.swift in Sources */,
+				1A18235ECA1DD9E37BC3181CB18A5B00 /* PDBouncyButton.swift in Sources */,
+				5662A3D0F3200A25F714E8349B9BA114 /* PDColor+NamedColors.swift in Sources */,
+				55F627D08125E42C74973F9CFC72E6C5 /* PDColor.swift in Sources */,
+				806992EA79AA3734FF4E4359139E46FD /* PDColorPicker-dummy.m in Sources */,
+				2320EC8C2EDA564A4B169E25A08082D4 /* PDColorPickerAlphaSliderView.swift in Sources */,
+				E95BAACCCA7C2B6EAE1E006BA54EECD8 /* PDColorPickerGridView.swift in Sources */,
+				5BDDEA658A219DF967D2B6D9A92FCC9C /* PDColorPickerSliderView.swift in Sources */,
+				FC8D9453D669A4E313F33E7AE0C990A3 /* PDColorPickerViewController.swift in Sources */,
+				467E5B17ABE5D27AE09265FFB2E5A9DE /* PDPanGestureRecognizer.swift in Sources */,
+				AF318C600AF285EC029D5BAA5BFCB828 /* PDRoundedRectButton.swift in Sources */,
+				2FD2753709852FD438EBF46BF036AEA1 /* PDSelectedColorLabel.swift in Sources */,
+				387EB366AC18BFFEC9C0257C53F58841 /* PDTapGestureRecognizer.swift in Sources */,
+				437CFA69EE406B20CF38CB6EF62EDA3C /* UIView+Layout.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		62F8CC729349BD526EBF7D93CF73B7B1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = PDColorPicker;
+			target = FD6452901F2E062055DAED1C2F02DC63 /* PDColorPicker */;
+			targetProxy = AF8D77FA6B7F0BF4306E70EBB6D78714 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		28C10C3C9D4E22F96DBCC36355DAE8B1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BD3664C7A60A269BEE14E464A8E2FACF /* Pods-AR Drawing.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-AR Drawing/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-AR Drawing/Pods-AR Drawing.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		685AFF72858809C981F5AF12A9E28369 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 52309983175C01FCDA3CA92C1E8ABB6B /* Pods-AR Drawing.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-AR Drawing/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-AR Drawing/Pods-AR Drawing.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		98CFCE972955D39C56CB3B825601CB56 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E2E7B32F59A6F147356BA9C5E29E6748 /* PDColorPicker.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/PDColorPicker/PDColorPicker-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/PDColorPicker/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/PDColorPicker/PDColorPicker.modulemap";
+				PRODUCT_MODULE_NAME = PDColorPicker;
+				PRODUCT_NAME = PDColorPicker;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		98E98810EEEB96C99CB95CB91F4ADE0A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Debug;
+		};
+		B97A7F6ACE1216BB5A2307CA83FC93C5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 4.2;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Release;
+		};
+		F1D14FD7419D1CDB17123B4FD319CB60 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E2E7B32F59A6F147356BA9C5E29E6748 /* PDColorPicker.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/PDColorPicker/PDColorPicker-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/PDColorPicker/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/PDColorPicker/PDColorPicker.modulemap";
+				PRODUCT_MODULE_NAME = PDColorPicker;
+				PRODUCT_NAME = PDColorPicker;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		13F4FED81682C6E46AFE609C20E39F05 /* Build configuration list for PBXNativeTarget "Pods-AR Drawing" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				28C10C3C9D4E22F96DBCC36355DAE8B1 /* Debug */,
+				685AFF72858809C981F5AF12A9E28369 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				98E98810EEEB96C99CB95CB91F4ADE0A /* Debug */,
+				B97A7F6ACE1216BB5A2307CA83FC93C5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BF393845986F600D31AC7A2037233F67 /* Build configuration list for PBXNativeTarget "PDColorPicker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1D14FD7419D1CDB17123B4FD319CB60 /* Debug */,
+				98CFCE972955D39C56CB3B825601CB56 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+}

@@ -1,0 +1,16 @@
+PODS:
+  - PDColorPicker (0.8.1)
+
+DEPENDENCIES:
+  - PDColorPicker
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - PDColorPicker
+
+SPEC CHECKSUMS:
+  PDColorPicker: 8958fb63e3c005ba0613a127c2e2abc4570b48af
+
+PODFILE CHECKSUM: e09c042643bc6d929f55afc17b1adbd36c025353
+
+COCOAPODS: 1.5.3
