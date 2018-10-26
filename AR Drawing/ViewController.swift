@@ -51,8 +51,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         sceneView.scene = scene
         
         // Set the drawing scene as the overlaying scene
-        let drawingScene = DrawingSceneColors(fileNamed: "DrawingScene")
-        drawingScene?.initialize()
+        let drawingScene = DrawingSceneColors(size: sceneView.frame.size)
         sceneView.overlaySKScene = drawingScene
         
         pinchGesture.delegate = self
@@ -448,6 +447,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
             self.lastRotation = self.rotation
         }
     }
+    
+    
+    @IBAction func handleTapGesture(_ sender: UITapGestureRecognizer) {
+        let location = sender.location(in: sceneView)
+        
+        let hits = sceneView.hitTest(location, options: nil)
+        
+        if !hits.isEmpty {
+            print(hits)
+        }
+    }
+    
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return (gestureRecognizer is UIPinchGestureRecognizer && otherGestureRecognizer is UIRotationGestureRecognizer) ||

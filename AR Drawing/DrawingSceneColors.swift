@@ -13,8 +13,8 @@ class DrawingSceneColors: SKScene {
     private var paths = [CGMutablePath]()
     private var previewNodes = [SKShapeNode]()
     
-    private var currentNode = SKShapeNode()
-    private var currentPath = CGMutablePath()
+    private var previewNode: SKShapeNode
+    private var previewPath: CGMutablePath
     
     var isEnabled = true
     
@@ -23,17 +23,41 @@ class DrawingSceneColors: SKScene {
             return self.previewNodes.count
         }
     }
+
     
-    func initialize() {
-        backgroundColor = UIColor.clear
+    override init(size: CGSize) {
+        previewPath = CGMutablePath.init()
+        previewNode = SKShapeNode.init()
+        
+        super.init(size: size)
+        
+        backgroundColor = .clear
+        addChild(previewNode)
+        previewNode.strokeColor = lineColor
+        previewNode.lineWidth = lineWidth
     }
+    
+    required init?(coder aDecoder: NSCoder) {
+        previewPath = CGMutablePath.init()
+        previewNode = SKShapeNode.init()
+        
+        super.init(coder: aDecoder)
+        
+        backgroundColor = .clear
+        addChild(previewNode)
+        previewNode.strokeColor = lineColor
+        previewNode.lineWidth = lineWidth
+    }
+    
+    
+    
     
     // Creates node with current color and width settings
     func createNode() -> SKShapeNode {
         let node = SKShapeNode()
         node.lineWidth = lineWidth
         node.strokeColor = lineColor
-        node.path = CGMutablePath()
+        node.path = CGMutablePath.init()
         
         return node
     }
@@ -64,28 +88,31 @@ class DrawingSceneColors: SKScene {
         var location = touch.location(in: self.view)
         location = convertPoint(fromView: location)
         
-        previewNodes.append(createNode())
-        currentNode = previewNodes.last!
-        currentPath = previewNodes.last!.path as! CGMutablePath
         
-        currentNode.path = currentPath
-        currentPath.move(to: location)
-        
-        addChild(currentNode)
+        previewPath = CGMutablePath.init()
+        previewPath.move(to: location)
     }
+    
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         if isEnabled == false { return }
         guard let touch = touches.first else { return }
         var location = touch.location(in: self.view)
-        location = convertPoint(fromView: location)
+        location = convertPoint(fromView: location)        
         
-        currentPath.addLine(to: location)
-        currentNode.path = currentPath
+        // adding to path:
+        previewPath.addLine(to: location)
+        previewNode.path = previewPath.copy()
+        print(previewNode.path === previewPath)
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         if isEnabled == false { return }
         
+        let node = previewNode.copy() as! SKShapeNode
+        previewNodes.append(node)
+        addChild(node)
+        
+        previewNode.path = nil
     }
 }
