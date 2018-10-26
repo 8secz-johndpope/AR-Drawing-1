@@ -7,8 +7,17 @@ class DrawingSceneColors: SKScene {
     
     //MARK: Properties
     
-    var lineColor: UIColor = UIColor.red
-    var lineWidth: CGFloat = 5.0
+    var lineColor: UIColor = UIColor.red {
+        didSet {
+            previewNode.strokeColor = lineColor
+        }
+    }
+    
+    var lineWidth: CGFloat = 5.0 {
+        didSet {
+            previewNode.lineWidth = lineWidth
+        }
+    }
     
     private var paths = [CGMutablePath]()
     private var previewNodes = [SKShapeNode]()
@@ -35,6 +44,7 @@ class DrawingSceneColors: SKScene {
         addChild(previewNode)
         previewNode.strokeColor = lineColor
         previewNode.lineWidth = lineWidth
+        previewNode.zPosition = 1
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -47,6 +57,7 @@ class DrawingSceneColors: SKScene {
         addChild(previewNode)
         previewNode.strokeColor = lineColor
         previewNode.lineWidth = lineWidth
+        previewNode.zPosition = 1
     }
     
     
@@ -98,7 +109,7 @@ class DrawingSceneColors: SKScene {
         if isEnabled == false { return }
         guard let touch = touches.first else { return }
         var location = touch.location(in: self.view)
-        location = convertPoint(fromView: location)        
+        location = convertPoint(fromView: location)
         
         // adding to path:
         previewPath.addLine(to: location)
@@ -112,6 +123,7 @@ class DrawingSceneColors: SKScene {
         let node = previewNode.copy() as! SKShapeNode
         previewNodes.append(node)
         addChild(node)
+        node.zPosition = 0
         
         previewNode.path = nil
     }
