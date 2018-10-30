@@ -94,7 +94,7 @@ class DrawingSceneColors: SKScene {
     //MARK: Touch Methods
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if isEnabled == false { return }
+        if isEnabled == false { print("touch but disabled"); return }
         guard let touch = touches.first else { return }
         var location = touch.location(in: self.view)
         location = convertPoint(fromView: location)
@@ -127,4 +127,6 @@ class DrawingSceneColors: SKScene {
         
         previewNode.path = nil
     }
+    
+    
 }

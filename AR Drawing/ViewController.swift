@@ -270,21 +270,29 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     
     func setState(_ state: ScribbleState) {
         if(state == ScribbleState.drawing) {
-            self.drawingScene?.isEnabled = true
             setInfoText("Draw something on the screen, press + when you're done")
+            self.drawingSceneView?.isHidden = false
+            self.drawingSceneView?.isUserInteractionEnabled = true
+            self.drawingScene?.isEnabled = true
+            
             currentState = ScribbleState.drawing
             debugLabel.isHidden = true
             pinchGesture.isEnabled = false
+            rotationGesture.isEnabled = false
             
             toggleSideBar(visible: true)
         }
         else if(state == ScribbleState.placing) {
+            setInfoText("Tap the screen to place your scribble in the world")
+            self.drawingSceneView?.isHidden = true
+            self.drawingSceneView?.isUserInteractionEnabled = false
             self.drawingScene?.isEnabled = false
             self.drawingScene?.clear()
-            setInfoText("Tap the screen to place your scribble in the world")
+        
             currentState = ScribbleState.placing
             debugLabel.isHidden = false
             pinchGesture.isEnabled = true
+            rotationGesture.isEnabled = true
             self.scaleFactor = 1.0
             self.rotation = 0.0
             
@@ -417,6 +425,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     
     
     @IBAction func handePinchGesture(_ sender: UIPinchGestureRecognizer) {
+        print("scaling")
         if(sender.state == .began || sender.state == .changed) {
             self.scaleFactor = self.lastScaleFactor * sender.scale
         }
