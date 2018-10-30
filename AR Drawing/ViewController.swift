@@ -7,6 +7,7 @@ import PDColorPicker
 class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDelegate, Dimmable {
 
     @IBOutlet var sceneView: ARSCNView!
+    @IBOutlet weak var drawingSceneView: SKView!
     @IBOutlet weak var infoLabel: UILabel!
     @IBOutlet weak var debugLabel: UILabel!
     @IBOutlet var pinchGesture: UIPinchGestureRecognizer!
@@ -37,6 +38,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     
     var brushSizeSlider: UISlider?
     
+    var selected: SCNNode?
+    
+    var drawingScene: DrawingSceneColors?
+    
     
     //MARK: View Life Cycle Methods
     
@@ -50,9 +55,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         let scene = SCNScene()
         sceneView.scene = scene
         
+        
+        /*      BAD_ACCESS error originates from drawing on the overlay scene
+         
         // Set the drawing scene as the overlaying scene
         let drawingScene = DrawingSceneColors(size: sceneView.frame.size)
         sceneView.overlaySKScene = drawingScene
+        */
+        
+        self.drawingScene = DrawingSceneColors(size: sceneView.frame.size)
+        drawingSceneView.presentScene(drawingScene)
         
         pinchGesture.delegate = self
         rotationGesture.delegate = self
@@ -286,9 +298,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     
     func setState(_ state: ScribbleState) {
         if(state == ScribbleState.drawing) {
-            if let drawingScene = sceneView.overlaySKScene as? DrawingSceneColors {
-                drawingScene.isEnabled = true
-            }
+            self.drawingScene?.isEnabled = true
             setInfoText("Draw something on the screen, press + when you're done")
             currentState = ScribbleState.drawing
             debugLabel.isHidden = true
@@ -297,11 +307,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
             toggleSideBar(visible: true)
         }
         else if(state == ScribbleState.placing) {
-            if let drawingScene = sceneView.overlaySKScene as? DrawingSceneColors {
-                currentState = ScribbleState.placing
-                drawingScene.isEnabled = false
-                drawingScene.clear()
-            }
+            self.drawingScene?.isEnabled = false
+            self.drawingScene?.clear()
             setInfoText("Tap the screen to place your scribble in the world")
             currentState = ScribbleState.placing
             debugLabel.isHidden = false
@@ -363,7 +370,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         
         if(currentState == ScribbleState.drawing) {
             // make preview node from screen scribble
-            if let drawingScene = sceneView.overlaySKScene as? DrawingSceneColors {
+            if let drawingScene = self.drawingScene {
                 if drawingScene.isEmpty() {
                     print("Emty scene, draw something on screen first")
                     return
@@ -386,7 +393,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
                 let plane = SCNPlane(width: width, height: height)
                 
                 // copy is necessary
-                let scene = sceneView.overlaySKScene?.copy() as! SKScene
+                let scene = self.drawingScene?.copy() as! SKScene
                 plane.firstMaterial?.diffuse.contents = scene
                 plane.firstMaterial?.isDoubleSided = true
                 plane.firstMaterial?.emission.contents = UIColor.black
@@ -455,7 +462,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         let hits = sceneView.hitTest(location, options: nil)
         
         if !hits.isEmpty {
-            print(hits)
+            print("Tap detected: \(hits.count) objects hit")
+            for hit in hits {
+                let node = hit.node
+                
+                if selected === node {
+                    node.filters?.removeAll()
+                    selected = nil
+                }
+                else {
+                    //node.geometry?.firstMaterial?.emission.contents = UIColor.white
+                    //node.geometry?.firstMaterial?.specular.contents = UIColor.white
+                    
+                    var filters = [CIFilter]()
+                    filters.append(CIFilter(name: "CIGaussianBlur")!)
+                    
+                    node.filters = filters
+                    
+                    selected = node
+                }
+            }
         }
     }
     
@@ -480,10 +506,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
                 return
             }
             
-            if let drawingScene = self!.sceneView.overlaySKScene as? DrawingSceneColors {
-                drawingScene.lineColor = color.uiColor
-                print("color selected: \(String(describing: color))")
-            }
+            
+            self!.drawingScene?.lineColor = color.uiColor
+            print("color selected: \(String(describing: color))")
         }
         
         dim()
@@ -508,7 +533,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
             slider.thumbTintColor = UIColor.black
             slider.isHidden = true
             
-            slider.value = Float(((self.sceneView.overlaySKScene as? DrawingSceneColors)?.lineWidth)!)
+            slider.value = Float((self.drawingScene?.lineWidth)!)
             
             slider.transform = CGAffineTransform(rotationAngle: CGFloat.pi/2)
             
@@ -532,9 +557,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         self.brushSizeSlider?.setThumbImage(ResizeImage(image: thumbImage, targetSize: size), for: .highlighted)
         
         
-        if let drawingScene = self.sceneView.overlaySKScene as? DrawingSceneColors {
-            drawingScene.lineWidth = CGFloat(sender.value)
-        }
+        self.drawingScene?.lineWidth = CGFloat(sender.value)
     }
     
     func ResizeImage(image: UIImage, targetSize: CGSize) -> UIImage {
@@ -564,8 +587,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     }
     
     @IBAction func clickedUndoButton(_ sender: UIButton) {
-        guard let drawingScene = sceneView.overlaySKScene as? DrawingSceneColors else { return }
-        
-        drawingScene.removeLastNode()
+        self.drawingScene?.removeLastNode()
     }
 }

@@ -26,6 +26,43 @@
                                     <outletCollection property="gestureRecognizers" destination="1y2-Zr-BtL" appends="YES" id="bTd-yu-scz"/>
                                 </connections>
                             </arscnView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wdL-dC-Fft">
+                                <rect key="frame" x="974" y="693" width="30" height="60"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                <state key="normal">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="hitTestBtnPressed:" destination="BV1-FR-VrT" eventType="touchUpInside" id="Jrf-VY-A50"/>
+                                </connections>
+                            </button>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="debug text" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5vb-ke-nF0">
+                                <rect key="frame" x="0.0" y="20" width="1024" height="20.5"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X61-fu-aeO">
+                                <rect key="frame" x="810" y="693" width="194" height="60"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                <state key="normal" title="Clear world">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="clearBtnPressed:" destination="BV1-FR-VrT" eventType="touchUpInside" id="Wgr-jT-bgj"/>
+                                </connections>
+                            </button>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="info text" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gdk-dW-dzr">
+                                <rect key="frame" x="0.0" y="40.5" width="1024" height="20.5"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <skView contentMode="scaleAspectFill" allowsTransparency="YES" ignoresSiblingOrder="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KXm-AA-Xwd">
+                                <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                            </skView>
                             <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Jl-GI-BJp">
                                 <rect key="frame" x="0.0" y="0.0" width="100" height="768"/>
                                 <subviews>
@@ -95,47 +132,16 @@
                                     <action selector="clickedAddButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="jaO-Co-Xgo"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wdL-dC-Fft">
-                                <rect key="frame" x="974" y="693" width="30" height="60"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
-                                <state key="normal">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="hitTestBtnPressed:" destination="BV1-FR-VrT" eventType="touchUpInside" id="Jrf-VY-A50"/>
-                                </connections>
-                            </button>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="debug text" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5vb-ke-nF0">
-                                <rect key="frame" x="0.0" y="20" width="1024" height="20.5"/>
-                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X61-fu-aeO">
-                                <rect key="frame" x="810" y="693" width="194" height="60"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
-                                <state key="normal" title="Clear world">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="clearBtnPressed:" destination="BV1-FR-VrT" eventType="touchUpInside" id="Wgr-jT-bgj"/>
-                                </connections>
-                            </button>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="info text" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gdk-dW-dzr">
-                                <rect key="frame" x="0.0" y="40.5" width="1024" height="20.5"/>
-                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="X61-fu-aeO" firstAttribute="centerY" secondItem="iOC-sJ-73Z" secondAttribute="centerY" id="3lB-MZ-ANg"/>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="trailing" secondItem="wdL-dC-Fft" secondAttribute="trailing" constant="20" id="5JC-5W-MJf"/>
+                            <constraint firstItem="KXm-AA-Xwd" firstAttribute="trailing" secondItem="fQZ-KI-GVf" secondAttribute="trailing" id="E1b-W5-gsF"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="GsS-dJ-CKf"/>
                             <constraint firstItem="7Jl-GI-BJp" firstAttribute="bottom" secondItem="fQZ-KI-GVf" secondAttribute="bottom" id="Jo5-Wv-J0k"/>
+                            <constraint firstItem="KXm-AA-Xwd" firstAttribute="top" secondItem="U0K-SW-4ec" secondAttribute="top" id="Odm-5E-085"/>
+                            <constraint firstItem="KXm-AA-Xwd" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="QSi-04-nlS"/>
                             <constraint firstItem="5vb-ke-nF0" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="TDj-TK-Prs"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="bottom" secondItem="fQZ-KI-GVf" secondAttribute="bottom" id="VpT-BR-CcM"/>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="bottom" secondItem="iOC-sJ-73Z" secondAttribute="bottom" constant="20" id="WB1-Uk-173"/>
@@ -143,6 +149,7 @@
                             <constraint firstItem="7Jl-GI-BJp" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="YLY-4l-ZgF"/>
                             <constraint firstItem="5vb-ke-nF0" firstAttribute="top" secondItem="fQZ-KI-GVf" secondAttribute="top" id="Zwq-8D-DBD"/>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="trailing" secondItem="gdk-dW-dzr" secondAttribute="trailing" id="dkI-by-ndd"/>
+                            <constraint firstItem="KXm-AA-Xwd" firstAttribute="bottom" secondItem="fQZ-KI-GVf" secondAttribute="bottom" id="fAL-t3-be9"/>
                             <constraint firstItem="7Jl-GI-BJp" firstAttribute="top" secondItem="U0K-SW-4ec" secondAttribute="top" id="h10-rf-cv1"/>
                             <constraint firstItem="gdk-dW-dzr" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="kXq-Kd-jUr"/>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="trailing" secondItem="5vb-ke-nF0" secondAttribute="trailing" id="qt7-xx-wWl"/>
@@ -159,6 +166,7 @@
                         <outlet property="brushSizeButton" destination="K3P-i1-Orz" id="JE3-hI-TtV"/>
                         <outlet property="colorButton" destination="ue7-e5-kXY" id="SvV-fj-uba"/>
                         <outlet property="debugLabel" destination="5vb-ke-nF0" id="nii-uZ-rVc"/>
+                        <outlet property="drawingSceneView" destination="KXm-AA-Xwd" id="0Eg-r1-UTG"/>
                         <outlet property="infoLabel" destination="gdk-dW-dzr" id="CdG-GJ-4ff"/>
                         <outlet property="pinchGesture" destination="HQo-pc-BE3" id="j82-Ad-Aj9"/>
                         <outlet property="rotationGesture" destination="hDg-Vn-hBJ" id="uVD-Rt-Fty"/>
