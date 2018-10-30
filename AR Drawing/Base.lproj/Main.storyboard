@@ -63,7 +63,7 @@
                             <skView contentMode="scaleAspectFill" allowsTransparency="YES" ignoresSiblingOrder="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KXm-AA-Xwd">
                                 <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                             </skView>
-                            <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Jl-GI-BJp">
+                            <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Jl-GI-BJp" userLabel="Sidebar left">
                                 <rect key="frame" x="0.0" y="0.0" width="100" height="768"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="40" translatesAutoresizingMaskIntoConstraints="NO" id="Izq-83-vlB">
@@ -132,13 +132,52 @@
                                     <action selector="clickedAddButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="jaO-Co-Xgo"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3x1-vO-Y02" userLabel="Sidebar right">
+                                <rect key="frame" x="924" y="0.0" width="100" height="768"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="40" translatesAutoresizingMaskIntoConstraints="NO" id="lEN-Ac-l4d">
+                                        <rect key="frame" x="10" y="65" width="80" height="200"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rl8-5m-4RR">
+                                                <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="Rl8-5m-4RR" secondAttribute="height" multiplier="1:1" id="owm-X6-Z4T"/>
+                                                </constraints>
+                                                <state key="normal" image="move"/>
+                                                <connections>
+                                                    <action selector="clickedEditButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="M5t-aN-Qqd"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2sp-JG-mgF">
+                                                <rect key="frame" x="0.0" y="120" width="80" height="80"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="2sp-JG-mgF" secondAttribute="height" multiplier="1:1" id="9wE-04-aP2"/>
+                                                </constraints>
+                                                <state key="normal" image="delete"/>
+                                                <connections>
+                                                    <action selector="clickedDeleteButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="4zd-wb-SX6"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="AQW-oz-iBF"/>
+                                    <constraint firstItem="lEN-Ac-l4d" firstAttribute="leading" secondItem="3x1-vO-Y02" secondAttribute="leading" constant="10" id="YRr-Ov-0jw"/>
+                                    <constraint firstItem="lEN-Ac-l4d" firstAttribute="top" secondItem="3x1-vO-Y02" secondAttribute="top" constant="65" id="jUo-xh-61Q"/>
+                                    <constraint firstAttribute="trailing" secondItem="lEN-Ac-l4d" secondAttribute="trailing" constant="10" id="lbO-lx-dNc"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="3x1-vO-Y02" firstAttribute="top" secondItem="U0K-SW-4ec" secondAttribute="top" id="1Km-hL-lmx"/>
                             <constraint firstItem="X61-fu-aeO" firstAttribute="centerY" secondItem="iOC-sJ-73Z" secondAttribute="centerY" id="3lB-MZ-ANg"/>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="trailing" secondItem="wdL-dC-Fft" secondAttribute="trailing" constant="20" id="5JC-5W-MJf"/>
                             <constraint firstItem="KXm-AA-Xwd" firstAttribute="trailing" secondItem="fQZ-KI-GVf" secondAttribute="trailing" id="E1b-W5-gsF"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="GsS-dJ-CKf"/>
+                            <constraint firstItem="3x1-vO-Y02" firstAttribute="trailing" secondItem="fQZ-KI-GVf" secondAttribute="trailing" id="HS0-jY-t4h"/>
                             <constraint firstItem="7Jl-GI-BJp" firstAttribute="bottom" secondItem="fQZ-KI-GVf" secondAttribute="bottom" id="Jo5-Wv-J0k"/>
                             <constraint firstItem="KXm-AA-Xwd" firstAttribute="top" secondItem="U0K-SW-4ec" secondAttribute="top" id="Odm-5E-085"/>
                             <constraint firstItem="KXm-AA-Xwd" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="QSi-04-nlS"/>
@@ -154,6 +193,7 @@
                             <constraint firstItem="gdk-dW-dzr" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="kXq-Kd-jUr"/>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="trailing" secondItem="5vb-ke-nF0" secondAttribute="trailing" id="qt7-xx-wWl"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="top" secondItem="U0K-SW-4ec" secondAttribute="top" id="rJc-2c-zQA"/>
+                            <constraint firstItem="3x1-vO-Y02" firstAttribute="bottom" secondItem="fQZ-KI-GVf" secondAttribute="bottom" id="srJ-Ys-qRk"/>
                             <constraint firstItem="wdL-dC-Fft" firstAttribute="centerY" secondItem="iOC-sJ-73Z" secondAttribute="centerY" id="tDa-Dd-tTu"/>
                             <constraint firstItem="iOC-sJ-73Z" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" id="un6-J8-Lwl"/>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="trailing" secondItem="X61-fu-aeO" secondAttribute="trailing" constant="20" id="vfK-Rs-3AP"/>
@@ -166,7 +206,9 @@
                         <outlet property="brushSizeButton" destination="K3P-i1-Orz" id="JE3-hI-TtV"/>
                         <outlet property="colorButton" destination="ue7-e5-kXY" id="SvV-fj-uba"/>
                         <outlet property="debugLabel" destination="5vb-ke-nF0" id="nii-uZ-rVc"/>
+                        <outlet property="deleteButton" destination="2sp-JG-mgF" id="D0Z-Dw-Opt"/>
                         <outlet property="drawingSceneView" destination="KXm-AA-Xwd" id="0Eg-r1-UTG"/>
+                        <outlet property="editButton" destination="Rl8-5m-4RR" id="Aju-gk-bgz"/>
                         <outlet property="infoLabel" destination="gdk-dW-dzr" id="CdG-GJ-4ff"/>
                         <outlet property="pinchGesture" destination="HQo-pc-BE3" id="j82-Ad-Aj9"/>
                         <outlet property="rotationGesture" destination="hDg-Vn-hBJ" id="uVD-Rt-Fty"/>
@@ -197,7 +239,9 @@
     </scenes>
     <resources>
         <image name="brush" width="512" height="512"/>
+        <image name="delete" width="409.60000610351562" height="409.60000610351562"/>
         <image name="img_411294" width="980" height="980"/>
+        <image name="move" width="409.60000610351562" height="409.60000610351562"/>
         <image name="plus-circle" width="512" height="512"/>
         <image name="undo-arrow" width="512" height="512"/>
     </resources>

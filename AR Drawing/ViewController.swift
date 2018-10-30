@@ -18,12 +18,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     @IBOutlet weak var colorButton: UIButton!
     @IBOutlet weak var brushSizeButton: UIButton!
     @IBOutlet weak var undoButton: UIButton!
+    @IBOutlet weak var editButton: UIButton!
+    @IBOutlet weak var deleteButton: UIButton!
     
     let defaultDistance = CGFloat(1.0)      // place scribble at ...m when no featurepoints or planes are detected
     
     enum ScribbleState {
         case drawing                        // first user draws a scribble on the screen
         case placing                        // then the scribble gets placed in the AR world
+        case editing                        // looking around and selecting scribbles to be edited
     }
     var currentState = ScribbleState.drawing
     
@@ -264,6 +267,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     private func makePreviewNode(_ node: SCNNode) {
         node.geometry?.firstMaterial?.readsFromDepthBuffer = false // always visible
         node.renderingOrder = -10    // always on top
+        node.name = "scribble"
         sceneView.scene.rootNode.addChildNode(node)
         previewNode = node
     }
@@ -280,6 +284,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
             pinchGesture.isEnabled = false
             rotationGesture.isEnabled = false
             
+            self.deleteButton.isHidden = true
+            
             toggleSideBar(visible: true)
         }
         else if(state == ScribbleState.placing) {
@@ -295,6 +301,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
             rotationGesture.isEnabled = true
             self.scaleFactor = 1.0
             self.rotation = 0.0
+            
+            self.deleteButton.isHidden = false
+            
+            toggleSideBar(visible: false)
+        }
+        else if(state == ScribbleState.editing) {
+            setInfoText("Tap on a scribble to move or delete")
+            self.drawingSceneView?.isHidden = true
+            self.drawingSceneView?.isUserInteractionEnabled = false
+            self.drawingScene?.isEnabled = false
+            
+            currentState = ScribbleState.editing
+            debugLabel.isHidden = true
+            
+            self.deleteButton.isHidden = true
             
             toggleSideBar(visible: false)
         }
@@ -404,6 +425,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
 
             setState(ScribbleState.drawing)
         }
+        else if(currentState == ScribbleState.editing) {
+            setState(ScribbleState.drawing)
+        }
     }
     
     
@@ -425,7 +449,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     
     
     @IBAction func handePinchGesture(_ sender: UIPinchGestureRecognizer) {
-        print("scaling")
         if(sender.state == .began || sender.state == .changed) {
             self.scaleFactor = self.lastScaleFactor * sender.scale
         }
@@ -446,29 +469,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     
     
     @IBAction func handleTapGesture(_ sender: UITapGestureRecognizer) {
-        let location = sender.location(in: sceneView)
         
-        let hits = sceneView.hitTest(location, options: nil)
-        
-        if !hits.isEmpty {
-            print("Tap detected: \(hits.count) objects hit")
-            for hit in hits {
-                let node = hit.node
+        if(currentState == ScribbleState.editing) {
+            let location = sender.location(in: sceneView)
+            let hits = sceneView.hitTest(location, options: nil)
+            
+            if !hits.isEmpty {
+                print("Tap detected: \(hits.count) objects hit")
                 
-                if selected === node {
-                    node.filters?.removeAll()
-                    selected = nil
-                }
-                else {
-                    //node.geometry?.firstMaterial?.emission.contents = UIColor.white
-                    //node.geometry?.firstMaterial?.specular.contents = UIColor.white
-                    
-                    var filters = [CIFilter]()
-                    filters.append(CIFilter(name: "CIGaussianBlur")!)
-                    
-                    node.filters = filters
-                    
-                    selected = node
+                if let node = hits.first?.node, node.name == "scribble" {
+                    print(node)
+                    previewNode = node
+                    setState(ScribbleState.placing)
                 }
             }
         }
@@ -573,5 +585,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     
     @IBAction func clickedUndoButton(_ sender: UIButton) {
         self.drawingScene?.removeLastNode()
+    }
+    
+    @IBAction func clickedEditButton(_ sender: UIButton) {
+        if(currentState == ScribbleState.editing) {
+            setState(ScribbleState.drawing)
+        }
+        else {
+            setState(ScribbleState.editing)
+        }
+    }
+    
+    @IBAction func clickedDeleteButton(_ sender: UIButton) {
+        if(currentState == ScribbleState.placing) {
+            previewNode?.removeFromParentNode()
+            setState(ScribbleState.drawing)
+        }
     }
 }
