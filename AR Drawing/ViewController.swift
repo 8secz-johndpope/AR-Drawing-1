@@ -88,39 +88,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
 
     override func viewDidAppear(_ animated: Bool) {
         setState(ScribbleState.drawing)
-        // preview screen
-        /*
-        let heightToWidthRatio = view.frame.height / view.frame.width
-        let width: CGFloat = 0.30   // 30 cm wide
-        let height = width * heightToWidthRatio
-        
-        
-        let previewScene = DrawingScene(size: CGSize(width: view.frame.width, height: view.frame.height))
-        previewScene.makeExamplePath()
-        
-        let plane = SCNPlane(width: width, height: height)
-        plane.firstMaterial?.diffuse.contents = previewScene
-        plane.firstMaterial?.isDoubleSided = true
-        plane.firstMaterial?.blendMode = .alpha
-        previewNode = SCNNode(geometry: plane)
-        
-        guard let node = previewNode else { return }
-        sceneView.scene.rootNode.addChildNode(node)
-        */
     }
     
 
     
-    
     // MARK: - ARSCNViewDelegate
-    
-    /* Override to create and configure nodes for anchors added to the view's session.
-    func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
-        let node = SCNNode()
-     
-        return node
-    }
-     */
     
     /// - Tag: PlaceARContent
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
@@ -345,6 +317,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         UIView.animate(withDuration: 0.3, animations: { slider.alpha = 1 })
     }
     
+    func resizeBrushSizeSliderImage() {
+        let ratio = CGFloat((self.brushSizeSlider?.value ?? 5.0) + 10.0)
+        let thumbImage = UIImage(named: "black-dot")!
+        let size = CGSize(width: ratio, height: ratio)
+        self.brushSizeSlider?.setThumbImage(ResizeImage(image: thumbImage, targetSize: size), for: .normal)
+        self.brushSizeSlider?.setThumbImage(ResizeImage(image: thumbImage, targetSize: size), for: .highlighted)
+    }
+    
     func toggleSideBar(visible: Bool) {
         if visible == false {
             //sidebar.isHidden = true
@@ -537,25 +517,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
             
             slider.transform = CGAffineTransform(rotationAngle: CGFloat.pi/2)
             
+            slider.value = Float(self.drawingScene?.lineWidth ?? 5.0)
+            
             self.view.addSubview(slider)
             self.brushSizeSlider = slider
             
-            toggleBrushSizeSlider()
+            resizeBrushSizeSliderImage()
         }
-        else {
-            toggleBrushSizeSlider()
-        }
+        
+        toggleBrushSizeSlider()
     }    
     
     @objc func brushSliderValueChanged(_ sender: UISlider) {
         print("slider value changed: \(sender.value)")
         
-        let ratio = CGFloat(sender.value + 10)
-        let thumbImage = UIImage(named: "black-dot")!
-        let size = CGSize(width: ratio, height: ratio)
-        self.brushSizeSlider?.setThumbImage(ResizeImage(image: thumbImage, targetSize: size), for: .normal)
-        self.brushSizeSlider?.setThumbImage(ResizeImage(image: thumbImage, targetSize: size), for: .highlighted)
-        
+        resizeBrushSizeSliderImage()
         
         self.drawingScene?.lineWidth = CGFloat(sender.value)
     }
