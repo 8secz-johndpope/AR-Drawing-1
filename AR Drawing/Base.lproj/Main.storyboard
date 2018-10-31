@@ -160,24 +160,53 @@
                                             </button>
                                         </subviews>
                                     </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Yry-Kk-yNr">
+                                        <rect key="frame" x="10" y="682" width="80" height="36"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gfd-e3-hNq">
+                                                <rect key="frame" x="0.0" y="0.0" width="80" height="36"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                <state key="normal" title="Save"/>
+                                                <connections>
+                                                    <action selector="clickedSaveButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="Mz8-Iq-mGb"/>
+                                                </connections>
+                                            </button>
+                                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WeI-mS-YQb">
+                                                <rect key="frame" x="0.0" y="0.0" width="80" height="0.0"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                <state key="normal" title="Load"/>
+                                                <connections>
+                                                    <action selector="clickedLoadButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="2UR-EJ-Xkb"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstItem="Yry-Kk-yNr" firstAttribute="leading" secondItem="3x1-vO-Y02" secondAttribute="leading" constant="10" id="4wN-It-ddr"/>
                                     <constraint firstAttribute="width" constant="100" id="AQW-oz-iBF"/>
+                                    <constraint firstAttribute="trailing" secondItem="Yry-Kk-yNr" secondAttribute="trailing" constant="10" id="V4d-wa-Vim"/>
                                     <constraint firstItem="lEN-Ac-l4d" firstAttribute="leading" secondItem="3x1-vO-Y02" secondAttribute="leading" constant="10" id="YRr-Ov-0jw"/>
                                     <constraint firstItem="lEN-Ac-l4d" firstAttribute="top" secondItem="3x1-vO-Y02" secondAttribute="top" constant="65" id="jUo-xh-61Q"/>
                                     <constraint firstAttribute="trailing" secondItem="lEN-Ac-l4d" secondAttribute="trailing" constant="10" id="lbO-lx-dNc"/>
+                                    <constraint firstAttribute="bottom" secondItem="Yry-Kk-yNr" secondAttribute="bottom" constant="50" id="yGf-jz-KxB"/>
                                 </constraints>
                             </view>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="wYQ-O5-ZFu">
+                                <rect key="frame" x="108" y="69" width="307" height="230.5"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="3x1-vO-Y02" firstAttribute="top" secondItem="U0K-SW-4ec" secondAttribute="top" id="1Km-hL-lmx"/>
                             <constraint firstItem="X61-fu-aeO" firstAttribute="centerY" secondItem="iOC-sJ-73Z" secondAttribute="centerY" id="3lB-MZ-ANg"/>
+                            <constraint firstItem="wYQ-O5-ZFu" firstAttribute="leading" secondItem="7Jl-GI-BJp" secondAttribute="trailing" constant="8" id="4M9-31-QYh"/>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="trailing" secondItem="wdL-dC-Fft" secondAttribute="trailing" constant="20" id="5JC-5W-MJf"/>
                             <constraint firstItem="KXm-AA-Xwd" firstAttribute="trailing" secondItem="fQZ-KI-GVf" secondAttribute="trailing" id="E1b-W5-gsF"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="GsS-dJ-CKf"/>
                             <constraint firstItem="3x1-vO-Y02" firstAttribute="trailing" secondItem="fQZ-KI-GVf" secondAttribute="trailing" id="HS0-jY-t4h"/>
+                            <constraint firstItem="wYQ-O5-ZFu" firstAttribute="height" secondItem="KXm-AA-Xwd" secondAttribute="height" multiplier="0.3" id="HnT-Un-dPA"/>
                             <constraint firstItem="7Jl-GI-BJp" firstAttribute="bottom" secondItem="fQZ-KI-GVf" secondAttribute="bottom" id="Jo5-Wv-J0k"/>
                             <constraint firstItem="KXm-AA-Xwd" firstAttribute="top" secondItem="U0K-SW-4ec" secondAttribute="top" id="Odm-5E-085"/>
                             <constraint firstItem="KXm-AA-Xwd" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="QSi-04-nlS"/>
@@ -188,7 +217,9 @@
                             <constraint firstItem="7Jl-GI-BJp" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="YLY-4l-ZgF"/>
                             <constraint firstItem="5vb-ke-nF0" firstAttribute="top" secondItem="fQZ-KI-GVf" secondAttribute="top" id="Zwq-8D-DBD"/>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="trailing" secondItem="gdk-dW-dzr" secondAttribute="trailing" id="dkI-by-ndd"/>
+                            <constraint firstItem="wYQ-O5-ZFu" firstAttribute="top" secondItem="gdk-dW-dzr" secondAttribute="bottom" constant="8" id="edG-MB-9X0"/>
                             <constraint firstItem="KXm-AA-Xwd" firstAttribute="bottom" secondItem="fQZ-KI-GVf" secondAttribute="bottom" id="fAL-t3-be9"/>
+                            <constraint firstItem="wYQ-O5-ZFu" firstAttribute="width" secondItem="KXm-AA-Xwd" secondAttribute="width" multiplier="0.3" id="gIr-rc-JAN"/>
                             <constraint firstItem="7Jl-GI-BJp" firstAttribute="top" secondItem="U0K-SW-4ec" secondAttribute="top" id="h10-rf-cv1"/>
                             <constraint firstItem="gdk-dW-dzr" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="kXq-Kd-jUr"/>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="trailing" secondItem="5vb-ke-nF0" secondAttribute="trailing" id="qt7-xx-wWl"/>
@@ -210,10 +241,13 @@
                         <outlet property="drawingSceneView" destination="KXm-AA-Xwd" id="0Eg-r1-UTG"/>
                         <outlet property="editButton" destination="Rl8-5m-4RR" id="Aju-gk-bgz"/>
                         <outlet property="infoLabel" destination="gdk-dW-dzr" id="CdG-GJ-4ff"/>
+                        <outlet property="loadButton" destination="WeI-mS-YQb" id="m3P-o2-uiI"/>
                         <outlet property="pinchGesture" destination="HQo-pc-BE3" id="j82-Ad-Aj9"/>
                         <outlet property="rotationGesture" destination="hDg-Vn-hBJ" id="uVD-Rt-Fty"/>
+                        <outlet property="saveButton" destination="gfd-e3-hNq" id="MZF-Bl-QaA"/>
                         <outlet property="sceneView" destination="BrB-h1-WRS" id="5nT-qQ-ynl"/>
                         <outlet property="sidebar" destination="7Jl-GI-BJp" id="26R-Ld-P7B"/>
+                        <outlet property="snapShotImage" destination="wYQ-O5-ZFu" id="KZ6-yH-yt4"/>
                         <outlet property="undoButton" destination="tZo-9i-cCO" id="VLk-19-dId"/>
                     </connections>
                 </viewController>

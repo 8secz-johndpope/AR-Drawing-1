@@ -13,6 +13,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     @IBOutlet var pinchGesture: UIPinchGestureRecognizer!
     @IBOutlet var rotationGesture: UIRotationGestureRecognizer!
     @IBOutlet weak var sidebar: UIView!
+    @IBOutlet weak var snapShotImage: UIImageView!
     
     @IBOutlet weak var addButton: UIButton!
     @IBOutlet weak var colorButton: UIButton!
@@ -20,6 +21,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     @IBOutlet weak var undoButton: UIButton!
     @IBOutlet weak var editButton: UIButton!
     @IBOutlet weak var deleteButton: UIButton!
+    @IBOutlet weak var saveButton: UIButton!
+    @IBOutlet weak var loadButton: UIButton!
     
     let defaultDistance = CGFloat(1.0)      // place scribble at ...m when no featurepoints or planes are detected
     
@@ -33,6 +36,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     var planes = [ARPlaneAnchor: Plane]()
     var previewNode: SCNNode?
     var scribbles = [SCNNode]()
+    var scribbleCounter: Int = 0
     
     var lastScaleFactor: CGFloat = 1.0
     var scaleFactor: CGFloat = 1.0
@@ -45,6 +49,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     
     var drawingScene: DrawingSceneColors?
     
+    var worldMapURL: URL = {
+        do {
+            return try FileManager.default
+                .url(for: .documentDirectory,
+                     in: .userDomainMask,
+                     appropriateFor: nil,
+                     create: true)
+                .appendingPathComponent("map.arexperience")
+        } catch {
+            fatalError("Can't get file save URL: \(error.localizedDescription)")
+        }
+    }()
+    
+    var defaultConfiguration: ARWorldTrackingConfiguration {
+        let configuration = ARWorldTrackingConfiguration()
+        configuration.planeDetection = [.horizontal, .vertical]
+        configuration.environmentTexturing = .automatic
+        return configuration
+    }
+    
     
     //MARK: View Life Cycle Methods
     
@@ -52,7 +76,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         super.viewDidLoad()
         
         sceneView.delegate = self
-        //sceneView.showsStatistics = true
+        sceneView.showsStatistics = true
         sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints]
         
         let scene = SCNScene()
@@ -76,9 +100,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        let configuration = ARWorldTrackingConfiguration()
-        configuration.planeDetection = [.horizontal, .vertical]
-        
+        let configuration = self.defaultConfiguration
         sceneView.session.run(configuration)
         
     }
@@ -103,6 +125,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         if let planeAnchor = anchor as? ARPlaneAnchor {
             self.addPlane(node: node, anchor: planeAnchor)
         }
+                
+        if let scribbleAnchor = anchor as? ScribbleAnchor {
+            print("Scribble ARAnchor placed at: \(anchor.transform)")
+            scribbleAnchor.node.simdTransform = matrix_identity_float4x4
+            node.addChildNode(scribbleAnchor.node)
+        }
     }
     
     /// - Tag: UpdateARContent
@@ -116,6 +144,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     /// - TAG: UpdateFrame
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         
+        // Enable Save button only when the mapping status is good and an object has been placed
+        if let frame = sceneView.session.currentFrame {
+            var enableSaveButton = false
+            if frame.worldMappingStatus == .extending || frame.worldMappingStatus == .mapped {
+                enableSaveButton = true
+            }
+            
+            DispatchQueue.main.async {
+                self.saveButton.isEnabled = enableSaveButton
+            }
+        }
+            
         if(currentState == ScribbleState.placing && previewNode != nil) {
             
             for (_, plane) in planes {
@@ -178,42 +218,49 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         }
     }
     
+    
+    // MARK: ARSessionObserver
+    
     func session(_ session: ARSession, didFailWithError error: Error) {
         // Present an error message to the user
+        print("Session failed with error: \(error.localizedDescription)")
+    }
+    
+    func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
+        print("Camera tracking state changed: \(camera.trackingState)")
+        
+        let trackingState = camera.trackingState
+        let frame = session.currentFrame!
+        
+        self.snapShotImage.isHidden = true
+        switch (trackingState, frame.worldMappingStatus) {
+        case (.limited(.relocalizing), _):
+            print("Move device to position shown in image")
+            self.snapShotImage.isHidden = false
+        default:
+            print("")
+        }
     }
     
     func sessionWasInterrupted(_ session: ARSession) {
         // Inform the user that the session has been interrupted, for example, by presenting an overlay
+        print("Session was interupted")
     }
     
     func sessionInterruptionEnded(_ session: ARSession) {
         // Reset tracking and/or remove existing anchors if consistent tracking is required
+        print("Session interruption ended")
+    }
+    
+    func sessionShouldAttemptRelocalization(_ session: ARSession) -> Bool {
+        // Attempt relocalization after session interuption
+        return true
     }
     
     
     
     
     //MARK: Private Functions
-    
-    private func getRotation(_ matrix: simd_float4x4) -> float3 {
-        var yaw, pitch, roll: Float
-        if matrix.columns.0.x == 1.0 {
-            yaw = atan2f(matrix.columns.2.x , matrix.columns.3.z)
-            pitch = 0.0
-            roll = 0.0
-        }
-        else if matrix.columns.0.x == -1.0 {
-            yaw = atan2f(matrix.columns.2.x, matrix.columns.3.y)
-            pitch = 0.0
-            roll = 0.0
-        }
-        else {
-            yaw = atan2f(-matrix.columns.0.z, matrix.columns.0.x)
-            pitch = asin(matrix.columns.0.y)
-            roll = atan2f(-matrix.columns.2.y, matrix.columns.1.y)
-        }
-        return float3(yaw, pitch, roll)
-    }
     
     private func hitTestFromCenter() -> [ARHitTestResult] {
         let results = sceneView.hitTest(sceneView.center, types: [.existingPlaneUsingExtent, .featurePoint])
@@ -245,10 +292,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         
         let camTransform = sceneView.pointOfView?.simdTransform
         var transform = simd_mul(camTransform!, translation)
-        
-        let rotation = float4x4(simd_quatf(angle: Float.pi, axis: float3(1, 0, 0)))
-        transform *= rotation
-        
+                
         return transform
     }
     
@@ -402,8 +446,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
                 let plane = SCNPlane(width: width, height: height)
                 
                 // copy is necessary
-                let scene = self.drawingScene?.copy() as! SKScene
-                plane.firstMaterial?.diffuse.contents = scene
+                //let scene = self.drawingScene?.copy() as! SKScene
+                //plane.firstMaterial?.diffuse.contents = scene
+                
+                let image = self.drawingScene?.getSnapShot()
+                plane.firstMaterial?.diffuse.contents = image
                 plane.firstMaterial?.isDoubleSided = true
                 plane.firstMaterial?.emission.contents = UIColor.black
                 plane.firstMaterial?.transparencyMode = .aOne
@@ -414,15 +461,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
             }
         }
         else if(currentState == ScribbleState.placing) {
-            // place the scribble at the current location of the previewNode
-            // calculating where to put the scribble gets done in the renderer(_:updatedAtTime:) function
-            print("scribble placed")
-            if let preview = previewNode {
-                scribbles.append(preview)
-                print("# scribbles in world: \(scribbles.count)")
-                print(scribbles)
-            }
-
+            // create an ARAnchor at the transform of the previewNode
+            // in 'func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor)' a node gets associated with this anchor
+            let anchor = ScribbleAnchor(scribble: previewNode!, image: previewNode!.geometry!.firstMaterial!.diffuse.contents as! UIImage, transform: previewNode!.simdTransform)
+            sceneView.session.add(anchor: anchor)
+            
             setState(ScribbleState.drawing)
         }
         else if(currentState == ScribbleState.editing) {
@@ -478,8 +521,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
                 print("Tap detected: \(hits.count) objects hit")
                 
                 if let node = hits.first?.node, node.name == "scribble" {
-                    print(node)
-                    previewNode = node
+                    // Make a new preview node from selected node
+                    let copy = node.copy() as! SCNNode
+                    makePreviewNode(copy)
+                    
+                    // remove selected node along with its anchor
+                    // the new node gets it anchor after replacement
+                    sceneView.session.remove(anchor: sceneView.anchor(for: node)!)
                     setState(ScribbleState.placing)
                 }
             }
@@ -601,5 +649,79 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
             previewNode?.removeFromParentNode()
             setState(ScribbleState.drawing)
         }
+    }
+    
+    func saveWorldMap(_ worldMap: ARWorldMap, to url: URL) throws {
+        let data = try NSKeyedArchiver.archivedData(withRootObject: worldMap, requiringSecureCoding: true)
+        try data.write(to: url, options: [.atomic])
+    }
+    
+    func loadWorldMap(from url: URL) throws -> ARWorldMap {
+        let data = try Data(contentsOf: url)
+        guard let worldMap = try NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data) else {
+            throw ARError(.invalidWorldMap)
+        }
+        return worldMap
+    }
+    
+    @IBAction func clickedSaveButton(_ sender: UIButton) {
+        
+        sceneView.session.getCurrentWorldMap { (worldMap, error) in
+            guard let map = worldMap else {
+                print("Cannot get current world map \(error!.localizedDescription)")
+                return
+            }
+            
+            // add snapshot image to the worldmap
+            guard let snapshotAnchor = SnapshotAnchor(capturing: self.sceneView) else {
+                fatalError("Can't take snapshot")
+            }
+            map.anchors.append(snapshotAnchor)
+            
+            do {
+                try self.saveWorldMap(map, to: self.worldMapURL)
+                DispatchQueue.main.async {
+                    self.loadButton.isHidden = false
+                    self.loadButton.isEnabled = true
+                    print("world map is saved")
+                }
+                for anchor in map.anchors {
+                    print(anchor)
+                }
+            } catch {
+                fatalError("Can't save map: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    @IBAction func clickedLoadButton(_ sender: UIButton) {
+        
+        // load worldmap
+        let worldMap: ARWorldMap = {
+            do {
+                let data = try Data(contentsOf: self.worldMapURL)
+                guard let worldMap = try NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data)
+                    else { fatalError("No ARWorldMap in archive.") }
+                return worldMap
+            } catch {
+                fatalError("Can't unarchive ARWorldMap from file data: \(error)")
+            }
+        }()
+        
+        // display SnapShotImage
+        if let snapshotData = worldMap.snapshotAnchor?.imageData, let snapshot = UIImage(data: snapshotData) {
+            self.snapShotImage.image = snapshot
+            print("Move device to the location shown in the image")
+        } else {
+            print("No snapshot image stored with worldmap!")
+        }
+        
+        // remove snapshot from worldmap, not needed in scene
+        worldMap.anchors.removeAll(where: { $0 is SnapshotAnchor })
+        
+        // set configuration with initialWorldMap
+        let configuration = self.defaultConfiguration
+        configuration.initialWorldMap = worldMap
+        sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
     }
 }

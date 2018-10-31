@@ -19,7 +19,7 @@ class DrawingSceneColors: SKScene {
         }
     }
     
-    private var paths = [CGMutablePath]()
+    var paths = [CGMutablePath]()
     private var previewNodes = [SKShapeNode]()
     
     private var previewNode: SKShapeNode
@@ -89,6 +89,15 @@ class DrawingSceneColors: SKScene {
             previewNodes.last?.removeFromParent()
             previewNodes.removeLast()
         }
+    }
+    
+    func getSnapShot() -> UIImage {
+        UIGraphicsBeginImageContext(self.view!.bounds.size)
+        self.view!.drawHierarchy(in: self.view!.bounds, afterScreenUpdates: true)
+        var image: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        
+        return image
     }
     
     //MARK: Touch Methods
