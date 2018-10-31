@@ -184,7 +184,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
                 setDebugText("hitting plane")
                 self.planes[anchor]?.setColor(UIColor.blue)
                 self.previewNode?.simdTransform = (target?.worldTransform)!
-                let rotation = float4x4(simd_quatf(angle: Float.pi / 2, axis: float3(1, 0, 0)))
+                let rotation = float4x4(simd_quatf(angle: -Float.pi / 2, axis: float3(1, 0, 0)))
                 self.previewNode?.simdTransform *= rotation
                 
             case ARHitTestResult.ResultType.featurePoint:
@@ -200,7 +200,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
             self.previewNode?.scale = SCNVector3(self.scaleFactor, self.scaleFactor, self.scaleFactor)
             
             // rotation gesture
-            let rotation = float4x4(simd_quatf(angle: Float(self.rotation), axis: float3(0, 0, 1)))
+            let rotation = float4x4(simd_quatf(angle: Float(-self.rotation), axis: float3(0, 0, 1)))
             self.previewNode?.simdTransform *= rotation
         }
     }
@@ -428,7 +428,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         else if(currentState == ScribbleState.placing) {
             // create an ARAnchor at the transform of the previewNode
             // in 'func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor)' a node gets associated with this anchor
-            let anchor = ScribbleAnchor(scribble: previewNode!, image: previewNode!.geometry!.firstMaterial!.diffuse.contents as! UIImage, transform: previewNode!.simdTransform)
+            let anchor = ScribbleAnchor(scribble: previewNode!, transform: previewNode!.simdTransform)
             sceneView.session.add(anchor: anchor)
             
             setState(ScribbleState.drawing)
@@ -588,10 +588,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         // load worldmap
         let worldMap: ARWorldMap = {
             do {
-                let data = try Data(contentsOf: self.worldMapURL)
-                guard let worldMap = try NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data)
-                    else { fatalError("No ARWorldMap in archive.") }
-                return worldMap
+                return try self.loadWorldMap(from: self.worldMapURL)
             } catch {
                 fatalError("Can't unarchive ARWorldMap from file data: \(error)")
             }
@@ -638,12 +635,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     @IBAction func handleTapGesture(_ sender: UITapGestureRecognizer) {
         if(currentState == ScribbleState.editing) {
             let location = sender.location(in: sceneView)
-            let hits = sceneView.hitTest(location, options: nil)
+            let hits = sceneView.hitTest(location, options: [SCNHitTestOption.searchMode: 1])
             
-            if !hits.isEmpty {
-                print("Tap detected: \(hits.count) objects hit")
+            let scribbleNodes = hits.filter { $0.node.name == "scribble" }
+            
+            if !scribbleNodes.isEmpty {
+                print("Tap detected: \(hits.count) scribbles hit")
                 
-                if let node = hits.first?.node, node.name == "scribble" {
+                if let node = scribbleNodes.first?.node {
                     // Make a new preview node from selected node
                     let copy = node.copy() as! SCNNode
                     makePreviewNode(copy)

@@ -123,7 +123,6 @@ class DrawingSceneColors: SKScene {
         // adding to path:
         previewPath.addLine(to: location)
         previewNode.path = previewPath.copy()
-        print(previewNode.path === previewPath)
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
