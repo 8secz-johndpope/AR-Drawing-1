@@ -6,12 +6,12 @@ import PDColorPicker
 
 class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDelegate, Dimmable {
 
+    // Mark: Properties
+    
     @IBOutlet var sceneView: ARSCNView!
     @IBOutlet weak var drawingSceneView: SKView!
     @IBOutlet weak var infoLabel: UILabel!
     @IBOutlet weak var debugLabel: UILabel!
-    @IBOutlet var pinchGesture: UIPinchGestureRecognizer!
-    @IBOutlet var rotationGesture: UIRotationGestureRecognizer!
     @IBOutlet weak var sidebar: UIView!
     @IBOutlet weak var snapShotImage: UIImageView!
     
@@ -24,6 +24,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var loadButton: UIButton!
     
+    @IBOutlet var pinchGesture: UIPinchGestureRecognizer!
+    @IBOutlet var rotationGesture: UIRotationGestureRecognizer!
+    
     let defaultDistance = CGFloat(1.0)      // place scribble at ...m when no featurepoints or planes are detected
     
     enum ScribbleState {
@@ -33,23 +36,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     }
     var currentState = ScribbleState.drawing
     
-    var planes = [ARPlaneAnchor: Plane]()
-    var previewNode: SCNNode?
-    var scribbles = [SCNNode]()
-    var scribbleCounter: Int = 0
+    var planes = [ARPlaneAnchor: Plane]()   // to store auto detected planes
+    var previewNode: SCNNode?               // to preview where the scribble will be placed
     
-    var lastScaleFactor: CGFloat = 1.0
+    var lastScaleFactor: CGFloat = 1.0      // for scale and rotation gestures
     var scaleFactor: CGFloat = 1.0
     var lastRotation: CGFloat = 0.0
     var rotation: CGFloat = 0.0
     
-    var brushSizeSlider: UISlider?
+    var brushSizeSlider: UISlider?          // slider to change brush size
+    var selected: SCNNode?                  // selected node in editing state
+    var drawingScene: DrawingSceneColors?   // drawing scene, shown as transparant overlay
     
-    var selected: SCNNode?
-    
-    var drawingScene: DrawingSceneColors?
-    
-    var worldMapURL: URL = {
+    var worldMapURL: URL = {                // URL to archive ARWorldMap
         do {
             return try FileManager.default
                 .url(for: .documentDirectory,
@@ -62,12 +61,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         }
     }()
     
-    var defaultConfiguration: ARWorldTrackingConfiguration {
+    var defaultConfiguration: ARWorldTrackingConfiguration {        // Default ARWorldTrackingConfiguration
         let configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = [.horizontal, .vertical]
         configuration.environmentTexturing = .automatic
         return configuration
     }
+    
     
     
     //MARK: View Life Cycle Methods
@@ -82,12 +82,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         let scene = SCNScene()
         sceneView.scene = scene
         
-        
-        /*      BAD_ACCESS error originates from drawing on the overlay scene
+        /*      BAD_ACCESS error originates from drawing on the overlaySKScene
          
-        // Set the drawing scene as the overlaying scene
         let drawingScene = DrawingSceneColors(size: sceneView.frame.size)
         sceneView.overlaySKScene = drawingScene
+        
         */
         
         self.drawingScene = DrawingSceneColors(size: sceneView.frame.size)
@@ -112,20 +111,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     }
 
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
         setState(ScribbleState.drawing)
     }
     
 
     
-    // MARK: - ARSCNViewDelegate
+    // MARK: ARSCNViewDelegate
     
-    /// - Tag: PlaceARContent
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         // new plane detected
         if let planeAnchor = anchor as? ARPlaneAnchor {
             self.addPlane(node: node, anchor: planeAnchor)
         }
-                
+        
+        // new ScribbleAnchor placed
         if let scribbleAnchor = anchor as? ScribbleAnchor {
             print("Scribble ARAnchor placed at: \(anchor.transform)")
             scribbleAnchor.node.simdTransform = matrix_identity_float4x4
@@ -133,31 +134,25 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         }
     }
     
-    /// - Tag: UpdateARContent
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-        // existing plane update
+        // existing plane updated
         if let planeAnchor = anchor as? ARPlaneAnchor {
             self.updatePlane(anchor: planeAnchor)
         }
     }
     
-    /// - TAG: UpdateFrame
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-        
-        // Enable Save button only when the mapping status is good and an object has been placed
+        // enable Save button only when the mapping status is good and an object has been placed
         if let frame = sceneView.session.currentFrame {
-            var enableSaveButton = false
-            if frame.worldMappingStatus == .extending || frame.worldMappingStatus == .mapped {
-                enableSaveButton = true
-            }
+            let enableSaveButton = (frame.worldMappingStatus == .extending || frame.worldMappingStatus == .mapped)
             
             DispatchQueue.main.async {
                 self.saveButton.isEnabled = enableSaveButton
             }
         }
-            
+        
+        // update position of preview node
         if(currentState == ScribbleState.placing && previewNode != nil) {
-            
             for (_, plane) in planes {
                 plane.setColor(UIColor.green)
             }
@@ -191,32 +186,25 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
                 self.previewNode?.simdTransform = (target?.worldTransform)!
                 let rotation = float4x4(simd_quatf(angle: Float.pi / 2, axis: float3(1, 0, 0)))
                 self.previewNode?.simdTransform *= rotation
-            
-                // print(anchor.transform)
-                //let a = getRotation(anchor.transform).x
-                //let b = Float((sceneView.pointOfView?.eulerAngles.y)!)
-                
-                //self.rotation = CGFloat(-a)
                 
             case ARHitTestResult.ResultType.featurePoint:
                 setDebugText("hitting feature point  \(distance)m")
-                
                 self.previewNode?.simdTransform = transform
                 
             default:
                 setDebugText("hitting nothing \(distance)m")
-                
                 self.previewNode?.simdTransform = transform
             }
             
+            // scale gesture
             self.previewNode?.scale = SCNVector3(self.scaleFactor, self.scaleFactor, self.scaleFactor)
             
+            // rotation gesture
             let rotation = float4x4(simd_quatf(angle: Float(self.rotation), axis: float3(0, 0, 1)))
             self.previewNode?.simdTransform *= rotation
-            
-            
         }
     }
+    
     
     
     // MARK: ARSessionObserver
@@ -259,18 +247,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     
     
     
-    
-    //MARK: Private Functions
+    //MARK: Functions
     
     private func hitTestFromCenter() -> [ARHitTestResult] {
         let results = sceneView.hitTest(sceneView.center, types: [.existingPlaneUsingExtent, .featurePoint])
         return results
-    }
-    
-    private func clearWorld() {
-        for scribble in scribbles {
-            scribble.removeFromParentNode()
-        }
     }
 
     private func addPlane(node: SCNNode, anchor: ARPlaneAnchor) {
@@ -292,7 +273,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         
         let camTransform = sceneView.pointOfView?.simdTransform
         var transform = simd_mul(camTransform!, translation)
-                
+        
         return transform
     }
     
@@ -316,7 +297,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         previewNode = node
     }
     
-    func setState(_ state: ScribbleState) {
+    private func setState(_ state: ScribbleState) {
         if(state == ScribbleState.drawing) {
             setInfoText("Draw something on the screen, press + when you're done")
             self.drawingSceneView?.isHidden = false
@@ -365,7 +346,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         }
     }
     
-    func toggleBrushSizeSlider() {
+    private func toggleBrushSizeSlider() {
         guard let slider = brushSizeSlider else { return }
         
         let hidden = slider.isHidden
@@ -378,19 +359,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         //UIView.transition(with: slider, duration: 0.5, options: .transitionCrossDissolve, animations: {slider.isHidden})
     }
     
-    func hideBrushSizeSlider() {
+    private func hideBrushSizeSlider() {
         guard let slider = brushSizeSlider else { return }
         UIView.animate(withDuration: 0.3, animations: { slider.alpha = 0 }, completion: { (finished) in slider.isHidden = finished })
     }
     
-    func showBrushSizeSlider() {
+    private func showBrushSizeSlider() {
         guard let slider = brushSizeSlider else { return }
         slider.alpha = 0
         slider.isHidden = false
         UIView.animate(withDuration: 0.3, animations: { slider.alpha = 1 })
     }
     
-    func resizeBrushSizeSliderImage() {
+    private func resizeBrushSizeSliderImage() {
         let ratio = CGFloat((self.brushSizeSlider?.value ?? 5.0) + 10.0)
         let thumbImage = UIImage(named: "black-dot")!
         let size = CGSize(width: ratio, height: ratio)
@@ -398,7 +379,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         self.brushSizeSlider?.setThumbImage(ResizeImage(image: thumbImage, targetSize: size), for: .highlighted)
     }
     
-    func toggleSideBar(visible: Bool) {
+    private func toggleSideBar(visible: Bool) {
         if visible == false {
             //sidebar.isHidden = true
             hideBrushSizeSlider()
@@ -420,7 +401,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     //MARK: Actions
     
     @IBAction func clickedAddButton(_ sender: UIButton) {
-        
         if(currentState == ScribbleState.drawing) {
             // make preview node from screen scribble
             if let drawingScene = self.drawingScene {
@@ -429,25 +409,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
                     return
                 }
                 
-                /*  attempt at doing it with SCNShape
- 
-                let path = UIBezierPath(cgPath: drawingScene.path)
-                let shape = SCNShape(path: path, extrusionDepth: 0.5)
-                let node = SCNNode(geometry: shape)
-                node.scale = SCNVector3(0.1, 0.1, 0.1)
-                node.geometry?.firstMaterial?.diffuse.contents = UIColor.red
-                node.geometry?.firstMaterial?.isDoubleSided = true
-                
-                */
-                
                 let heightToWidthRatio = view.frame.size.height / view.frame.size.width
                 let width: CGFloat = 0.30   // 30 cm wide
                 let height = width * heightToWidthRatio
                 let plane = SCNPlane(width: width, height: height)
-                
-                // copy is necessary
-                //let scene = self.drawingScene?.copy() as! SKScene
-                //plane.firstMaterial?.diffuse.contents = scene
                 
                 let image = self.drawingScene?.getSnapShot()
                 plane.firstMaterial?.diffuse.contents = image
@@ -473,75 +438,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         }
     }
     
-    
-    @IBAction func hitTestBtnPressed(_ sender: UIButton) {
-        let results = hitTestFromCenter()
-        
-        print("Hit test found \(results.count) results")
-        for result in results {
-            print("\(result.distance)m away from camera")
-            print(result)
-        }
-        print("-------------")
-    }
-    
-    @IBAction func clearBtnPressed(_ sender: UIButton) {
-        print("Clear btn pressed")
-        clearWorld()
-    }
-    
-    
-    @IBAction func handePinchGesture(_ sender: UIPinchGestureRecognizer) {
-        if(sender.state == .began || sender.state == .changed) {
-            self.scaleFactor = self.lastScaleFactor * sender.scale
-        }
-        else if(sender.state == .ended) {
-            self.lastScaleFactor = self.scaleFactor
-        }
-    }
-    
-    
-    @IBAction func handleRotationGesture(_ sender: UIRotationGestureRecognizer) {
-        if(sender.state == .began || sender.state == .changed) {
-            self.rotation = self.lastRotation + sender.rotation
-        }
-        else if(sender.state == .ended) {
-            self.lastRotation = self.rotation
-        }
-    }
-    
-    
-    @IBAction func handleTapGesture(_ sender: UITapGestureRecognizer) {
-        
-        if(currentState == ScribbleState.editing) {
-            let location = sender.location(in: sceneView)
-            let hits = sceneView.hitTest(location, options: nil)
-            
-            if !hits.isEmpty {
-                print("Tap detected: \(hits.count) objects hit")
-                
-                if let node = hits.first?.node, node.name == "scribble" {
-                    // Make a new preview node from selected node
-                    let copy = node.copy() as! SCNNode
-                    makePreviewNode(copy)
-                    
-                    // remove selected node along with its anchor
-                    // the new node gets it anchor after replacement
-                    sceneView.session.remove(anchor: sceneView.anchor(for: node)!)
-                    setState(ScribbleState.placing)
-                }
-            }
-        }
-    }
-    
-    
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return (gestureRecognizer is UIPinchGestureRecognizer && otherGestureRecognizer is UIRotationGestureRecognizer) ||
-        (gestureRecognizer is UIRotationGestureRecognizer && otherGestureRecognizer is UIPinchGestureRecognizer)
-    }
-    
     @IBAction func clickedColorButton(_ sender: UIButton) {
-        print("select color")
         hideBrushSizeSlider()
         
         let picker = PDColorPickerViewController(initialColor: .red, tintColor: .black)
@@ -567,9 +464,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     
     
     @IBAction func clickedBrushSizeButton(_ sender: UIButton) {
-        print("brush size button clicked")
-        
-        
         if(brushSizeSlider == nil) {
             // instantiatie new slider
             let btnRect = sender.convert(sender.bounds, to: self.view)
@@ -581,12 +475,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
             slider.addTarget(self, action: #selector(ViewController.brushSliderValueChanged(_:)), for: .valueChanged)
             slider.thumbTintColor = UIColor.black
             slider.isHidden = true
-            
             slider.value = Float((self.drawingScene?.lineWidth)!)
             
+            // vertical slider
             slider.transform = CGAffineTransform(rotationAngle: CGFloat.pi/2)
-            
-            slider.value = Float(self.drawingScene?.lineWidth ?? 5.0)
             
             self.view.addSubview(slider)
             self.brushSizeSlider = slider
@@ -598,10 +490,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     }    
     
     @objc func brushSliderValueChanged(_ sender: UISlider) {
-        print("slider value changed: \(sender.value)")
-        
         resizeBrushSizeSliderImage()
-        
         self.drawingScene?.lineWidth = CGFloat(sender.value)
     }
     
@@ -651,6 +540,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         }
     }
     
+    // Persisitence
+    
     func saveWorldMap(_ worldMap: ARWorldMap, to url: URL) throws {
         let data = try NSKeyedArchiver.archivedData(withRootObject: worldMap, requiringSecureCoding: true)
         try data.write(to: url, options: [.atomic])
@@ -665,7 +556,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     }
     
     @IBAction func clickedSaveButton(_ sender: UIButton) {
-        
         sceneView.session.getCurrentWorldMap { (worldMap, error) in
             guard let map = worldMap else {
                 print("Cannot get current world map \(error!.localizedDescription)")
@@ -695,7 +585,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     }
     
     @IBAction func clickedLoadButton(_ sender: UIButton) {
-        
         // load worldmap
         let worldMap: ARWorldMap = {
             do {
@@ -723,5 +612,54 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         let configuration = self.defaultConfiguration
         configuration.initialWorldMap = worldMap
         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+    }
+    
+    
+    // Gestures
+    
+    @IBAction func handePinchGesture(_ sender: UIPinchGestureRecognizer) {
+        if(sender.state == .began || sender.state == .changed) {
+            self.scaleFactor = self.lastScaleFactor * sender.scale
+        }
+        else if(sender.state == .ended) {
+            self.lastScaleFactor = self.scaleFactor
+        }
+    }
+    
+    @IBAction func handleRotationGesture(_ sender: UIRotationGestureRecognizer) {
+        if(sender.state == .began || sender.state == .changed) {
+            self.rotation = self.lastRotation + sender.rotation
+        }
+        else if(sender.state == .ended) {
+            self.lastRotation = self.rotation
+        }
+    }
+    
+    @IBAction func handleTapGesture(_ sender: UITapGestureRecognizer) {
+        if(currentState == ScribbleState.editing) {
+            let location = sender.location(in: sceneView)
+            let hits = sceneView.hitTest(location, options: nil)
+            
+            if !hits.isEmpty {
+                print("Tap detected: \(hits.count) objects hit")
+                
+                if let node = hits.first?.node, node.name == "scribble" {
+                    // Make a new preview node from selected node
+                    let copy = node.copy() as! SCNNode
+                    makePreviewNode(copy)
+                    
+                    // remove selected node along with its anchor
+                    // the new node gets it anchor after replacement
+                    sceneView.session.remove(anchor: sceneView.anchor(for: node)!)
+                    setState(ScribbleState.placing)
+                }
+            }
+        }
+    }
+    
+    // Simultaneous recognition for rotation and scale gestures
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return (gestureRecognizer is UIPinchGestureRecognizer && otherGestureRecognizer is UIRotationGestureRecognizer) ||
+            (gestureRecognizer is UIRotationGestureRecognizer && otherGestureRecognizer is UIPinchGestureRecognizer)
     }
 }

@@ -19,7 +19,7 @@ class DrawingSceneColors: SKScene {
         }
     }
     
-    var paths = [CGMutablePath]()
+    private var paths = [CGMutablePath]()
     private var previewNodes = [SKShapeNode]()
     
     private var previewNode: SKShapeNode
@@ -94,7 +94,7 @@ class DrawingSceneColors: SKScene {
     func getSnapShot() -> UIImage {
         UIGraphicsBeginImageContext(self.view!.bounds.size)
         self.view!.drawHierarchy(in: self.view!.bounds, afterScreenUpdates: true)
-        var image: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+        let image: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         
         return image
