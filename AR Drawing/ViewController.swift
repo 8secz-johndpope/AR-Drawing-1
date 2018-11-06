@@ -71,13 +71,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         return configuration
     }
     
-    var detectionImages: Set<ARReferenceImage> {
+    var detectionImages: Set<ARReferenceImage> {                    // Images to detect and track
         guard let images = ARReferenceImage.referenceImages(inGroupNamed: "DetectionImages", bundle: nil) else {
             fatalError("Detection Images could not be loaded")
         }
         return images
     }
     
+    var attachToImagePlane: SCNNode?            // to attach scriblle to a tracked detection image plane
     
     //MARK: View Life Cycle Methods
     
@@ -181,13 +182,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
             for(_, plane) in imagePlanes {
                 plane.geometry?.firstMaterial?.diffuse.contents = UIColor.red.withAlphaComponent(0.5)
             }
+            attachToImagePlane = nil
             
             let detectionImageNode = hitTestDetectionImage()
             if let imagePlane = detectionImageNode {
                 setDebugText("Detection Image plane hit")
                 imagePlane.geometry?.firstMaterial?.diffuse.contents = UIColor.cyan.withAlphaComponent(0.5)
                 self.previewNode?.simdTransform = sceneView.anchor(for: imagePlane)!.transform
-                self.previewNode?.simdTransform *= float4x4(simd_quatf(angle: Float.pi / 2, axis: float3(1,0,0)))
+                self.previewNode?.simdTransform *= float4x4(simd_quatf(angle: -Float.pi / 2, axis: float3(1,0,0)))
+                attachToImagePlane = imagePlane
             }
             else {
             
@@ -471,11 +474,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
             }
         }
         else if(currentState == ScribbleState.placing) {
-            // create an ARAnchor at the transform of the previewNode
-            // in 'func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor)' a node gets associated with this anchor
-            let anchor = ScribbleAnchor(scribble: previewNode!, transform: previewNode!.simdTransform)
-            sceneView.session.add(anchor: anchor)
-            
+            if let attachedTo = attachToImagePlane {
+                // attach SCNNode to the Plane associated with the ARImageAnchor
+                attachedTo.addChildNode(previewNode!)
+                
+                // transform here is relative to parent, transform of the preview node is relative to the world
+                previewNode?.simdTransform = matrix_identity_float4x4
+                previewNode?.simdTransform *= float4x4(simd_quatf(angle: Float.pi, axis: float3(1,0,0)))
+                previewNode?.scale = SCNVector3(self.scaleFactor, self.scaleFactor, self.scaleFactor)
+                previewNode?.simdTransform *= float4x4(simd_quatf(angle: Float(-self.rotation), axis: float3(0,0,1)))
+            }
+            else {
+                // create an ARAnchor at the transform of the previewNode
+                // in 'func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor)' a node gets associated with this anchor
+                let anchor = ScribbleAnchor(scribble: previewNode!, transform: previewNode!.simdTransform)
+                sceneView.session.add(anchor: anchor)
+            }
             setState(ScribbleState.drawing)
         }
         else if(currentState == ScribbleState.editing) {
@@ -484,9 +498,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     }
     
     @IBAction func clickedColorButton(_ sender: UIButton) {
+        guard let initColor = drawingScene?.lineColor else { return }
         hideBrushSizeSlider()
-        
-        let picker = PDColorPickerViewController(initialColor: .red, tintColor: .black)
+        let picker = PDColorPickerViewController(initialColor: initColor, tintColor: .black)
         picker.completion = {
             [weak self] newColor in
             
@@ -694,7 +708,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
                     
                     // remove selected node along with its anchor
                     // the new node gets it anchor after replacement
-                    sceneView.session.remove(anchor: sceneView.anchor(for: node)!)
+                    if let anchorForNode = sceneView.anchor(for: node) {
+                        sceneView.session.remove(anchor: anchorForNode)
+                    }
+                    
+                    if node.parent?.name == "detection_image_plane" {
+                        node.removeFromParentNode()
+                    }
                     setState(ScribbleState.placing)
                 }
             }
