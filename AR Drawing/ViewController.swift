@@ -27,28 +27,29 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     @IBOutlet var pinchGesture: UIPinchGestureRecognizer!
     @IBOutlet var rotationGesture: UIRotationGestureRecognizer!
     
-    let defaultDistance = CGFloat(1.0)      // place scribble at ...m when no featurepoints or planes are detected
+    let defaultDistance = CGFloat(1.0)          // place scribble at ...m when no featurepoints or planes are detected
     
     enum ScribbleState {
-        case drawing                        // first user draws a scribble on the screen
-        case placing                        // then the scribble gets placed in the AR world
-        case editing                        // looking around and selecting scribbles to be edited
+        case drawing                            // first user draws a scribble on the screen
+        case placing                            // then the scribble gets placed in the AR world
+        case editing                            // looking around and selecting scribbles to be edited
     }
     var currentState = ScribbleState.drawing
     
-    var planes = [ARPlaneAnchor: Plane]()   // to store auto detected planes
-    var previewNode: SCNNode?               // to preview where the scribble will be placed
+    var planes = [ARPlaneAnchor: Plane]()       // to store auto detected planes
+    var previewNode: SCNNode?                   // to preview where the scribble will be placed
+    var imagePlanes = [ARImageAnchor: SCNNode]()  // to store planes associated with detected images
     
-    var lastScaleFactor: CGFloat = 1.0      // for scale and rotation gestures
+    var lastScaleFactor: CGFloat = 1.0          // for scale and rotation gestures
     var scaleFactor: CGFloat = 1.0
     var lastRotation: CGFloat = 0.0
     var rotation: CGFloat = 0.0
     
-    var brushSizeSlider: UISlider?          // slider to change brush size
-    var selected: SCNNode?                  // selected node in editing state
-    var drawingScene: DrawingSceneColors?   // drawing scene, shown as transparant overlay
+    var brushSizeSlider: UISlider?              // slider to change brush size
+    var selected: SCNNode?                      // selected node in editing state
+    var drawingScene: DrawingSceneColors?       // drawing scene, shown as transparant overlay
     
-    var worldMapURL: URL = {                // URL to archive ARWorldMap
+    var worldMapURL: URL = {                    // URL to archive ARWorldMap
         do {
             return try FileManager.default
                 .url(for: .documentDirectory,
@@ -65,9 +66,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         let configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = [.horizontal, .vertical]
         configuration.environmentTexturing = .automatic
+        configuration.detectionImages = self.detectionImages
+        configuration.maximumNumberOfTrackedImages = 1
         return configuration
     }
     
+    var detectionImages: Set<ARReferenceImage> {
+        guard let images = ARReferenceImage.referenceImages(inGroupNamed: "DetectionImages", bundle: nil) else {
+            fatalError("Detection Images could not be loaded")
+        }
+        return images
+    }
     
     
     //MARK: View Life Cycle Methods
@@ -126,6 +135,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
             self.addPlane(node: node, anchor: planeAnchor)
         }
         
+        // new image detected
+        if let imageAnchor = anchor as? ARImageAnchor {
+            print("Detection Image detected")
+            let size = imageAnchor.referenceImage.physicalSize
+            let plane = SCNNode(geometry: SCNPlane(width: size.width, height: size.height))
+            plane.geometry?.firstMaterial?.diffuse.contents = UIColor.red.withAlphaComponent(0.5)
+            plane.geometry?.firstMaterial?.isDoubleSided = true
+            plane.simdTransform *= float4x4(simd_quatf(angle: Float.pi / 2, axis: float3(1,0,0)))
+            plane.name = "detection_image_plane"
+            node.addChildNode(plane)
+            self.imagePlanes[imageAnchor] = plane
+        }
+        
         // new ScribbleAnchor placed
         if let scribbleAnchor = anchor as? ScribbleAnchor {
             print("Scribble ARAnchor placed at: \(anchor.transform)")
@@ -156,44 +178,57 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
             for (_, plane) in planes {
                 plane.setColor(UIColor.green)
             }
-            
-            let results = hitTestFromCenter()
-            var target: ARHitTestResult? = nil
-            
-            // look for first plane detected in results
-            // if no planes are detected take the first featurepoint
-            for result in results {
-                if result.type == ARHitTestResult.ResultType.existingPlaneUsingExtent {
-                    target = result
-                    break // select closest plane as target
-                }
-                else if result.type == ARHitTestResult.ResultType.featurePoint {
-                    if target == nil { // no plane or closer feature point selected as target
-                        target = result
-                    }
-                }
+            for(_, plane) in imagePlanes {
+                plane.geometry?.firstMaterial?.diffuse.contents = UIColor.red.withAlphaComponent(0.5)
             }
             
-            let distance = results.first?.distance ?? defaultDistance
-            let transform = getTransformInFrontOfCamera(Float(distance))
+            let detectionImageNode = hitTestDetectionImage()
+            if let imagePlane = detectionImageNode {
+                setDebugText("Detection Image plane hit")
+                imagePlane.geometry?.firstMaterial?.diffuse.contents = UIColor.cyan.withAlphaComponent(0.5)
+                self.previewNode?.simdTransform = sceneView.anchor(for: imagePlane)!.transform
+                self.previewNode?.simdTransform *= float4x4(simd_quatf(angle: Float.pi / 2, axis: float3(1,0,0)))
+            }
+            else {
             
-            switch target?.type {
-            case ARHitTestResult.ResultType.existingPlaneUsingExtent:
-                guard let anchor = target?.anchor as? ARPlaneAnchor else { return }
+                let results = hitTestFromCenter()
+                var target: ARHitTestResult? = nil
                 
-                setDebugText("hitting plane")
-                self.planes[anchor]?.setColor(UIColor.blue)
-                self.previewNode?.simdTransform = (target?.worldTransform)!
-                let rotation = float4x4(simd_quatf(angle: -Float.pi / 2, axis: float3(1, 0, 0)))
-                self.previewNode?.simdTransform *= rotation
+                // look for first plane detected in results
+                // if no planes are detected take the first featurepoint
+                for result in results {
+                    if result.type == ARHitTestResult.ResultType.existingPlaneUsingExtent {
+                        target = result
+                        break // select closest plane as target
+                    }
+                    else if result.type == ARHitTestResult.ResultType.featurePoint {
+                        if target == nil { // no plane or closer feature point selected as target
+                            target = result
+                        }
+                    }
+                }
                 
-            case ARHitTestResult.ResultType.featurePoint:
-                setDebugText("hitting feature point  \(distance)m")
-                self.previewNode?.simdTransform = transform
+                let distance = results.first?.distance ?? defaultDistance
+                let transform = getTransformInFrontOfCamera(Float(distance))
                 
-            default:
-                setDebugText("hitting nothing \(distance)m")
-                self.previewNode?.simdTransform = transform
+                switch target?.type {
+                case ARHitTestResult.ResultType.existingPlaneUsingExtent:
+                    guard let anchor = target?.anchor as? ARPlaneAnchor else { return }
+                    
+                    setDebugText("hitting plane")
+                    self.planes[anchor]?.setColor(UIColor.blue)
+                    self.previewNode?.simdTransform = (target?.worldTransform)!
+                    let rotation = float4x4(simd_quatf(angle: -Float.pi / 2, axis: float3(1, 0, 0)))
+                    self.previewNode?.simdTransform *= rotation
+                    
+                case ARHitTestResult.ResultType.featurePoint:
+                    setDebugText("hitting feature point  \(distance)m")
+                    self.previewNode?.simdTransform = transform
+                    
+                default:
+                    setDebugText("hitting nothing \(distance)m")
+                    self.previewNode?.simdTransform = transform
+                }
             }
             
             // scale gesture
@@ -252,6 +287,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     private func hitTestFromCenter() -> [ARHitTestResult] {
         let results = sceneView.hitTest(sceneView.center, types: [.existingPlaneUsingExtent, .featurePoint])
         return results
+    }
+    
+    private func hitTestDetectionImage() -> SCNNode? {
+        let results = sceneView.hitTest(sceneView.center, options: [SCNHitTestOption.searchMode: SCNHitTestSearchMode.all.rawValue])
+        let imagePlanes = results.filter { $0.node.name == "detection_image_plane" }
+        print("image planes hit: \(imagePlanes.count)")
+        if let plane = imagePlanes.first?.node {
+            return plane
+        }
+        return nil
     }
 
     private func addPlane(node: SCNNode, anchor: ARPlaneAnchor) {
@@ -635,7 +680,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     @IBAction func handleTapGesture(_ sender: UITapGestureRecognizer) {
         if(currentState == ScribbleState.editing) {
             let location = sender.location(in: sceneView)
-            let hits = sceneView.hitTest(location, options: [SCNHitTestOption.searchMode: 1])
+            let hits = sceneView.hitTest(location, options: [SCNHitTestOption.searchMode: SCNHitTestSearchMode.all.rawValue])
             
             let scribbleNodes = hits.filter { $0.node.name == "scribble" }
             
