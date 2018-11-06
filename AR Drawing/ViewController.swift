@@ -145,6 +145,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
             plane.geometry?.firstMaterial?.isDoubleSided = true
             plane.simdTransform *= float4x4(simd_quatf(angle: Float.pi / 2, axis: float3(1,0,0)))
             plane.name = "detection_image_plane"
+            plane.renderingOrder = -5
             node.addChildNode(plane)
             self.imagePlanes[imageAnchor] = plane
         }
