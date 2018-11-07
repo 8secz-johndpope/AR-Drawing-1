@@ -4,6 +4,15 @@ import SpriteKit
 import ARKit
 import PDColorPicker
 
+
+extension UIColor {
+    static let planeColor = UIColor.green
+    static let planeColorHover = UIColor.blue
+    static let imagePlaneColor = UIColor.red.withAlphaComponent(0.3)
+    static let imagePlaneColorHover = UIColor.blue.withAlphaComponent(0.3)
+}
+
+
 class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDelegate, Dimmable {
 
     // Mark: Properties
@@ -141,7 +150,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
             print("Detection Image detected")
             let size = imageAnchor.referenceImage.physicalSize
             let plane = SCNNode(geometry: SCNPlane(width: size.width, height: size.height))
-            plane.geometry?.firstMaterial?.diffuse.contents = UIColor.red.withAlphaComponent(0.5)
+            plane.geometry?.firstMaterial?.diffuse.contents = UIColor.imagePlaneColor
             plane.geometry?.firstMaterial?.isDoubleSided = true
             plane.simdTransform *= float4x4(simd_quatf(angle: Float.pi / 2, axis: float3(1,0,0)))
             plane.name = "detection_image_plane"
@@ -178,19 +187,25 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         // update position of preview node
         if(currentState == ScribbleState.placing && previewNode != nil) {
             for (_, plane) in planes {
-                plane.setColor(UIColor.green)
+                plane.setColor(UIColor.planeColor)
             }
             for(_, plane) in imagePlanes {
-                plane.geometry?.firstMaterial?.diffuse.contents = UIColor.red.withAlphaComponent(0.5)
+                plane.geometry?.firstMaterial?.diffuse.contents = UIColor.imagePlaneColor
             }
             attachToImagePlane = nil
             
             let detectionImageNode = hitTestDetectionImage()
             if let imagePlane = detectionImageNode {
                 setDebugText("Detection Image plane hit")
-                imagePlane.geometry?.firstMaterial?.diffuse.contents = UIColor.cyan.withAlphaComponent(0.5)
+                imagePlane.geometry?.firstMaterial?.diffuse.contents = UIColor.imagePlaneColorHover
                 self.previewNode?.simdTransform = sceneView.anchor(for: imagePlane)!.transform
                 self.previewNode?.simdTransform *= float4x4(simd_quatf(angle: -Float.pi / 2, axis: float3(1,0,0)))
+                
+                var translation = matrix_identity_float4x4
+                translation.columns.3.z = -0.001
+                
+                self.previewNode?.simdTransform *= translation
+                
                 attachToImagePlane = imagePlane
             }
             else {
@@ -220,7 +235,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
                     guard let anchor = target?.anchor as? ARPlaneAnchor else { return }
                     
                     setDebugText("hitting plane")
-                    self.planes[anchor]?.setColor(UIColor.blue)
+                    self.planes[anchor]?.setColor(UIColor.planeColorHover)
                     self.previewNode?.simdTransform = (target?.worldTransform)!
                     let rotation = float4x4(simd_quatf(angle: -Float.pi / 2, axis: float3(1, 0, 0)))
                     self.previewNode?.simdTransform *= rotation
@@ -304,7 +319,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     }
 
     private func addPlane(node: SCNNode, anchor: ARPlaneAnchor) {
-        let plane = Plane(anchor)
+        let plane = Plane(anchor, in: sceneView)
         node.addChildNode(plane)
         planes[anchor] = plane
         print(planes)

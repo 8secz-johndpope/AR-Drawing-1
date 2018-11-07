@@ -6,6 +6,12 @@
   "resources" : [
     {
       "filename" : "dominos.arreferenceimage"
+    },
+    {
+      "filename" : "kinepolis.arreferenceimage"
+    },
+    {
+      "filename" : "qustomer.arreferenceimage"
     }
   ]
 }

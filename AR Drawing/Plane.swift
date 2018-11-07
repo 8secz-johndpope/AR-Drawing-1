@@ -3,29 +3,53 @@ import SceneKit
 import ARKit
 
 class Plane: SCNNode {
-    let transparancy: CGFloat = 0.5
+    
+    let meshOpacity: CGFloat = 0.3
+    let extentOpacity: CGFloat = 0.6
     
     var planeAnchor: ARPlaneAnchor
-    var planeGeometry: ARSCNPlaneGeometry
-    var planeNode: SCNNode
+    var meshNode: SCNNode
+    var extentNode: SCNNode
     
-    init(_ anchor: ARPlaneAnchor) {
+    init(_ anchor: ARPlaneAnchor, in sceneView: ARSCNView) {
         
         self.planeAnchor = anchor
-        //self.planeGeometry = SCNPlane(width: CGFloat(anchor.extent.x), height: CGFloat(anchor.extent.z))
-        self.planeGeometry = ARSCNPlaneGeometry(device: MTLCreateSystemDefaultDevice()!)!
-        self.planeGeometry.update(from: anchor.geometry)
-        self.planeGeometry.firstMaterial?.diffuse.contents = UIColor.green.withAlphaComponent(transparancy)
-        self.planeGeometry.firstMaterial?.isDoubleSided = true
         
-        self.planeNode = SCNNode(geometry: self.planeGeometry)
-        //self.planeNode.transform = SCNMatrix4MakeRotation(-Float.pi / 2.0, 1, 0, 0)
+        // mesh to visualize estimated borders of plane
+        guard let geometry = ARSCNPlaneGeometry(device: sceneView.device!) else {
+            fatalError("Cannot create plane geometry")
+        }
+        geometry.update(from: anchor.geometry)
+        self.meshNode = SCNNode(geometry: geometry)
+        self.meshNode.geometry?.firstMaterial?.isDoubleSided = true
+        self.meshNode.opacity = 0.3
+        self.meshNode.geometry?.firstMaterial?.diffuse.contents = UIColor.planeColor
         
+        // node to visualize the plane's bounding rectangle.
+        let extentPlane: SCNPlane = SCNPlane(width: CGFloat(anchor.extent.x), height: CGFloat(anchor.extent.z))
+        self.extentNode = SCNNode(geometry: extentPlane)
+        self.extentNode.simdPosition = anchor.center
+        self.extentNode.opacity = 0.6
+        self.extentNode.geometry?.firstMaterial?.diffuse.contents = UIColor.planeColor
+        
+        // Use a SceneKit shader modifier to render only the borders of the plane.
+        guard let path = Bundle.main.path(forResource: "wireframe_shader", ofType: "metal", inDirectory: "Assets.scnassets")
+            else { fatalError("Can't find wireframe shader") }
+        do {
+            let shader = try String(contentsOfFile: path, encoding: .utf8)
+            self.extentNode.geometry?.firstMaterial!.shaderModifiers = [.surface: shader]
+        } catch {
+            fatalError("Can't load wireframe shader: \(error)")
+        }
+        
+        // `SCNPlane` is vertically oriented in its local coordinate space, so
+        // rotate it to match the orientation of `ARPlaneAnchor`.
+        self.extentNode.eulerAngles.x = -.pi / 2
+       
         super.init()
         
-        self.addChildNode(planeNode)
-        
-        self.position = SCNVector3(anchor.center.x, anchor.center.y, anchor.center.z)
+        self.addChildNode(self.meshNode)
+        self.addChildNode(self.extentNode)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -33,17 +57,20 @@ class Plane: SCNNode {
     }
     
     func update(_ anchor: ARPlaneAnchor) {
-        self.planeAnchor = anchor
-        //self.planeGeometry.width = CGFloat(anchor.extent.x)
-        //self.planeGeometry.height = CGFloat(anchor.extent.z)
+        if let planeGeometry = self.meshNode.geometry as? ARSCNPlaneGeometry {
+            planeGeometry.update(from: anchor.geometry)
+        }
         
-        self.planeGeometry.update(from: anchor.geometry)
-        
-        self.position = SCNVector3Make(anchor.center.x, anchor.center.y, anchor.center.z)
+        if let extendGeometry = self.extentNode.geometry as? SCNPlane {
+            extendGeometry.width = CGFloat(anchor.extent.x)
+            extendGeometry.height = CGFloat(anchor.extent.z)
+            self.extentNode.simdPosition = anchor.center
+        }
     }
     
     func setColor(_ color: UIColor) {
-        self.planeGeometry.materials.first?.diffuse.contents = color.withAlphaComponent(transparancy)
+        self.meshNode.geometry?.firstMaterial?.diffuse.contents = color
+        self.extentNode.geometry?.firstMaterial?.diffuse.contents = color
     }
     
 }
