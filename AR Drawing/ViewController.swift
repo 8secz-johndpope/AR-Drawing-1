@@ -172,7 +172,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         if let planeAnchor = anchor as? ARPlaneAnchor {
             self.updatePlane(anchor: planeAnchor)
         }
+        
+        if let imageAnchor = anchor as? ARImageAnchor {
+            if !imageAnchor.isTracked {
+                print("image anchor went out of screen")
+                self.imagePlanes[imageAnchor]?.isHidden = true
+            } else {
+                self.imagePlanes[imageAnchor]?.isHidden = false
+            }
+        }
     }
+
     
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         // enable Save button only when the mapping status is good and an object has been placed
@@ -311,7 +321,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     private func hitTestDetectionImage() -> SCNNode? {
         let results = sceneView.hitTest(sceneView.center, options: [SCNHitTestOption.searchMode: SCNHitTestSearchMode.all.rawValue])
         let imagePlanes = results.filter { $0.node.name == "detection_image_plane" }
-        print("image planes hit: \(imagePlanes.count)")
         if let plane = imagePlanes.first?.node {
             return plane
         }
@@ -499,6 +508,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
                 previewNode?.simdTransform *= float4x4(simd_quatf(angle: Float.pi, axis: float3(1,0,0)))
                 previewNode?.scale = SCNVector3(self.scaleFactor, self.scaleFactor, self.scaleFactor)
                 previewNode?.simdTransform *= float4x4(simd_quatf(angle: Float(-self.rotation), axis: float3(0,0,1)))
+                
+                var translation = matrix_identity_float4x4
+                translation.columns.3.z = -0.001
+                
+                previewNode?.simdTransform *= translation
             }
             else {
                 // create an ARAnchor at the transform of the previewNode
@@ -715,22 +729,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
             let scribbleNodes = hits.filter { $0.node.name == "scribble" }
             
             if !scribbleNodes.isEmpty {
-                print("Tap detected: \(hits.count) scribbles hit")
+                print("Tap detected: \(scribbleNodes.count) scribbles hit")
+                for scribble in scribbleNodes {
+                    print(scribble)
+                }
                 
                 if let node = scribbleNodes.first?.node {
                     // Make a new preview node from selected node
                     let copy = node.copy() as! SCNNode
                     makePreviewNode(copy)
                     
-                    // remove selected node along with its anchor
-                    // the new node gets it anchor after replacement
-                    if let anchorForNode = sceneView.anchor(for: node) {
-                        sceneView.session.remove(anchor: anchorForNode)
-                    }
+                    node.removeFromParentNode()
                     
-                    if node.parent?.name == "detection_image_plane" {
-                        node.removeFromParentNode()
-                    }
                     setState(ScribbleState.placing)
                 }
             }
