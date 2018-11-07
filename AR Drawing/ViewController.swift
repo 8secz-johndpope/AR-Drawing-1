@@ -35,6 +35,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     
     @IBOutlet var pinchGesture: UIPinchGestureRecognizer!
     @IBOutlet var rotationGesture: UIRotationGestureRecognizer!
+    @IBOutlet var panGesture: UIPanGestureRecognizer!
     
     let defaultDistance = CGFloat(1.0)          // place scribble at ...m when no featurepoints or planes are detected
     
@@ -53,6 +54,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     var scaleFactor: CGFloat = 1.0
     var lastRotation: CGFloat = 0.0
     var rotation: CGFloat = 0.0
+    var lastPanFactor: CGPoint = CGPoint(x: 0, y: 0)
+    var panFactor: CGPoint = CGPoint(x: 0, y: 0)
     
     var brushSizeSlider: UISlider?              // slider to change brush size
     var selected: SCNNode?                      // selected node in editing state
@@ -76,7 +79,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         configuration.planeDetection = [.horizontal, .vertical]
         configuration.environmentTexturing = .automatic
         configuration.detectionImages = self.detectionImages
-        configuration.maximumNumberOfTrackedImages = 1
+        configuration.maximumNumberOfTrackedImages = 3
         return configuration
     }
     
@@ -111,6 +114,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         self.drawingScene = DrawingSceneColors(size: sceneView.frame.size)
         drawingSceneView.presentScene(drawingScene)
         
+        panGesture.delegate = self
         pinchGesture.delegate = self
         rotationGesture.delegate = self
     }
@@ -205,17 +209,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
             attachToImagePlane = nil
             
             let detectionImageNode = hitTestDetectionImage()
-            if let imagePlane = detectionImageNode {
+            if let hit = detectionImageNode {
                 setDebugText("Detection Image plane hit")
+                let imagePlane = hit.node
                 imagePlane.geometry?.firstMaterial?.diffuse.contents = UIColor.imagePlaneColorHover
                 self.previewNode?.simdTransform = sceneView.anchor(for: imagePlane)!.transform
                 self.previewNode?.simdTransform *= float4x4(simd_quatf(angle: -Float.pi / 2, axis: float3(1,0,0)))
+            
+                // place scribble little bit in front of plane
+                var depthCorrection = matrix_identity_float4x4
+                depthCorrection.columns.3.z = -0.001
+                self.previewNode?.simdTransform *= depthCorrection
                 
-                var translation = matrix_identity_float4x4
-                translation.columns.3.z = -0.001
-                
-                self.previewNode?.simdTransform *= translation
-                
+                if let planeGeometry = imagePlane.geometry as? SCNPlane {
+                    print("Plane size: \(planeGeometry)")
+                    let pan = CGPoint(x: self.panFactor.x * planeGeometry.width, y: self.panFactor.y * planeGeometry.height)
+                    print("Pan: \(pan)")
+                    self.previewNode?.localTranslate(by: SCNVector3(pan.x, -pan.y, 0))
+                }
                 attachToImagePlane = imagePlane
             }
             else {
@@ -318,11 +329,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         return results
     }
     
-    private func hitTestDetectionImage() -> SCNNode? {
+    private func hitTestDetectionImage() -> SCNHitTestResult? {
         let results = sceneView.hitTest(sceneView.center, options: [SCNHitTestOption.searchMode: SCNHitTestSearchMode.all.rawValue])
         let imagePlanes = results.filter { $0.node.name == "detection_image_plane" }
-        if let plane = imagePlanes.first?.node {
-            return plane
+        if let hit = imagePlanes.first {
+            return hit
         }
         return nil
     }
@@ -379,8 +390,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
             
             currentState = ScribbleState.drawing
             debugLabel.isHidden = true
-            pinchGesture.isEnabled = false
-            rotationGesture.isEnabled = false
+            setGestureDetectorsEnabled(false)
             
             self.deleteButton.isHidden = true
             
@@ -388,6 +398,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         }
         else if(state == ScribbleState.placing) {
             setInfoText("Tap the screen to place your scribble in the world")
+            resetGestureValues()
             self.drawingSceneView?.isHidden = true
             self.drawingSceneView?.isUserInteractionEnabled = false
             self.drawingScene?.isEnabled = false
@@ -395,10 +406,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         
             currentState = ScribbleState.placing
             debugLabel.isHidden = false
-            pinchGesture.isEnabled = true
-            rotationGesture.isEnabled = true
-            self.scaleFactor = 1.0
-            self.rotation = 0.0
+            setGestureDetectorsEnabled(true)
+
             
             self.deleteButton.isHidden = false
             
@@ -412,6 +421,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
             
             currentState = ScribbleState.editing
             debugLabel.isHidden = true
+            setGestureDetectorsEnabled(false)
             
             self.deleteButton.isHidden = true
             
@@ -469,7 +479,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         }
     }
     
+    private func setGestureDetectorsEnabled(_ enabled: Bool) {
+        self.rotationGesture.isEnabled = enabled
+        self.pinchGesture.isEnabled = enabled
+        self.panGesture.isEnabled = enabled
+    }
     
+    private func resetGestureValues() {
+        self.lastScaleFactor = 1.0
+        self.scaleFactor = 1.0
+        self.lastRotation = 0.0
+        self.rotation = 0.0
+        self.lastPanFactor = CGPoint(x: 0, y: 0)
+        self.panFactor = CGPoint(x: 0, y: 0)
+    }
     
     //MARK: Actions
     
@@ -503,16 +526,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
                 // attach SCNNode to the Plane associated with the ARImageAnchor
                 attachedTo.addChildNode(previewNode!)
                 
-                // transform here is relative to parent, transform of the preview node is relative to the world
-                previewNode?.simdTransform = matrix_identity_float4x4
-                previewNode?.simdTransform *= float4x4(simd_quatf(angle: Float.pi, axis: float3(1,0,0)))
-                previewNode?.scale = SCNVector3(self.scaleFactor, self.scaleFactor, self.scaleFactor)
-                previewNode?.simdTransform *= float4x4(simd_quatf(angle: Float(-self.rotation), axis: float3(0,0,1)))
-                
-                var translation = matrix_identity_float4x4
-                translation.columns.3.z = -0.001
-                
-                previewNode?.simdTransform *= translation
+                previewNode?.transform = sceneView.scene.rootNode.convertTransform(previewNode!.transform, to: attachedTo)
             }
             else {
                 // create an ARAnchor at the transform of the previewNode
@@ -721,6 +735,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
         }
     }
     
+    @IBAction func handlePanGesture(_ sender: UIPanGestureRecognizer) {
+        if(sender.state == .began || sender.state == .changed) {
+            let translation = sender.translation(in: sceneView)
+            self.panFactor = CGPoint(x: (translation.x / sceneView.bounds.width) + self.lastPanFactor.x, y: (translation.y / sceneView.bounds.height) + self.lastPanFactor.y)
+            print(panFactor)
+        }
+        else if(sender.state == .ended) {
+            self.lastPanFactor = self.panFactor
+        }
+    }
+    
     @IBAction func handleTapGesture(_ sender: UITapGestureRecognizer) {
         if(currentState == ScribbleState.editing) {
             let location = sender.location(in: sceneView)
@@ -746,6 +771,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
             }
         }
     }
+    
     
     // Simultaneous recognition for rotation and scale gestures
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {

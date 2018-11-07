@@ -24,6 +24,7 @@
                                     <outletCollection property="gestureRecognizers" destination="HQo-pc-BE3" appends="YES" id="Rqb-ma-gkH"/>
                                     <outletCollection property="gestureRecognizers" destination="hDg-Vn-hBJ" appends="YES" id="VcJ-3g-hpz"/>
                                     <outletCollection property="gestureRecognizers" destination="1y2-Zr-BtL" appends="YES" id="bTd-yu-scz"/>
+                                    <outletCollection property="gestureRecognizers" destination="umo-8y-Sdh" appends="YES" id="0Ac-wu-aIz"/>
                                 </connections>
                             </arscnView>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="debug text" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5vb-ke-nF0">
@@ -230,6 +231,7 @@
                         <outlet property="editButton" destination="Rl8-5m-4RR" id="Aju-gk-bgz"/>
                         <outlet property="infoLabel" destination="gdk-dW-dzr" id="CdG-GJ-4ff"/>
                         <outlet property="loadButton" destination="WeI-mS-YQb" id="m3P-o2-uiI"/>
+                        <outlet property="panGesture" destination="umo-8y-Sdh" id="MIe-3a-DAh"/>
                         <outlet property="pinchGesture" destination="HQo-pc-BE3" id="j82-Ad-Aj9"/>
                         <outlet property="rotationGesture" destination="hDg-Vn-hBJ" id="uVD-Rt-Fty"/>
                         <outlet property="saveButton" destination="gfd-e3-hNq" id="MZF-Bl-QaA"/>
@@ -250,6 +252,11 @@
                         <action selector="handleRotationGesture:" destination="BV1-FR-VrT" id="hwh-Z8-Z2I"/>
                     </connections>
                 </rotationGestureRecognizer>
+                <panGestureRecognizer minimumNumberOfTouches="1" maximumNumberOfTouches="2" id="umo-8y-Sdh">
+                    <connections>
+                        <action selector="handlePanGesture:" destination="BV1-FR-VrT" id="d22-hW-JK8"/>
+                    </connections>
+                </panGestureRecognizer>
                 <tapGestureRecognizer id="1y2-Zr-BtL">
                     <connections>
                         <action selector="handleTapGesture:" destination="BV1-FR-VrT" id="osc-Vx-4Vv"/>
