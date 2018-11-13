@@ -19,6 +19,7 @@
 		D6A97F522175CEF600EC7AAB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D6A97F502175CEF600EC7AAB /* Main.storyboard */; };
 		D6A97F542175CEF600EC7AAB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D6A97F532175CEF600EC7AAB /* Assets.xcassets */; };
 		D6A97F572175CEF600EC7AAB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D6A97F552175CEF600EC7AAB /* LaunchScreen.storyboard */; };
+		D6BD159F2192F63300DCB3F5 /* Assets.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = D6BD159E2192F63300DCB3F5 /* Assets.scnassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +38,7 @@
 		D6A97F532175CEF600EC7AAB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D6A97F562175CEF600EC7AAB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D6A97F582175CEF600EC7AAB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D6BD159E2192F63300DCB3F5 /* Assets.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = Assets.scnassets; sourceTree = "<group>"; };
 		F59F0BF50DD75A1461100350 /* Pods-AR Drawing.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AR Drawing.release.xcconfig"; path = "Pods/Target Support Files/Pods-AR Drawing/Pods-AR Drawing.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -90,6 +92,7 @@
 				D644D6762188ADE90006CBCA /* SnapshotAnchor.swift */,
 				D619C3C42189D35F00C80761 /* ScribbleAnchor.swift */,
 				D6A97F532175CEF600EC7AAB /* Assets.xcassets */,
+				D6BD159E2192F63300DCB3F5 /* Assets.scnassets */,
 				D6A97F552175CEF600EC7AAB /* LaunchScreen.storyboard */,
 				D6A97F582175CEF600EC7AAB /* Info.plist */,
 				D62CBA63218099CF006D27C0 /* DrawingScene.sks */,
@@ -167,6 +170,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D62CBA64218099CF006D27C0 /* DrawingScene.sks in Resources */,
+				D6BD159F2192F63300DCB3F5 /* Assets.scnassets in Resources */,
 				D6A97F572175CEF600EC7AAB /* LaunchScreen.storyboard in Resources */,
 				D6A97F542175CEF600EC7AAB /* Assets.xcassets in Resources */,
 				D6A97F522175CEF600EC7AAB /* Main.storyboard in Resources */,

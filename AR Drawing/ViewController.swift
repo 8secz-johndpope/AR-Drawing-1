@@ -13,7 +13,7 @@ extension UIColor {
 }
 
 
-class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDelegate, Dimmable {
+class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ARSCNViewDelegate, UIGestureRecognizerDelegate, Dimmable {
 
     // Mark: Properties
     
@@ -32,6 +32,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     @IBOutlet weak var deleteButton: UIButton!
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var loadButton: UIButton!
+    @IBOutlet weak var imageButton: UIButton!
     
     @IBOutlet var pinchGesture: UIPinchGestureRecognizer!
     @IBOutlet var rotationGesture: UIRotationGestureRecognizer!
@@ -91,6 +92,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
     }
     
     var attachToImagePlane: SCNNode?            // to attach scriblle to a tracked detection image plane
+    
+    var imagePicker = UIImagePickerController()
     
     //MARK: View Life Cycle Methods
     
@@ -641,6 +644,38 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIGestureRecognizerDe
             previewNode?.removeFromParentNode()
             setState(ScribbleState.drawing)
         }
+    }
+    
+    
+    @IBAction func clickedImageButton(_ sender: UIButton) {
+        if UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum) {
+            imagePicker.delegate = self
+            imagePicker.sourceType = .savedPhotosAlbum
+            imagePicker.allowsEditing = false
+            imagePicker.modalPresentationStyle = .overCurrentContext
+            
+            self.present(imagePicker, animated: true, completion: nil)
+        }
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
+        let node = SCNNode(geometry: SCNPlane(width: image.size.width / 10000, height: image.size.height / 10000))
+        
+        node.geometry?.firstMaterial?.diffuse.contents = image
+        node.simdTransform *= float4x4(simd_quatf(angle: Float.pi / 2, axis: float3(1,0,0)))
+        node.name = "detection_image_plane"
+        node.renderingOrder = -5
+        
+        
+        picker.dismiss(animated: true, completion: nil)
+        
+        makePreviewNode(node)
+        setState(ScribbleState.placing)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
     }
     
     // Persisitence
