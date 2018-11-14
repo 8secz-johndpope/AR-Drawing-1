@@ -177,6 +177,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             scribbleAnchor.node.simdTransform = matrix_identity_float4x4
             node.addChildNode(scribbleAnchor.node)
         }
+        
+        // new TextAnchor placed
+        if let textAnchor = anchor as? TextAnchor {
+            print("Text anchor place at: \(anchor.transform)")
+            textAnchor.node.simdTransform = matrix_identity_float4x4
+            node.addChildNode(textAnchor.node)
+        }
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
@@ -224,7 +231,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             
             let detectionImageNode = hitTestDetectionImage()
             if let hit = detectionImageNode {
-                setDebugText("Detection Image plane hit")
+                print("Detection Image plane hit: \(hit)")
                 let imagePlane = hit.node
                 imagePlane.geometry?.firstMaterial?.diffuse.contents = UIColor.imagePlaneColorHover
                 self.previewNode?.simdTransform = sceneView.anchor(for: imagePlane)!.transform
@@ -394,7 +401,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     private func makePreviewNode(_ node: SCNNode) {
         node.geometry?.firstMaterial?.readsFromDepthBuffer = true // always visible
         node.renderingOrder = -10    // always on top
-        node.name = "scribble"
         sceneView.scene.rootNode.addChildNode(node)
         previewNode = node
     }
@@ -549,6 +555,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 plane.firstMaterial?.emission.contents = UIColor.black
                 plane.firstMaterial?.transparencyMode = .aOne
                 let node = SCNNode(geometry: plane)
+                node.name = "scribble"
                 
                 makePreviewNode(node)
                 setState(ScribbleState.placing)
@@ -562,9 +569,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 previewNode?.transform = sceneView.scene.rootNode.convertTransform(previewNode!.transform, to: attachedTo)
             }
             else {
-                // create an ARAnchor at the transform of the previewNode
-                // in 'func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor)' a node gets associated with this anchor
-                let anchor = ScribbleAnchor(scribble: previewNode!, transform: previewNode!.simdTransform)
+                var anchor: ARAnchor
+                if let node = previewNode as? TextNode {
+                    anchor = TextAnchor(textnode: node, transform: previewNode!.simdTransform)
+                } else {
+                    // create an ARAnchor at the transform of the previewNode
+                    // in 'func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor)' a node gets associated with this anchor
+                    anchor = ScribbleAnchor(scribble: previewNode!, transform: previewNode!.simdTransform)
+                }
                 sceneView.session.add(anchor: anchor)
             }
             setState(ScribbleState.drawing)
@@ -683,6 +695,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         print("Made new text node, set state to typing")
         let textnode = TextNode(text: "")
+        textnode.name = "text"
         makePreviewNode(textnode)
         setState(ScribbleState.typing)
     }
@@ -844,15 +857,22 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             let location = sender.location(in: sceneView)
             let hits = sceneView.hitTest(location, options: [SCNHitTestOption.searchMode: SCNHitTestSearchMode.all.rawValue])
             
-            let scribbleNodes = hits.filter { $0.node.name == "scribble" }
-            
-            if !scribbleNodes.isEmpty {
-                print("Tap detected: \(scribbleNodes.count) scribbles hit")
-                for scribble in scribbleNodes {
-                    print(scribble)
+            for hit in hits {
+                print(hit)
+                if let text = (hit.node.geometry as? SCNText)?.string as? String {
+                    let copy = TextNode(text: text)
+                    makePreviewNode(copy)
+                    hit.node.removeFromParentNode()
+                    setState(ScribbleState.placing)
                 }
+            }
+            
+            let nodes = hits.filter { $0.node.name == "scribble" || $0.node.name == "text" }
+            
+            if !nodes.isEmpty {
+                print("Tap detected: \(nodes.count) nodes hit")
                 
-                if let node = scribbleNodes.first?.node {
+                if let node = nodes.first?.node {
                     // Make a new preview node from selected node
                     let copy = node.copy() as! SCNNode
                     makePreviewNode(copy)

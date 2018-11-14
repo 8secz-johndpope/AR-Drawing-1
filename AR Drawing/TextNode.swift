@@ -25,6 +25,8 @@ class TextNode: SCNNode {
         
         super.init()
         
+        self.name = "text"
+        
         self.recenterPivot()
         self.addChildNode(node)
     }
