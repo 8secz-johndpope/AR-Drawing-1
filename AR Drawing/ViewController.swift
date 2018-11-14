@@ -736,7 +736,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         node.geometry?.firstMaterial?.diffuse.contents = image
         node.simdTransform *= float4x4(simd_quatf(angle: Float.pi / 2, axis: float3(1,0,0)))
-        node.name = "detection_image_plane"
+        node.name = "image"
         
         
         picker.dismiss(animated: true, completion: nil)
@@ -867,7 +867,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 }
             }
             
-            let nodes = hits.filter { $0.node.name == "scribble" || $0.node.name == "text" }
+            let nodes = hits.filter { $0.node.name == "scribble" || $0.node.name == "text" || $0.node.name == "image" }
             
             if !nodes.isEmpty {
                 print("Tap detected: \(nodes.count) nodes hit")
