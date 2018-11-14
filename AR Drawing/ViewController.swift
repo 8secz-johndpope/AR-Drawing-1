@@ -731,7 +731,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         hiddenTextField.addTarget(self, action: #selector(ViewController.hiddenTextFieldEndEditing), for: UIControl.Event.editingDidEnd)
         
         print("Made new text node, set state to typing")
-        let textnode = TextNode(text: "")
+        let textnode = TextNode(text: "", color: (drawingScene?.lineColor)!)
         textnode.name = "text"
         makePreviewNode(textnode)
         setState(ScribbleState.typing)
@@ -908,8 +908,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             
             for hit in hits {
                 print(hit)
-                if let text = (hit.node.geometry as? SCNText)?.string as? String {
-                    let copy = TextNode(text: text)
+                if let text = (hit.node.geometry as? SCNText)?.string as? String,
+                    let color = (hit.node.geometry?.firstMaterial?.diffuse.contents) as? UIColor {
+                    let copy = TextNode(text: text, color: color)
                     makePreviewNode(copy)
                     hit.node.removeFromParentNode()
                     setState(ScribbleState.placing)

@@ -82,24 +82,24 @@
                                                     <action selector="clickedBrushSizeButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="AB5-zR-QIh"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iIm-vS-9iE">
-                                                <rect key="frame" x="0.0" y="240" width="80" height="80"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" secondItem="iIm-vS-9iE" secondAttribute="height" multiplier="1:1" id="tq0-7p-JEA"/>
-                                                </constraints>
-                                                <state key="normal" title="Button" image="gallery"/>
-                                                <connections>
-                                                    <action selector="clickedImageButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="Xb3-Ic-fJo"/>
-                                                </connections>
-                                            </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mCx-xT-uTe">
-                                                <rect key="frame" x="0.0" y="360" width="80" height="80"/>
+                                                <rect key="frame" x="0.0" y="240" width="80" height="80"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="mCx-xT-uTe" secondAttribute="height" multiplier="1:1" id="02S-GG-UcE"/>
                                                 </constraints>
                                                 <state key="normal" title="Button" image="text"/>
                                                 <connections>
                                                     <action selector="clickedTextButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="NAw-4I-JcN"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iIm-vS-9iE">
+                                                <rect key="frame" x="0.0" y="360" width="80" height="80"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="iIm-vS-9iE" secondAttribute="height" multiplier="1:1" id="tq0-7p-JEA"/>
+                                                </constraints>
+                                                <state key="normal" title="Button" image="gallery"/>
+                                                <connections>
+                                                    <action selector="clickedImageButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="Xb3-Ic-fJo"/>
                                                 </connections>
                                             </button>
                                         </subviews>

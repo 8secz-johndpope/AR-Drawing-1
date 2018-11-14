@@ -14,12 +14,13 @@ class TextNode: SCNNode {
     let extrusionDepth: CGFloat = 0.02
     
     
-    init(text: String) {
+    init(text: String, color: UIColor) {
         self.text = text
         
         let geometry = SCNText(string: self.text, extrusionDepth: self.extrusionDepth)
         geometry.alignmentMode = "center"
         geometry.font = UIFont(name: "Arial", size: 0.2)
+        geometry.firstMaterial?.diffuse.contents = color
         self.node = SCNNode(geometry: geometry)
         
         
