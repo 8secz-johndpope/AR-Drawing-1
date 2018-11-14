@@ -58,7 +58,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="100" height="768"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="40" translatesAutoresizingMaskIntoConstraints="NO" id="Izq-83-vlB">
-                                        <rect key="frame" x="10" y="65" width="80" height="320"/>
+                                        <rect key="frame" x="10" y="65" width="80" height="440"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ue7-e5-kXY">
                                                 <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
@@ -90,6 +90,16 @@
                                                 <state key="normal" title="Button" image="gallery"/>
                                                 <connections>
                                                     <action selector="clickedImageButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="Xb3-Ic-fJo"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mCx-xT-uTe">
+                                                <rect key="frame" x="0.0" y="360" width="80" height="80"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="mCx-xT-uTe" secondAttribute="height" multiplier="1:1" id="02S-GG-UcE"/>
+                                                </constraints>
+                                                <state key="normal" title="Button" image="text"/>
+                                                <connections>
+                                                    <action selector="clickedTextButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="NAw-4I-JcN"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -197,6 +207,13 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="wYQ-O5-ZFu">
                                 <rect key="frame" x="108" y="69" width="307" height="230.5"/>
                             </imageView>
+                            <textField hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="7tw-Uo-808">
+                                <rect key="frame" x="463" y="369" width="97" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -239,6 +256,7 @@
                         <outlet property="deleteButton" destination="2sp-JG-mgF" id="D0Z-Dw-Opt"/>
                         <outlet property="drawingSceneView" destination="KXm-AA-Xwd" id="0Eg-r1-UTG"/>
                         <outlet property="editButton" destination="Rl8-5m-4RR" id="Aju-gk-bgz"/>
+                        <outlet property="hiddenTextField" destination="7tw-Uo-808" id="AFB-pr-XI1"/>
                         <outlet property="imageButton" destination="iIm-vS-9iE" id="J6w-ID-GmX"/>
                         <outlet property="infoLabel" destination="gdk-dW-dzr" id="CdG-GJ-4ff"/>
                         <outlet property="loadButton" destination="WeI-mS-YQb" id="m3P-o2-uiI"/>
@@ -249,6 +267,7 @@
                         <outlet property="sceneView" destination="BrB-h1-WRS" id="5nT-qQ-ynl"/>
                         <outlet property="sidebar" destination="7Jl-GI-BJp" id="26R-Ld-P7B"/>
                         <outlet property="snapShotImage" destination="wYQ-O5-ZFu" id="KZ6-yH-yt4"/>
+                        <outlet property="textButton" destination="mCx-xT-uTe" id="k3Q-fa-17h"/>
                         <outlet property="undoButton" destination="tZo-9i-cCO" id="VLk-19-dId"/>
                     </connections>
                 </viewController>
@@ -284,6 +303,7 @@
         <image name="move" width="409.60000610351562" height="409.60000610351562"/>
         <image name="palette" width="980" height="980"/>
         <image name="plus-circle" width="512" height="512"/>
+        <image name="text" width="512" height="512"/>
         <image name="undo-arrow" width="512" height="512"/>
     </resources>
 </document>

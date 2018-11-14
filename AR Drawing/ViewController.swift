@@ -13,7 +13,7 @@ extension UIColor {
 }
 
 
-class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ARSCNViewDelegate, UIGestureRecognizerDelegate, Dimmable {
+class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ARSCNViewDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate, Dimmable {
 
     // Mark: Properties
     
@@ -23,6 +23,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var debugLabel: UILabel!
     @IBOutlet weak var sidebar: UIView!
     @IBOutlet weak var snapShotImage: UIImageView!
+    @IBOutlet weak var hiddenTextField: UITextField!
     
     @IBOutlet weak var addButton: UIButton!
     @IBOutlet weak var colorButton: UIButton!
@@ -33,6 +34,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var loadButton: UIButton!
     @IBOutlet weak var imageButton: UIButton!
+    @IBOutlet weak var textButton: UIButton!
     
     @IBOutlet var pinchGesture: UIPinchGestureRecognizer!
     @IBOutlet var rotationGesture: UIRotationGestureRecognizer!
@@ -44,6 +46,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         case drawing                            // first user draws a scribble on the screen
         case placing                            // then the scribble gets placed in the AR world
         case editing                            // looking around and selecting scribbles to be edited
+        case typing                             // Typing text
     }
     var currentState = ScribbleState.drawing
     
@@ -120,6 +123,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         panGesture.delegate = self
         pinchGesture.delegate = self
         rotationGesture.delegate = self
+        
+        hiddenTextField.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -161,7 +166,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             plane.geometry?.firstMaterial?.isDoubleSided = true
             plane.simdTransform *= float4x4(simd_quatf(angle: Float.pi / 2, axis: float3(1,0,0)))
             plane.name = "detection_image_plane"
-            plane.renderingOrder = -5
+            plane.renderingOrder = -20
             node.addChildNode(plane)
             self.imagePlanes[imageAnchor] = plane
         }
@@ -202,6 +207,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
         
         // update position of preview node
+        if(currentState == ScribbleState.typing) {
+            self.previewNode?.simdTransform = getTransformInFrontOfCamera(Float(self.defaultDistance))
+            self.previewNode?.localTranslate(by: SCNVector3(0, 0.1, 0))
+            print("Textnode transform: \(self.previewNode?.simdTransform)")
+        }
+        
         if(currentState == ScribbleState.placing && previewNode != nil) {
             for (_, plane) in planes {
                 plane.setColor(UIColor.planeColor)
@@ -325,6 +336,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     
     
+    // MARK: UITextFieldDelegate
+    
+    
+    
     //MARK: Functions
     
     private func hitTestFromCenter() -> [ARHitTestResult] {
@@ -377,7 +392,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     private func makePreviewNode(_ node: SCNNode) {
-        node.geometry?.firstMaterial?.readsFromDepthBuffer = false // always visible
+        node.geometry?.firstMaterial?.readsFromDepthBuffer = true // always visible
         node.renderingOrder = -10    // always on top
         node.name = "scribble"
         sceneView.scene.rootNode.addChildNode(node)
@@ -396,6 +411,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             setGestureDetectorsEnabled(false)
             
             self.deleteButton.isHidden = true
+            
+            self.previewNode = nil
             
             toggleSideBar(visible: true)
         }
@@ -427,6 +444,19 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             setGestureDetectorsEnabled(false)
             
             self.deleteButton.isHidden = true
+            
+            toggleSideBar(visible: false)
+        }
+        else if(state == ScribbleState.typing) {
+            setInfoText("Type some text to add to the scene")
+            
+            self.drawingSceneView?.isHidden = true
+            self.drawingSceneView?.isUserInteractionEnabled = false
+            self.drawingScene?.isEnabled = false
+            
+            currentState = ScribbleState.typing
+            debugLabel.isHidden = false
+            setGestureDetectorsEnabled(false)
             
             toggleSideBar(visible: false)
         }
@@ -646,6 +676,34 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     
+    @IBAction func clickedTextButton(_ sender: UIButton) {
+        hiddenTextField.becomeFirstResponder()
+        hiddenTextField.addTarget(self, action: #selector(ViewController.hiddenTextFieldChanged(_:)), for: UIControl.Event.editingChanged)
+        hiddenTextField.addTarget(self, action: #selector(ViewController.hiddenTextFieldEndEditing), for: UIControl.Event.editingDidEnd)
+        
+        print("Made new text node, set state to typing")
+        let textnode = TextNode(text: "")
+        makePreviewNode(textnode)
+        setState(ScribbleState.typing)
+    }
+    
+    @objc func hiddenTextFieldChanged(_ textField: UITextField) {
+        if let node = self.previewNode as? TextNode {
+            print("Text changed: \(textField.text)")
+            node.text = textField.text ?? ""
+        }
+    }
+    
+    @objc func hiddenTextFieldEndEditing() {
+        print("end editing")
+        self.hiddenTextField.text = ""
+        setState(ScribbleState.placing)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.hiddenTextField.resignFirstResponder()
+        return true
+    }
     
     @IBAction func clickedImageButton(_ sender: UIButton) {
         if UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum) {
@@ -660,12 +718,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
-        let node = SCNNode(geometry: SCNPlane(width: image.size.width / 10000, height: image.size.height / 10000))
+        // image size in pixels, node size in meters
+        let node = SCNNode(geometry: SCNPlane(width: image.size.width / 20000, height: image.size.height / 20000))
         
         node.geometry?.firstMaterial?.diffuse.contents = image
         node.simdTransform *= float4x4(simd_quatf(angle: Float.pi / 2, axis: float3(1,0,0)))
         node.name = "detection_image_plane"
-        node.renderingOrder = -5
         
         
         picker.dismiss(animated: true, completion: nil)
