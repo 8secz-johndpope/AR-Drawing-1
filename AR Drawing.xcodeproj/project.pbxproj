@@ -10,7 +10,6 @@
 		89F38A25227B430617CF8B1E /* Pods_AR_Drawing.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BA8032816815300394DE5F9 /* Pods_AR_Drawing.framework */; };
 		D612F3C3219C11EA007D4EC2 /* TextNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D612F3C2219C11EA007D4EC2 /* TextNode.swift */; };
 		D612F3C5219C3874007D4EC2 /* TextAnchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D612F3C4219C3874007D4EC2 /* TextAnchor.swift */; };
-		D612F3C9219C4D2A007D4EC2 /* InstructionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D612F3C8219C4D2A007D4EC2 /* InstructionManager.swift */; };
 		D619C3C52189D35F00C80761 /* ScribbleAnchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D619C3C42189D35F00C80761 /* ScribbleAnchor.swift */; };
 		D62CBA6221809998006D27C0 /* Plane.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62CBA6121809998006D27C0 /* Plane.swift */; };
 		D62CBA64218099CF006D27C0 /* DrawingScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = D62CBA63218099CF006D27C0 /* DrawingScene.sks */; };
@@ -30,7 +29,6 @@
 		582DBD839C624B2FA1146A81 /* Pods-AR Drawing.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AR Drawing.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AR Drawing/Pods-AR Drawing.debug.xcconfig"; sourceTree = "<group>"; };
 		D612F3C2219C11EA007D4EC2 /* TextNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextNode.swift; sourceTree = "<group>"; };
 		D612F3C4219C3874007D4EC2 /* TextAnchor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAnchor.swift; sourceTree = "<group>"; };
-		D612F3C8219C4D2A007D4EC2 /* InstructionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InstructionManager.swift; path = "/Users/wouterrappe/Desktop/AR-Drawing-master/AR Drawing/InstructionManager.swift"; sourceTree = "<absolute>"; };
 		D619C3C42189D35F00C80761 /* ScribbleAnchor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScribbleAnchor.swift; sourceTree = "<group>"; };
 		D62CBA6121809998006D27C0 /* Plane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plane.swift; sourceTree = "<group>"; };
 		D62CBA63218099CF006D27C0 /* DrawingScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = DrawingScene.sks; sourceTree = "<group>"; };
@@ -89,7 +87,6 @@
 		D6A97F492175CEF600EC7AAB /* AR Drawing */ = {
 			isa = PBXGroup;
 			children = (
-				D612F3C8219C4D2A007D4EC2 /* InstructionManager.swift */,
 				D6A97F502175CEF600EC7AAB /* Main.storyboard */,
 				D6A97F4A2175CEF600EC7AAB /* AppDelegate.swift */,
 				D6A97F4E2175CEF600EC7AAB /* ViewController.swift */,
@@ -240,7 +237,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D612F3C9219C4D2A007D4EC2 /* InstructionManager.swift in Sources */,
 				D6A97F4F2175CEF600EC7AAB /* ViewController.swift in Sources */,
 				D651CC51218065F7002E15AF /* BrushSizeSlider.swift in Sources */,
 				D651CC4D217F630F002E15AF /* DrawingSceneColors.swift in Sources */,

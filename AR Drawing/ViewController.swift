@@ -532,25 +532,27 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         self.panFactor = CGPoint(x: 0, y: 0)
     }
     
-    func nextStep() {
+    private func nextStep() {
         for node in nodesForStep[currentStep] {
             node.isHidden = true
         }
-        currentStep += 1
         
-        if currentStep < nodesForStep.count {
+        if currentStep + 1 >= nodesForStep.count {
+            if nodesForStep[currentStep].count > 0 {
+                nodesForStep.append([])
+                currentStep += 1
+            }
+        }
+        else {
+            currentStep += 1
             for node in nodesForStep[currentStep] {
                 node.isHidden = false
             }
         }
-        else {
-            nodesForStep.append([])
-        }
-        
         print("Next step. Now in step nr: \(currentStep)")
     }
     
-    func prevStep() {
+    private func prevStep() {
         guard currentStep >= 1 else { return }
         
         for node in nodesForStep[currentStep] {
