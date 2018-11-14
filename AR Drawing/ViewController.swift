@@ -35,6 +35,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var loadButton: UIButton!
     @IBOutlet weak var imageButton: UIButton!
     @IBOutlet weak var textButton: UIButton!
+    @IBOutlet weak var nextButton: UIButton!
+    @IBOutlet weak var prevButton: UIButton!
+    
     
     @IBOutlet var pinchGesture: UIPinchGestureRecognizer!
     @IBOutlet var rotationGesture: UIRotationGestureRecognizer!
@@ -98,6 +101,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     var imagePicker = UIImagePickerController()
     
+    var nodesForStep = [[SCNNode]]()
+    var currentStep = 0
+    
     //MARK: View Life Cycle Methods
     
     override func viewDidLoad() {
@@ -110,13 +116,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         let scene = SCNScene()
         sceneView.scene = scene
         
-        /*      BAD_ACCESS error originates from drawing on the overlaySKScene
-         
-        let drawingScene = DrawingSceneColors(size: sceneView.frame.size)
-        sceneView.overlaySKScene = drawingScene
-        
-        */
-        
         self.drawingScene = DrawingSceneColors(size: sceneView.frame.size)
         drawingSceneView.presentScene(drawingScene)
         
@@ -125,6 +124,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         rotationGesture.delegate = self
         
         hiddenTextField.delegate = self
+        
+        nodesForStep.append([])
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -176,6 +177,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             print("Scribble ARAnchor placed at: \(anchor.transform)")
             scribbleAnchor.node.simdTransform = matrix_identity_float4x4
             node.addChildNode(scribbleAnchor.node)
+            nodesForStep[currentStep].append(node)
         }
         
         // new TextAnchor placed
@@ -183,6 +185,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             print("Text anchor place at: \(anchor.transform)")
             textAnchor.node.simdTransform = matrix_identity_float4x4
             node.addChildNode(textAnchor.node)
+            nodesForStep[currentStep].append(node)
         }
     }
     
@@ -192,9 +195,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             self.updatePlane(anchor: planeAnchor)
         }
         
+        // imageAnchor went out of screen
         if let imageAnchor = anchor as? ARImageAnchor {
             if !imageAnchor.isTracked {
-                print("image anchor went out of screen")
                 self.imagePlanes[imageAnchor]?.isHidden = true
             } else {
                 self.imagePlanes[imageAnchor]?.isHidden = false
@@ -219,14 +222,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             self.previewNode?.localTranslate(by: SCNVector3(0, 0.1, 0))
             print("Textnode transform: \(self.previewNode?.simdTransform)")
         }
-        
-        if(currentState == ScribbleState.placing && previewNode != nil) {
-            for (_, plane) in planes {
-                plane.setColor(UIColor.planeColor)
-            }
-            for(_, plane) in imagePlanes {
-                plane.geometry?.firstMaterial?.diffuse.contents = UIColor.imagePlaneColor
-            }
+        else if(currentState == ScribbleState.placing && previewNode != nil) {
+            // reset colors
+            for (_, plane) in planes { plane.setColor(UIColor.planeColor) }
+            for(_, plane) in imagePlanes { plane.geometry?.firstMaterial?.diffuse.contents = UIColor.imagePlaneColor }
             attachToImagePlane = nil
             
             let detectionImageNode = hitTestDetectionImage()
@@ -533,6 +532,40 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         self.panFactor = CGPoint(x: 0, y: 0)
     }
     
+    func nextStep() {
+        for node in nodesForStep[currentStep] {
+            node.isHidden = true
+        }
+        currentStep += 1
+        
+        if currentStep < nodesForStep.count {
+            for node in nodesForStep[currentStep] {
+                node.isHidden = false
+            }
+        }
+        else {
+            nodesForStep.append([])
+        }
+        
+        print("Next step. Now in step nr: \(currentStep)")
+    }
+    
+    func prevStep() {
+        guard currentStep >= 1 else { return }
+        
+        for node in nodesForStep[currentStep] {
+            node.isHidden = true
+        }
+        currentStep -= 1
+        
+        for node in nodesForStep[currentStep] {
+            node.isHidden = false
+        }
+        
+        print("Prev step. Now in step nr: \(currentStep)")
+    }
+    
+    
     //MARK: Actions
     
     @IBAction func clickedAddButton(_ sender: UIButton) {
@@ -566,6 +599,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 // attach SCNNode to the Plane associated with the ARImageAnchor
                 attachedTo.addChildNode(previewNode!)
                 
+                // previewnode becomes child of attachedTo, instead of rootNode
+                // convert transform from one parent to the other
                 previewNode?.transform = sceneView.scene.rootNode.convertTransform(previewNode!.transform, to: attachedTo)
             }
             else {
@@ -709,8 +744,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     @objc func hiddenTextFieldEndEditing() {
         print("end editing")
+        if(hiddenTextField.text == "") {
+            setState(ScribbleState.drawing)
+        } else {
+            setState(ScribbleState.placing)
+        }
         self.hiddenTextField.text = ""
-        setState(ScribbleState.placing)
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -747,6 +786,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func clickedNextButton(_ sender: UIButton) {
+        nextStep()
+    }
+    
+    @IBAction func clickedPrevButton(_ sender: UIButton) {
+        prevStep()
     }
     
     // Persisitence

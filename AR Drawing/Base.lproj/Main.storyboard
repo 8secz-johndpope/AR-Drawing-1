@@ -35,7 +35,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X61-fu-aeO">
-                                <rect key="frame" x="810" y="693" width="194" height="60"/>
+                                <rect key="frame" x="810" y="673" width="194" height="60"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="Clear world">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -132,9 +132,9 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iOC-sJ-73Z">
-                                <rect key="frame" x="487" y="698" width="50" height="50"/>
+                                <rect key="frame" x="477" y="668" width="70" height="70"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="50" id="DE8-bG-We5"/>
+                                    <constraint firstAttribute="width" constant="70" id="DE8-bG-We5"/>
                                     <constraint firstAttribute="width" secondItem="iOC-sJ-73Z" secondAttribute="height" multiplier="1:1" id="wGY-7B-GWR"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="60"/>
@@ -214,6 +214,20 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uq7-qR-JeK">
+                                <rect key="frame" x="577" y="668" width="70" height="70"/>
+                                <state key="normal" title="Button" image="right-arrow"/>
+                                <connections>
+                                    <action selector="clickedNextButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="gL0-Fw-jCR"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kuz-J5-HZV">
+                                <rect key="frame" x="377" y="668" width="70" height="70"/>
+                                <state key="normal" title="Button" image="left-arrow"/>
+                                <connections>
+                                    <action selector="clickedPrevButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="ZRc-3Z-GOZ"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -224,16 +238,22 @@
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="GsS-dJ-CKf"/>
                             <constraint firstItem="3x1-vO-Y02" firstAttribute="trailing" secondItem="fQZ-KI-GVf" secondAttribute="trailing" id="HS0-jY-t4h"/>
                             <constraint firstItem="wYQ-O5-ZFu" firstAttribute="height" secondItem="KXm-AA-Xwd" secondAttribute="height" multiplier="0.3" id="HnT-Un-dPA"/>
+                            <constraint firstItem="kuz-J5-HZV" firstAttribute="centerY" secondItem="iOC-sJ-73Z" secondAttribute="centerY" id="IXs-yi-6Me"/>
                             <constraint firstItem="7Jl-GI-BJp" firstAttribute="bottom" secondItem="fQZ-KI-GVf" secondAttribute="bottom" id="Jo5-Wv-J0k"/>
+                            <constraint firstItem="uq7-qR-JeK" firstAttribute="width" secondItem="iOC-sJ-73Z" secondAttribute="width" id="NFO-Tk-Yr7"/>
+                            <constraint firstItem="kuz-J5-HZV" firstAttribute="width" secondItem="iOC-sJ-73Z" secondAttribute="width" id="OZN-nW-BAk"/>
                             <constraint firstItem="KXm-AA-Xwd" firstAttribute="top" secondItem="U0K-SW-4ec" secondAttribute="top" id="Odm-5E-085"/>
+                            <constraint firstItem="uq7-qR-JeK" firstAttribute="centerY" secondItem="iOC-sJ-73Z" secondAttribute="centerY" id="Pl9-k1-90E"/>
                             <constraint firstItem="KXm-AA-Xwd" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="QSi-04-nlS"/>
                             <constraint firstItem="5vb-ke-nF0" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="TDj-TK-Prs"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="bottom" secondItem="fQZ-KI-GVf" secondAttribute="bottom" id="VpT-BR-CcM"/>
-                            <constraint firstItem="fQZ-KI-GVf" firstAttribute="bottom" secondItem="iOC-sJ-73Z" secondAttribute="bottom" constant="20" id="WB1-Uk-173"/>
+                            <constraint firstItem="kuz-J5-HZV" firstAttribute="height" secondItem="iOC-sJ-73Z" secondAttribute="height" id="VsC-Ne-Aad"/>
+                            <constraint firstItem="fQZ-KI-GVf" firstAttribute="bottom" secondItem="iOC-sJ-73Z" secondAttribute="bottom" constant="30" id="WB1-Uk-173"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="trailing" secondItem="fQZ-KI-GVf" secondAttribute="trailing" id="XyZ-9z-H8e"/>
                             <constraint firstItem="7Jl-GI-BJp" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="YLY-4l-ZgF"/>
                             <constraint firstItem="5vb-ke-nF0" firstAttribute="top" secondItem="fQZ-KI-GVf" secondAttribute="top" id="Zwq-8D-DBD"/>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="trailing" secondItem="gdk-dW-dzr" secondAttribute="trailing" id="dkI-by-ndd"/>
+                            <constraint firstItem="uq7-qR-JeK" firstAttribute="height" secondItem="iOC-sJ-73Z" secondAttribute="height" id="eHV-FC-Y0a"/>
                             <constraint firstItem="wYQ-O5-ZFu" firstAttribute="top" secondItem="gdk-dW-dzr" secondAttribute="bottom" constant="8" id="edG-MB-9X0"/>
                             <constraint firstItem="KXm-AA-Xwd" firstAttribute="bottom" secondItem="fQZ-KI-GVf" secondAttribute="bottom" id="fAL-t3-be9"/>
                             <constraint firstItem="wYQ-O5-ZFu" firstAttribute="width" secondItem="KXm-AA-Xwd" secondAttribute="width" multiplier="0.3" id="gIr-rc-JAN"/>
@@ -241,9 +261,11 @@
                             <constraint firstItem="gdk-dW-dzr" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="kXq-Kd-jUr"/>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="trailing" secondItem="5vb-ke-nF0" secondAttribute="trailing" id="qt7-xx-wWl"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="top" secondItem="U0K-SW-4ec" secondAttribute="top" id="rJc-2c-zQA"/>
+                            <constraint firstItem="uq7-qR-JeK" firstAttribute="leading" secondItem="iOC-sJ-73Z" secondAttribute="trailing" constant="30" id="sIf-7s-2dS"/>
                             <constraint firstItem="3x1-vO-Y02" firstAttribute="bottom" secondItem="fQZ-KI-GVf" secondAttribute="bottom" id="srJ-Ys-qRk"/>
                             <constraint firstItem="iOC-sJ-73Z" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" id="un6-J8-Lwl"/>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="trailing" secondItem="X61-fu-aeO" secondAttribute="trailing" constant="20" id="vfK-Rs-3AP"/>
+                            <constraint firstItem="iOC-sJ-73Z" firstAttribute="leading" secondItem="kuz-J5-HZV" secondAttribute="trailing" constant="30" id="xe9-XT-Zz0"/>
                             <constraint firstItem="gdk-dW-dzr" firstAttribute="top" secondItem="5vb-ke-nF0" secondAttribute="bottom" id="zRk-Le-HTV"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="fQZ-KI-GVf"/>
@@ -260,8 +282,10 @@
                         <outlet property="imageButton" destination="iIm-vS-9iE" id="J6w-ID-GmX"/>
                         <outlet property="infoLabel" destination="gdk-dW-dzr" id="CdG-GJ-4ff"/>
                         <outlet property="loadButton" destination="WeI-mS-YQb" id="m3P-o2-uiI"/>
+                        <outlet property="nextButton" destination="uq7-qR-JeK" id="2Uw-Hj-BSB"/>
                         <outlet property="panGesture" destination="umo-8y-Sdh" id="MIe-3a-DAh"/>
                         <outlet property="pinchGesture" destination="HQo-pc-BE3" id="j82-Ad-Aj9"/>
+                        <outlet property="prevButton" destination="kuz-J5-HZV" id="t8m-Ht-ZTL"/>
                         <outlet property="rotationGesture" destination="hDg-Vn-hBJ" id="uVD-Rt-Fty"/>
                         <outlet property="saveButton" destination="gfd-e3-hNq" id="MZF-Bl-QaA"/>
                         <outlet property="sceneView" destination="BrB-h1-WRS" id="5nT-qQ-ynl"/>
@@ -300,9 +324,11 @@
         <image name="brush" width="512" height="512"/>
         <image name="delete" width="409.60000610351562" height="409.60000610351562"/>
         <image name="gallery" width="512" height="512"/>
+        <image name="left-arrow" width="409.60000610351562" height="409.60000610351562"/>
         <image name="move" width="409.60000610351562" height="409.60000610351562"/>
         <image name="palette" width="980" height="980"/>
         <image name="plus-circle" width="512" height="512"/>
+        <image name="right-arrow" width="409.60000610351562" height="409.60000610351562"/>
         <image name="text" width="512" height="512"/>
         <image name="undo-arrow" width="512" height="512"/>
     </resources>
