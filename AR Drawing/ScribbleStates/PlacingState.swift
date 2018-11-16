@@ -24,10 +24,10 @@ class PlacingState: State {
     func update(context: ViewController) {
         // reset colors
         for (_, plane) in context.planes { plane.setColor(UIColor.planeColor) }
-        for(_, plane) in context.imagePlanes { plane.geometry?.firstMaterial?.diffuse.contents = UIColor.imagePlaneColor }
+        context.imageTracker?.resetPlaneColors()
         context.attachToImagePlane = nil
         
-        let detectionImageNode = context.hitTestDetectionImage()
+        let detectionImageNode = context.imageTracker?.hitTestTrackedImage(in: context.sceneView, from: context.sceneView.center)
         if let hit = detectionImageNode {
             print("Detection Image plane hit: \(hit)")
             let imagePlane = hit.node

@@ -49,7 +49,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     var planes = [ARPlaneAnchor: Plane]()       // to store auto detected planes
     var previewNode: SCNNode?                   // to preview where the scribble will be placed
-    var imagePlanes = [ARImageAnchor: SCNNode]()  // to store planes associated with detected images
     
     var lastScaleFactor: CGFloat = 1.0          // for scale and rotation gestures
     var scaleFactor: CGFloat = 1.0
@@ -79,17 +78,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         let configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = [.horizontal, .vertical]
         configuration.environmentTexturing = .automatic
-        configuration.detectionImages = self.detectionImages
+        configuration.detectionImages = imageTracker?.trackedImages
         configuration.maximumNumberOfTrackedImages = 3
         return configuration
     }
     
-    var detectionImages: Set<ARReferenceImage> {                    // Images to detect and track
-        guard let images = ARReferenceImage.referenceImages(inGroupNamed: "DetectionImages_cards", bundle: nil) else {
-            fatalError("Detection Images could not be loaded")
-        }
-        return images
-    }
+    var imageTracker: ImageTracker?
     
     var attachToImagePlane: SCNNode?            // to attach scriblle to a tracked detection image plane
     
@@ -122,6 +116,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         nodesForStep.append([])
         
         currentState = DrawingState()
+        imageTracker = ImageTracker(imageGroup: "DetectionImages_cards")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -154,16 +149,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         // new image detected
         if let imageAnchor = anchor as? ARImageAnchor {
-            print("Detection Image detected")
-            let size = imageAnchor.referenceImage.physicalSize
-            let plane = SCNNode(geometry: SCNPlane(width: size.width, height: size.height))
-            plane.geometry?.firstMaterial?.diffuse.contents = UIColor.imagePlaneColor
-            plane.geometry?.firstMaterial?.isDoubleSided = true
-            plane.simdTransform *= float4x4(simd_quatf(angle: Float.pi / 2, axis: float3(1,0,0)))
-            plane.name = "detection_image_plane"
-            plane.renderingOrder = -10
-            node.addChildNode(plane)
-            self.imagePlanes[imageAnchor] = plane
+            imageTracker?.detectedImage(imageAnchor: imageAnchor, newNode: node)
         }
         
         // new ScribbleAnchor placed
@@ -191,11 +177,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         // imageAnchor went out of screen
         if let imageAnchor = anchor as? ARImageAnchor {
-            if !imageAnchor.isTracked {
-                self.imagePlanes[imageAnchor]?.isHidden = true
-            } else {
-                self.imagePlanes[imageAnchor]?.isHidden = false
-            }
+            imageTracker?.updateTrackedImageAnchor(imageAnchor: imageAnchor)
         }
     }
 
@@ -264,15 +246,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func hitTestFromCenter() -> [ARHitTestResult] {
         let results = sceneView.hitTest(sceneView.center, types: [.existingPlaneUsingExtent, .featurePoint])
         return results
-    }
-    
-    func hitTestDetectionImage() -> SCNHitTestResult? {
-        let results = sceneView.hitTest(sceneView.center, options: [SCNHitTestOption.searchMode: SCNHitTestSearchMode.all.rawValue])
-        let imagePlanes = results.filter { $0.node.name == "detection_image_plane" }
-        if let hit = imagePlanes.first {
-            return hit
-        }
-        return nil
     }
 
     func addPlane(node: SCNNode, anchor: ARPlaneAnchor) {

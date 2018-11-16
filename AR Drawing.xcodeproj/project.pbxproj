@@ -13,6 +13,7 @@
 		D60CD08F219EBF5100E63228 /* PlacingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60CD08E219EBF5100E63228 /* PlacingState.swift */; };
 		D60CD091219EBF6000E63228 /* EditingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60CD090219EBF6000E63228 /* EditingState.swift */; };
 		D60CD093219EC07700E63228 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60CD092219EC07700E63228 /* State.swift */; };
+		D60CD099219ED58300E63228 /* ImageTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60CD098219ED58300E63228 /* ImageTracker.swift */; };
 		D612F3C3219C11EA007D4EC2 /* TextNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D612F3C2219C11EA007D4EC2 /* TextNode.swift */; };
 		D612F3C5219C3874007D4EC2 /* TextAnchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D612F3C4219C3874007D4EC2 /* TextAnchor.swift */; };
 		D619C3C52189D35F00C80761 /* ScribbleAnchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D619C3C42189D35F00C80761 /* ScribbleAnchor.swift */; };
@@ -37,6 +38,7 @@
 		D60CD08E219EBF5100E63228 /* PlacingState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlacingState.swift; sourceTree = "<group>"; };
 		D60CD090219EBF6000E63228 /* EditingState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditingState.swift; sourceTree = "<group>"; };
 		D60CD092219EC07700E63228 /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
+		D60CD098219ED58300E63228 /* ImageTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ImageTracker.swift; path = "/Users/wouterrappe/Desktop/AR-Drawing-master/AR Drawing/ImageTracker.swift"; sourceTree = "<absolute>"; };
 		D612F3C2219C11EA007D4EC2 /* TextNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextNode.swift; sourceTree = "<group>"; };
 		D612F3C4219C3874007D4EC2 /* TextAnchor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAnchor.swift; sourceTree = "<group>"; };
 		D619C3C42189D35F00C80761 /* ScribbleAnchor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScribbleAnchor.swift; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 		D6A97F492175CEF600EC7AAB /* AR Drawing */ = {
 			isa = PBXGroup;
 			children = (
+				D60CD098219ED58300E63228 /* ImageTracker.swift */,
 				D60CD089219EBED800E63228 /* ScribbleStates */,
 				D6A97F502175CEF600EC7AAB /* Main.storyboard */,
 				D6A97F4A2175CEF600EC7AAB /* AppDelegate.swift */,
@@ -261,6 +264,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D60CD08D219EBF4300E63228 /* TypingState.swift in Sources */,
+				D60CD099219ED58300E63228 /* ImageTracker.swift in Sources */,
 				D60CD093219EC07700E63228 /* State.swift in Sources */,
 				D6A97F4F2175CEF600EC7AAB /* ViewController.swift in Sources */,
 				D651CC51218065F7002E15AF /* BrushSizeSlider.swift in Sources */,
