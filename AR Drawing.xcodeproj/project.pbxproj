@@ -18,8 +18,6 @@
 		D60CD09E219EEE3E00E63228 /* ImageNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60CD09D219EEE3E00E63228 /* ImageNode.swift */; };
 		D60CD0A0219EF66000E63228 /* NodeAnchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D60CD09F219EF66000E63228 /* NodeAnchor.swift */; };
 		D612F3C3219C11EA007D4EC2 /* TextNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D612F3C2219C11EA007D4EC2 /* TextNode.swift */; };
-		D612F3C5219C3874007D4EC2 /* TextAnchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D612F3C4219C3874007D4EC2 /* TextAnchor.swift */; };
-		D619C3C52189D35F00C80761 /* ScribbleAnchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D619C3C42189D35F00C80761 /* ScribbleAnchor.swift */; };
 		D62CBA6221809998006D27C0 /* Plane.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62CBA6121809998006D27C0 /* Plane.swift */; };
 		D62CBA64218099CF006D27C0 /* DrawingScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = D62CBA63218099CF006D27C0 /* DrawingScene.sks */; };
 		D651CC4D217F630F002E15AF /* DrawingSceneColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = D651CC4C217F630F002E15AF /* DrawingSceneColors.swift */; };
@@ -45,8 +43,6 @@
 		D60CD09D219EEE3E00E63228 /* ImageNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageNode.swift; sourceTree = "<group>"; };
 		D60CD09F219EF66000E63228 /* NodeAnchor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeAnchor.swift; sourceTree = "<group>"; };
 		D612F3C2219C11EA007D4EC2 /* TextNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextNode.swift; sourceTree = "<group>"; };
-		D612F3C4219C3874007D4EC2 /* TextAnchor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAnchor.swift; sourceTree = "<group>"; };
-		D619C3C42189D35F00C80761 /* ScribbleAnchor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScribbleAnchor.swift; sourceTree = "<group>"; };
 		D62CBA6121809998006D27C0 /* Plane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plane.swift; sourceTree = "<group>"; };
 		D62CBA63218099CF006D27C0 /* DrawingScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = DrawingScene.sks; sourceTree = "<group>"; };
 		D651CC4C217F630F002E15AF /* DrawingSceneColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingSceneColors.swift; sourceTree = "<group>"; };
@@ -98,8 +94,6 @@
 			isa = PBXGroup;
 			children = (
 				D60CD09B219EEDCB00E63228 /* SnapshotAnchor.swift */,
-				D619C3C42189D35F00C80761 /* ScribbleAnchor.swift */,
-				D612F3C4219C3874007D4EC2 /* TextAnchor.swift */,
 				D60CD09F219EF66000E63228 /* NodeAnchor.swift */,
 				D62CBA6121809998006D27C0 /* Plane.swift */,
 				D612F3C2219C11EA007D4EC2 /* TextNode.swift */,
@@ -287,12 +281,10 @@
 				D60CD0A0219EF66000E63228 /* NodeAnchor.swift in Sources */,
 				D6A97F4B2175CEF600EC7AAB /* AppDelegate.swift in Sources */,
 				D612F3C3219C11EA007D4EC2 /* TextNode.swift in Sources */,
-				D612F3C5219C3874007D4EC2 /* TextAnchor.swift in Sources */,
 				D60CD09C219EEDCC00E63228 /* SnapshotAnchor.swift in Sources */,
 				D60CD08F219EBF5100E63228 /* PlacingState.swift in Sources */,
 				D60CD09E219EEE3E00E63228 /* ImageNode.swift in Sources */,
 				D60CD08B219EBF1400E63228 /* DrawingState.swift in Sources */,
-				D619C3C52189D35F00C80761 /* ScribbleAnchor.swift in Sources */,
 				D62CBA6221809998006D27C0 /* Plane.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

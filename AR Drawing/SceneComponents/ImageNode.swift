@@ -5,8 +5,8 @@ import ARKit
 // Plane node with image content
 
 class ImageNode: SCNNode {
-    var node: SCNNode
-    var image: UIImage
+    var node: SCNNode?
+    var image: UIImage?
     
     init(image: UIImage, size: CGSize) {
         self.image = image
@@ -23,12 +23,25 @@ class ImageNode: SCNNode {
         super.init()
         
         self.name = "image"
-        self.node.name = "imagenode"
+        self.node!.name = "imagenode"
         
-        self.addChildNode(node)
+        self.addChildNode(node!)
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        self.node = aDecoder.decodeObject(of: SCNNode.self, forKey: "node")
+        self.image = aDecoder.decodeObject(of: UIImage.self, forKey: "image")
+        
+        super.init(coder: aDecoder)
+    }
+    
+    override func encode(with aCoder: NSCoder) {
+        super.encode(with: aCoder)
+        aCoder.encode(node, forKey: "node")
+        aCoder.encode(image, forKey: "image")
+    }
+    
+    override class var supportsSecureCoding: Bool {
+        return true
     }
 }

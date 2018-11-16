@@ -152,19 +152,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             imageTracker?.detectedImage(imageAnchor: imageAnchor, newNode: node)
         }
         
-        // new ScribbleAnchor placed
-        if let scribbleAnchor = anchor as? ScribbleAnchor {
-            print("Scribble ARAnchor placed at: \(anchor.transform)")
-            scribbleAnchor.node.simdTransform = matrix_identity_float4x4
-            node.addChildNode(scribbleAnchor.node)
-            nodesForStep[currentStep].append(node)
-        }
-        
-        // new TextAnchor placed
-        if let textAnchor = anchor as? TextAnchor {
-            print("Text anchor place at: \(anchor.transform)")
-            textAnchor.node.simdTransform = matrix_identity_float4x4
-            node.addChildNode(textAnchor.node)
+        // new NodeAnchor placed
+        if let nodeAnchor = anchor as? NodeAnchor {
+            print("Node Anchor placed at: \(anchor.transform)")
+            nodeAnchor.node.simdTransform = matrix_identity_float4x4
+            node.addChildNode(nodeAnchor.node)
             nodesForStep[currentStep].append(node)
         }
     }

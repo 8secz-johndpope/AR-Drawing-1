@@ -109,14 +109,17 @@ class PlacingState: State {
         }
         else {
             var anchor: ARAnchor
-            if let node = context.previewNode as? TextNode {
+            /*if let node = context.previewNode as? TextNode {
                 anchor = TextAnchor(textnode: node, transform: context.previewNode!.simdTransform)
             } else {
                 // create an ARAnchor at the transform of the previewNode
                 // in 'func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor)' a node gets associated with this anchor
                 anchor = ScribbleAnchor(scribble: context.previewNode!, transform: context.previewNode!.simdTransform)
+            }*/
+            if let node = context.previewNode {
+                anchor = NodeAnchor(node: node, transform: node.simdTransform)
+                context.sceneView.session.add(anchor: anchor)
             }
-            context.sceneView.session.add(anchor: anchor)
         }
         context.setState(DrawingState())
     }
