@@ -45,13 +45,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     let defaultDistance = CGFloat(1.0)          // place scribble at ...m when no featurepoints or planes are detected
     
-    enum ScribbleState {
-        case drawing                            // first user draws a scribble on the screen
-        case placing                            // then the scribble gets placed in the AR world
-        case editing                            // looking around and selecting scribbles to be edited
-        case typing                             // Typing text
-    }
-    var currentState = ScribbleState.drawing
+    var currentState: State?
     
     var planes = [ARPlaneAnchor: Plane]()       // to store auto detected planes
     var previewNode: SCNNode?                   // to preview where the scribble will be placed
@@ -126,6 +120,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         hiddenTextField.delegate = self
         
         nodesForStep.append([])
+        
+        currentState = DrawingState()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -144,8 +140,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        setState(ScribbleState.drawing)
     }
     
 
@@ -216,88 +210,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             }
         }
         
-        // update position of preview node
-        if(currentState == ScribbleState.typing) {
-            self.previewNode?.simdTransform = getTransformInFrontOfCamera(Float(self.defaultDistance))
-            self.previewNode?.localTranslate(by: SCNVector3(0, 0.1, 0))
-            print("Textnode transform: \(self.previewNode?.simdTransform)")
-        }
-        else if(currentState == ScribbleState.placing && previewNode != nil) {
-            // reset colors
-            for (_, plane) in planes { plane.setColor(UIColor.planeColor) }
-            for(_, plane) in imagePlanes { plane.geometry?.firstMaterial?.diffuse.contents = UIColor.imagePlaneColor }
-            attachToImagePlane = nil
-            
-            let detectionImageNode = hitTestDetectionImage()
-            if let hit = detectionImageNode {
-                print("Detection Image plane hit: \(hit)")
-                let imagePlane = hit.node
-                imagePlane.geometry?.firstMaterial?.diffuse.contents = UIColor.imagePlaneColorHover
-                self.previewNode?.simdTransform = sceneView.anchor(for: imagePlane)!.transform
-                self.previewNode?.simdTransform *= float4x4(simd_quatf(angle: -Float.pi / 2, axis: float3(1,0,0)))
-            
-                // place scribble little bit in front of plane
-                var depthCorrection = matrix_identity_float4x4
-                depthCorrection.columns.3.z = -0.001
-                self.previewNode?.simdTransform *= depthCorrection
-                
-                if let planeGeometry = imagePlane.geometry as? SCNPlane {
-                    print("Plane size: \(planeGeometry)")
-                    let pan = CGPoint(x: self.panFactor.x * planeGeometry.width, y: self.panFactor.y * planeGeometry.height)
-                    print("Pan: \(pan)")
-                    self.previewNode?.localTranslate(by: SCNVector3(pan.x, -pan.y, 0))
-                }
-                attachToImagePlane = imagePlane
-            }
-            else {
-            
-                let results = hitTestFromCenter()
-                var target: ARHitTestResult? = nil
-                
-                // look for first plane detected in results
-                // if no planes are detected take the first featurepoint
-                for result in results {
-                    if result.type == ARHitTestResult.ResultType.existingPlaneUsingExtent {
-                        target = result
-                        break // select closest plane as target
-                    }
-                    else if result.type == ARHitTestResult.ResultType.featurePoint {
-                        if target == nil { // no plane or closer feature point selected as target
-                            target = result
-                        }
-                    }
-                }
-                
-                let distance = results.first?.distance ?? defaultDistance
-                let transform = getTransformInFrontOfCamera(Float(distance))
-                
-                switch target?.type {
-                case ARHitTestResult.ResultType.existingPlaneUsingExtent:
-                    guard let anchor = target?.anchor as? ARPlaneAnchor else { return }
-                    
-                    setDebugText("hitting plane")
-                    self.planes[anchor]?.setColor(UIColor.planeColorHover)
-                    self.previewNode?.simdTransform = (target?.worldTransform)!
-                    let rotation = float4x4(simd_quatf(angle: -Float.pi / 2, axis: float3(1, 0, 0)))
-                    self.previewNode?.simdTransform *= rotation
-                    
-                case ARHitTestResult.ResultType.featurePoint:
-                    setDebugText("hitting feature point  \(distance)m")
-                    self.previewNode?.simdTransform = transform
-                    
-                default:
-                    setDebugText("hitting nothing \(distance)m")
-                    self.previewNode?.simdTransform = transform
-                }
-            }
-            
-            // scale gesture
-            self.previewNode?.scale = SCNVector3(self.scaleFactor, self.scaleFactor, self.scaleFactor)
-            
-            // rotation gesture
-            let rotation = float4x4(simd_quatf(angle: Float(-self.rotation), axis: float3(0, 0, 1)))
-            self.previewNode?.simdTransform *= rotation
-        }
+        currentState?.update(context: self)
     }
     
     
@@ -348,12 +261,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     //MARK: Functions
     
-    private func hitTestFromCenter() -> [ARHitTestResult] {
+    func hitTestFromCenter() -> [ARHitTestResult] {
         let results = sceneView.hitTest(sceneView.center, types: [.existingPlaneUsingExtent, .featurePoint])
         return results
     }
     
-    private func hitTestDetectionImage() -> SCNHitTestResult? {
+    func hitTestDetectionImage() -> SCNHitTestResult? {
         let results = sceneView.hitTest(sceneView.center, options: [SCNHitTestOption.searchMode: SCNHitTestSearchMode.all.rawValue])
         let imagePlanes = results.filter { $0.node.name == "detection_image_plane" }
         if let hit = imagePlanes.first {
@@ -362,20 +275,20 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         return nil
     }
 
-    private func addPlane(node: SCNNode, anchor: ARPlaneAnchor) {
+    func addPlane(node: SCNNode, anchor: ARPlaneAnchor) {
         let plane = Plane(anchor, in: sceneView)
         node.addChildNode(plane)
         planes[anchor] = plane
         print(planes)
     }
     
-    private func updatePlane(anchor: ARPlaneAnchor) {
+    func updatePlane(anchor: ARPlaneAnchor) {
         if let plane = planes[anchor] {
             plane.update(anchor)
         }
     }
     
-    private func getTransformInFrontOfCamera(_ distance: Float) -> simd_float4x4 {
+    func getTransformInFrontOfCamera(_ distance: Float) -> simd_float4x4 {
         var translation = matrix_identity_float4x4
         translation.columns.3.z = -distance
         
@@ -385,89 +298,32 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         return transform
     }
     
-    private func setInfoText(_ text: String) {
+    func setInfoText(_ text: String) {
         DispatchQueue.main.async {
             self.infoLabel.text = text
         }
     }
     
-    private func setDebugText(_ text: String) {
+    func setDebugText(_ text: String) {
         DispatchQueue.main.async {
             self.debugLabel.text = text
         }
     }
     
-    private func makePreviewNode(_ node: SCNNode) {
+    func makePreviewNode(_ node: SCNNode) {
         node.geometry?.firstMaterial?.readsFromDepthBuffer = true // always visible
         node.renderingOrder = -10    // always on top
         sceneView.scene.rootNode.addChildNode(node)
         previewNode = node
     }
     
-    private func setState(_ state: ScribbleState) {
-        if(state == ScribbleState.drawing) {
-            setInfoText("Draw something on the screen, press + when you're done")
-            self.drawingSceneView?.isHidden = false
-            self.drawingSceneView?.isUserInteractionEnabled = true
-            self.drawingScene?.isEnabled = true
-            
-            currentState = ScribbleState.drawing
-            debugLabel.isHidden = true
-            setGestureDetectorsEnabled(false)
-            
-            self.deleteButton.isHidden = true
-            
-            self.previewNode = nil
-            
-            toggleSideBar(visible: true)
-        }
-        else if(state == ScribbleState.placing) {
-            setInfoText("Tap the screen to place your scribble in the world")
-            resetGestureValues()
-            self.drawingSceneView?.isHidden = true
-            self.drawingSceneView?.isUserInteractionEnabled = false
-            self.drawingScene?.isEnabled = false
-            self.drawingScene?.clear()
-        
-            currentState = ScribbleState.placing
-            debugLabel.isHidden = false
-            setGestureDetectorsEnabled(true)
-
-            
-            self.deleteButton.isHidden = false
-            
-            toggleSideBar(visible: false)
-        }
-        else if(state == ScribbleState.editing) {
-            setInfoText("Tap on a scribble to move or delete")
-            self.drawingSceneView?.isHidden = true
-            self.drawingSceneView?.isUserInteractionEnabled = false
-            self.drawingScene?.isEnabled = false
-            
-            currentState = ScribbleState.editing
-            debugLabel.isHidden = true
-            setGestureDetectorsEnabled(false)
-            
-            self.deleteButton.isHidden = true
-            
-            toggleSideBar(visible: false)
-        }
-        else if(state == ScribbleState.typing) {
-            setInfoText("Type some text to add to the scene")
-            
-            self.drawingSceneView?.isHidden = true
-            self.drawingSceneView?.isUserInteractionEnabled = false
-            self.drawingScene?.isEnabled = false
-            
-            currentState = ScribbleState.typing
-            debugLabel.isHidden = false
-            setGestureDetectorsEnabled(false)
-            
-            toggleSideBar(visible: false)
-        }
+    func setState(_ state: State) {
+        currentState?.onExitState(context: self)
+        currentState = state
+        currentState?.onEnterState(context: self)
     }
     
-    private func toggleBrushSizeSlider() {
+    func toggleBrushSizeSlider() {
         guard let slider = brushSizeSlider else { return }
         
         let hidden = slider.isHidden
@@ -480,19 +336,19 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         //UIView.transition(with: slider, duration: 0.5, options: .transitionCrossDissolve, animations: {slider.isHidden})
     }
     
-    private func hideBrushSizeSlider() {
+    func hideBrushSizeSlider() {
         guard let slider = brushSizeSlider else { return }
         UIView.animate(withDuration: 0.3, animations: { slider.alpha = 0 }, completion: { (finished) in slider.isHidden = finished })
     }
     
-    private func showBrushSizeSlider() {
+    func showBrushSizeSlider() {
         guard let slider = brushSizeSlider else { return }
         slider.alpha = 0
         slider.isHidden = false
         UIView.animate(withDuration: 0.3, animations: { slider.alpha = 1 })
     }
     
-    private func resizeBrushSizeSliderImage() {
+    func resizeBrushSizeSliderImage() {
         let ratio = CGFloat((self.brushSizeSlider?.value ?? 5.0) + 10.0)
         let thumbImage = UIImage(named: "black-dot")!
         let size = CGSize(width: ratio, height: ratio)
@@ -500,7 +356,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         self.brushSizeSlider?.setThumbImage(ResizeImage(image: thumbImage, targetSize: size), for: .highlighted)
     }
     
-    private func toggleSideBar(visible: Bool) {
+    func toggleSideBar(visible: Bool) {
         if visible == false {
             //sidebar.isHidden = true
             hideBrushSizeSlider()
@@ -517,13 +373,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     
-    private func setGestureDetectorsEnabled(_ enabled: Bool) {
+    func setGestureDetectorsEnabled(_ enabled: Bool) {
         self.rotationGesture.isEnabled = enabled
         self.pinchGesture.isEnabled = enabled
         self.panGesture.isEnabled = enabled
     }
     
-    private func resetGestureValues() {
+    func resetGestureValues() {
         self.lastScaleFactor = 1.0
         self.scaleFactor = 1.0
         self.lastRotation = 0.0
@@ -532,7 +388,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         self.panFactor = CGPoint(x: 0, y: 0)
     }
     
-    private func nextStep() {
+    func nextStep() {
         for node in nodesForStep[currentStep] {
             node.isHidden = true
         }
@@ -552,7 +408,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         print("Next step. Now in step nr: \(currentStep)")
     }
     
-    private func prevStep() {
+    func prevStep() {
         guard currentStep >= 1 else { return }
         
         for node in nodesForStep[currentStep] {
@@ -571,56 +427,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     //MARK: Actions
     
     @IBAction func clickedAddButton(_ sender: UIButton) {
-        if(currentState == ScribbleState.drawing) {
-            // make preview node from screen scribble
-            if let drawingScene = self.drawingScene {
-                if drawingScene.isEmpty() {
-                    print("Emty scene, draw something on screen first")
-                    return
-                }
-                
-                let heightToWidthRatio = view.frame.size.height / view.frame.size.width
-                let width: CGFloat = 0.30   // 30 cm wide
-                let height = width * heightToWidthRatio
-                let plane = SCNPlane(width: width, height: height)
-                
-                let image = self.drawingScene?.getSnapShot()
-                plane.firstMaterial?.diffuse.contents = image
-                plane.firstMaterial?.isDoubleSided = true
-                plane.firstMaterial?.emission.contents = UIColor.black
-                plane.firstMaterial?.transparencyMode = .aOne
-                let node = SCNNode(geometry: plane)
-                node.name = "scribble"
-                
-                makePreviewNode(node)
-                setState(ScribbleState.placing)
-            }
-        }
-        else if(currentState == ScribbleState.placing) {
-            if let attachedTo = attachToImagePlane {
-                // attach SCNNode to the Plane associated with the ARImageAnchor
-                attachedTo.addChildNode(previewNode!)
-                
-                // previewnode becomes child of attachedTo, instead of rootNode
-                // convert transform from one parent to the other
-                previewNode?.transform = sceneView.scene.rootNode.convertTransform(previewNode!.transform, to: attachedTo)
-            }
-            else {
-                var anchor: ARAnchor
-                if let node = previewNode as? TextNode {
-                    anchor = TextAnchor(textnode: node, transform: previewNode!.simdTransform)
-                } else {
-                    // create an ARAnchor at the transform of the previewNode
-                    // in 'func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor)' a node gets associated with this anchor
-                    anchor = ScribbleAnchor(scribble: previewNode!, transform: previewNode!.simdTransform)
-                }
-                sceneView.session.add(anchor: anchor)
-            }
-            setState(ScribbleState.drawing)
-        }
-        else if(currentState == ScribbleState.editing) {
-            setState(ScribbleState.drawing)
-        }
+        currentState?.handleAddButton(context: self)
     }
     
     @IBAction func clickedColorButton(_ sender: UIButton) {
@@ -710,18 +517,18 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func clickedEditButton(_ sender: UIButton) {
-        if(currentState == ScribbleState.editing) {
-            setState(ScribbleState.drawing)
+        if(currentState is EditingState) {
+            setState(DrawingState())
         }
         else {
-            setState(ScribbleState.editing)
+            setState(EditingState())
         }
     }
     
     @IBAction func clickedDeleteButton(_ sender: UIButton) {
-        if(currentState == ScribbleState.placing) {
+        if(currentState is PlacingState) {
             previewNode?.removeFromParentNode()
-            setState(ScribbleState.drawing)
+            setState(DrawingState())
         }
     }
     
@@ -734,7 +541,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         let textnode = TextNode(text: "", color: (drawingScene?.lineColor)!)
         textnode.name = "text"
         makePreviewNode(textnode)
-        setState(ScribbleState.typing)
+        setState(TypingState())
     }
     
     @objc func hiddenTextFieldChanged(_ textField: UITextField) {
@@ -747,9 +554,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @objc func hiddenTextFieldEndEditing() {
         print("end editing")
         if(hiddenTextField.text == "") {
-            setState(ScribbleState.drawing)
+            setState(DrawingState())
         } else {
-            setState(ScribbleState.placing)
+            setState(PlacingState())
         }
         self.hiddenTextField.text = ""
     }
@@ -783,7 +590,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         picker.dismiss(animated: true, completion: nil)
         
         makePreviewNode(node)
-        setState(ScribbleState.placing)
+        setState(PlacingState())
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -902,37 +709,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func handleTapGesture(_ sender: UITapGestureRecognizer) {
-        if(currentState == ScribbleState.editing) {
-            let location = sender.location(in: sceneView)
-            let hits = sceneView.hitTest(location, options: [SCNHitTestOption.searchMode: SCNHitTestSearchMode.all.rawValue])
-            
-            for hit in hits {
-                print(hit)
-                if let text = (hit.node.geometry as? SCNText)?.string as? String,
-                    let color = (hit.node.geometry?.firstMaterial?.diffuse.contents) as? UIColor {
-                    let copy = TextNode(text: text, color: color)
-                    makePreviewNode(copy)
-                    hit.node.removeFromParentNode()
-                    setState(ScribbleState.placing)
-                }
-            }
-            
-            let nodes = hits.filter { $0.node.name == "scribble" || $0.node.name == "text" || $0.node.name == "image" }
-            
-            if !nodes.isEmpty {
-                print("Tap detected: \(nodes.count) nodes hit")
-                
-                if let node = nodes.first?.node {
-                    // Make a new preview node from selected node
-                    let copy = node.copy() as! SCNNode
-                    makePreviewNode(copy)
-                    
-                    node.removeFromParentNode()
-                    
-                    setState(ScribbleState.placing)
-                }
-            }
-        }
+        currentState?.handleTap(context: self, sender: sender)
     }
     
     
