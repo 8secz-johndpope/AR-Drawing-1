@@ -180,7 +180,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             imageTracker?.updateTrackedImageAnchor(imageAnchor: imageAnchor)
         }
     }
-
     
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         // enable Save button only when the mapping status is good and an object has been placed
@@ -234,10 +233,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         // Attempt relocalization after session interuption
         return true
     }
-    
-    
-    
-    // MARK: UITextFieldDelegate
     
     
     
@@ -325,8 +320,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         let ratio = CGFloat((self.brushSizeSlider?.value ?? 5.0) + 10.0)
         let thumbImage = UIImage(named: "black-dot")!
         let size = CGSize(width: ratio, height: ratio)
-        self.brushSizeSlider?.setThumbImage(ResizeImage(image: thumbImage, targetSize: size), for: .normal)
-        self.brushSizeSlider?.setThumbImage(ResizeImage(image: thumbImage, targetSize: size), for: .highlighted)
+        self.brushSizeSlider?.setThumbImage(thumbImage.resizeImage(targetSize: size), for: .normal)
+        self.brushSizeSlider?.setThumbImage(thumbImage.resizeImage(targetSize: size), for: .highlighted)
     }
     
     func toggleSideBar(visible: Bool) {
@@ -397,6 +392,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     
+    
     //MARK: Actions
     
     @IBAction func clickedAddButton(_ sender: UIButton) {
@@ -427,7 +423,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         present(picker, animated: true)
     }
     
-    
     @IBAction func clickedBrushSizeButton(_ sender: UIButton) {
         if(brushSizeSlider == nil) {
             // instantiatie new slider
@@ -452,37 +447,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
         
         toggleBrushSizeSlider()
-    }    
-    
-    @objc func brushSliderValueChanged(_ sender: UISlider) {
-        resizeBrushSizeSliderImage()
-        self.drawingScene?.lineWidth = CGFloat(sender.value)
-    }
-    
-    func ResizeImage(image: UIImage, targetSize: CGSize) -> UIImage {
-        let size = image.size
-        
-        let widthRatio  = targetSize.width  / image.size.width
-        let heightRatio = targetSize.height / image.size.height
-        
-        // Figure out what our orientation is, and use that to form the rectangle
-        var newSize: CGSize
-        if(widthRatio > heightRatio) {
-            newSize = CGSize(width: size.width * heightRatio, height: size.height * heightRatio)
-        } else {
-            newSize = CGSize(width: size.width * widthRatio,  height: size.height * widthRatio)
-        }
-        
-        // This is the rect that we've calculated out and this is what is actually used below
-        let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
-        
-        // Actually do the resizing to the rect using the ImageContext stuff
-        UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
-        image.draw(in: rect)
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        return newImage!
     }
     
     @IBAction func clickedUndoButton(_ sender: UIButton) {
@@ -512,9 +476,52 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         print("Made new text node, set state to typing")
         let textnode = TextNode(text: "", color: (drawingScene?.lineColor)!)
-        textnode.name = "text"
         makePreviewNode(textnode)
         setState(TypingState())
+    }
+    
+    @IBAction func clickedNextButton(_ sender: UIButton) {
+        nextStep()
+    }
+    
+    @IBAction func clickedPrevButton(_ sender: UIButton) {
+        prevStep()
+    }
+    
+    @IBAction func clickedImageButton(_ sender: UIButton) {
+        if UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum) {
+            imagePicker.delegate = self
+            imagePicker.sourceType = .savedPhotosAlbum
+            imagePicker.allowsEditing = false
+            imagePicker.modalPresentationStyle = .overCurrentContext
+            
+            self.present(imagePicker, animated: true, completion: nil)
+        }
+    }
+    
+    
+    
+    // MARK: Delegates and Listeners
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
+        // image size in pixels, node size in meters
+        let node = ImageNode(image: image, size: CGSize(width: image.size.width / 20000, height: image.size.height / 20000))
+        node.simdTransform *= float4x4(simd_quatf(angle: Float.pi / 2, axis: float3(1,0,0)))
+        
+        picker.dismiss(animated: true, completion: nil)
+        
+        makePreviewNode(node)
+        setState(PlacingState())
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func brushSliderValueChanged(_ sender: UISlider) {
+        resizeBrushSizeSliderImage()
+        self.drawingScene?.lineWidth = CGFloat(sender.value)
     }
     
     @objc func hiddenTextFieldChanged(_ textField: UITextField) {
@@ -539,44 +546,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         return true
     }
     
-    @IBAction func clickedImageButton(_ sender: UIButton) {
-        if UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum) {
-            imagePicker.delegate = self
-            imagePicker.sourceType = .savedPhotosAlbum
-            imagePicker.allowsEditing = false
-            imagePicker.modalPresentationStyle = .overCurrentContext
-            
-            self.present(imagePicker, animated: true, completion: nil)
-        }
-    }
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
-        // image size in pixels, node size in meters
-        let node = SCNNode(geometry: SCNPlane(width: image.size.width / 20000, height: image.size.height / 20000))
-        
-        node.geometry?.firstMaterial?.diffuse.contents = image
-        node.simdTransform *= float4x4(simd_quatf(angle: Float.pi / 2, axis: float3(1,0,0)))
-        node.name = "image"
-        
-        
-        picker.dismiss(animated: true, completion: nil)
-        
-        makePreviewNode(node)
-        setState(PlacingState())
-    }
-    
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        picker.dismiss(animated: true, completion: nil)
-    }
-    
-    @IBAction func clickedNextButton(_ sender: UIButton) {
-        nextStep()
-    }
-    
-    @IBAction func clickedPrevButton(_ sender: UIButton) {
-        prevStep()
-    }
     
     // Persisitence
     
@@ -650,6 +620,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     
+    
     // Gestures
     
     @IBAction func handePinchGesture(_ sender: UIPinchGestureRecognizer) {
@@ -674,7 +645,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         if(sender.state == .began || sender.state == .changed) {
             let translation = sender.translation(in: sceneView)
             self.panFactor = CGPoint(x: (translation.x / sceneView.bounds.width) + self.lastPanFactor.x, y: (translation.y / sceneView.bounds.height) + self.lastPanFactor.y)
-            print(panFactor)
         }
         else if(sender.state == .ended) {
             self.lastPanFactor = self.panFactor
@@ -690,5 +660,37 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return (gestureRecognizer is UIPinchGestureRecognizer && otherGestureRecognizer is UIRotationGestureRecognizer) ||
             (gestureRecognizer is UIRotationGestureRecognizer && otherGestureRecognizer is UIPinchGestureRecognizer)
+    }
+}
+
+
+
+// Mark: Extensions
+
+extension UIImage {
+    func resizeImage(targetSize: CGSize) -> UIImage {
+        let size = self.size
+        
+        let widthRatio  = targetSize.width  / self.size.width
+        let heightRatio = targetSize.height / self.size.height
+        
+        // Figure out what our orientation is, and use that to form the rectangle
+        var newSize: CGSize
+        if(widthRatio > heightRatio) {
+            newSize = CGSize(width: size.width * heightRatio, height: size.height * heightRatio)
+        } else {
+            newSize = CGSize(width: size.width * widthRatio,  height: size.height * widthRatio)
+        }
+        
+        // This is the rect that we've calculated out and this is what is actually used below
+        let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
+        
+        // Actually do the resizing to the rect using the ImageContext stuff
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
+        self.draw(in: rect)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return newImage!
     }
 }

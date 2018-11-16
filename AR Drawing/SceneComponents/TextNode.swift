@@ -1,18 +1,19 @@
 import UIKit
 import ARKit
 
+// Node with text
+
 class TextNode: SCNNode {
-    var node: SCNNode
+    let extrusionDepth: CGFloat = 0.02
     
+    var node: SCNNode
+
     var text: String {
         didSet {
             (self.node.geometry as! SCNText).string = text
             recenterPivot()
         }
     }
-    
-    let extrusionDepth: CGFloat = 0.02
-    
     
     init(text: String, color: UIColor) {
         self.text = text
@@ -23,10 +24,10 @@ class TextNode: SCNNode {
         geometry.firstMaterial?.diffuse.contents = color
         self.node = SCNNode(geometry: geometry)
         
-        
         super.init()
         
         self.name = "text"
+        self.node.name = "textnode"
         
         self.recenterPivot()
         self.addChildNode(node)
@@ -37,7 +38,6 @@ class TextNode: SCNNode {
     }
     
     func recenterPivot() {
-        
         let (min, max) = self.node.boundingBox
         let dx = min.x + 0.5 * (max.x - min.x)
         let dy = min.y + 0.5 * (max.y - min.y)

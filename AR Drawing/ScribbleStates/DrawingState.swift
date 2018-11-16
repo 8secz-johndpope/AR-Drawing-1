@@ -31,18 +31,12 @@ class DrawingState: State {
                 return
             }
             
+            guard let image = context.drawingScene?.getSnapShot() else { return }
             let heightToWidthRatio = context.view.frame.size.height / context.view.frame.size.width
             let width: CGFloat = 0.30   // 30 cm wide
             let height = width * heightToWidthRatio
-            let plane = SCNPlane(width: width, height: height)
             
-            let image = context.drawingScene?.getSnapShot()
-            plane.firstMaterial?.diffuse.contents = image
-            plane.firstMaterial?.isDoubleSided = true
-            plane.firstMaterial?.emission.contents = UIColor.black
-            plane.firstMaterial?.transparencyMode = .aOne
-            let node = SCNNode(geometry: plane)
-            node.name = "scribble"
+            let node = ImageNode(image: image, size: CGSize(width: width, height: height))
             
             context.makePreviewNode(node)
             context.setState(PlacingState())

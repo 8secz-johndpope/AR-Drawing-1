@@ -30,18 +30,7 @@ class EditingState: State {
         let location = sender.location(in: context.sceneView)
         let hits = context.sceneView.hitTest(location, options: [SCNHitTestOption.searchMode: SCNHitTestSearchMode.all.rawValue])
         
-        for hit in hits {
-            print(hit)
-            if let text = (hit.node.geometry as? SCNText)?.string as? String,
-                let color = (hit.node.geometry?.firstMaterial?.diffuse.contents) as? UIColor {
-                let copy = TextNode(text: text, color: color)
-                context.makePreviewNode(copy)
-                hit.node.removeFromParentNode()
-                context.setState(PlacingState())
-            }
-        }
-        
-        let nodes = hits.filter { $0.node.name == "scribble" || $0.node.name == "text" || $0.node.name == "image" }
+        let nodes = hits.filter { $0.node.name == "imagenode" || $0.node.name == "textnode" }
         
         if !nodes.isEmpty {
             print("Tap detected: \(nodes.count) nodes hit")

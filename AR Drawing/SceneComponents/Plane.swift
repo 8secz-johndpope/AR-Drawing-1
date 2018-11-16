@@ -2,6 +2,8 @@ import UIKit
 import SceneKit
 import ARKit
 
+// Detected Plane, showing extent and mesh
+
 class Plane: SCNNode {
     
     let meshOpacity: CGFloat = 0.1
