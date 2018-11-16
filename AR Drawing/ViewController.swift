@@ -6,8 +6,8 @@ import PDColorPicker
 
 
 extension UIColor {
-    static let planeColor = UIColor.green
-    static let planeColorHover = UIColor.blue
+    static let planeColor = UIColor.green.withAlphaComponent(0.2)
+    static let planeColorHover = UIColor.blue.withAlphaComponent(0.2)
     static let imagePlaneColor = UIColor.red.withAlphaComponent(0.3)
     static let imagePlaneColorHover = UIColor.blue.withAlphaComponent(0.3)
 }
@@ -91,7 +91,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     var detectionImages: Set<ARReferenceImage> {                    // Images to detect and track
-        guard let images = ARReferenceImage.referenceImages(inGroupNamed: "DetectionImages", bundle: nil) else {
+        guard let images = ARReferenceImage.referenceImages(inGroupNamed: "DetectionImages_cards", bundle: nil) else {
             fatalError("Detection Images could not be loaded")
         }
         return images
@@ -167,7 +167,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             plane.geometry?.firstMaterial?.isDoubleSided = true
             plane.simdTransform *= float4x4(simd_quatf(angle: Float.pi / 2, axis: float3(1,0,0)))
             plane.name = "detection_image_plane"
-            plane.renderingOrder = -20
+            plane.renderingOrder = -10
             node.addChildNode(plane)
             self.imagePlanes[imageAnchor] = plane
         }

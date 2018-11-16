@@ -4,8 +4,8 @@ import ARKit
 
 class Plane: SCNNode {
     
-    let meshOpacity: CGFloat = 0.3
-    let extentOpacity: CGFloat = 0.6
+    let meshOpacity: CGFloat = 0.1
+    let extentOpacity: CGFloat = 0.3
     
     var planeAnchor: ARPlaneAnchor
     var meshNode: SCNNode
