@@ -28,6 +28,7 @@
 		D6A97F542175CEF600EC7AAB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D6A97F532175CEF600EC7AAB /* Assets.xcassets */; };
 		D6A97F572175CEF600EC7AAB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D6A97F552175CEF600EC7AAB /* LaunchScreen.storyboard */; };
 		D6BD159F2192F63300DCB3F5 /* Assets.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = D6BD159E2192F63300DCB3F5 /* Assets.scnassets */; };
+		D6F1FDCC21A4031100D326A7 /* WorldMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6F1FDCB21A4031100D326A7 /* WorldMapper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,6 +56,7 @@
 		D6A97F562175CEF600EC7AAB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D6A97F582175CEF600EC7AAB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D6BD159E2192F63300DCB3F5 /* Assets.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = Assets.scnassets; sourceTree = "<group>"; };
+		D6F1FDCB21A4031100D326A7 /* WorldMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldMapper.swift; sourceTree = "<group>"; };
 		F59F0BF50DD75A1461100350 /* Pods-AR Drawing.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AR Drawing.release.xcconfig"; path = "Pods/Target Support Files/Pods-AR Drawing/Pods-AR Drawing.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -129,6 +131,7 @@
 				D6A97F502175CEF600EC7AAB /* Main.storyboard */,
 				D6A97F4A2175CEF600EC7AAB /* AppDelegate.swift */,
 				D6A97F4E2175CEF600EC7AAB /* ViewController.swift */,
+				D6F1FDCB21A4031100D326A7 /* WorldMapper.swift */,
 				D651CC4C217F630F002E15AF /* DrawingSceneColors.swift */,
 				D651CC50218065F7002E15AF /* BrushSizeSlider.swift */,
 				D6A97F532175CEF600EC7AAB /* Assets.xcassets */,
@@ -272,6 +275,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D60CD08D219EBF4300E63228 /* TypingState.swift in Sources */,
+				D6F1FDCC21A4031100D326A7 /* WorldMapper.swift in Sources */,
 				D60CD099219ED58300E63228 /* ImageTracker.swift in Sources */,
 				D60CD093219EC07700E63228 /* State.swift in Sources */,
 				D6A97F4F2175CEF600EC7AAB /* ViewController.swift in Sources */,

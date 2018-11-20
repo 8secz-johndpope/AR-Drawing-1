@@ -61,19 +61,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     var selected: SCNNode?                      // selected node in editing state
     var drawingScene: DrawingSceneColors?       // drawing scene, shown as transparant overlay
     
-    var worldMapURL: URL = {                    // URL to archive ARWorldMap
-        do {
-            return try FileManager.default
-                .url(for: .documentDirectory,
-                     in: .userDomainMask,
-                     appropriateFor: nil,
-                     create: true)
-                .appendingPathComponent("map.arexperience")
-        } catch {
-            fatalError("Can't get file save URL: \(error.localizedDescription)")
-        }
-    }()
-    
     var defaultConfiguration: ARWorldTrackingConfiguration {        // Default ARWorldTrackingConfiguration
         let configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = [.horizontal, .vertical]
@@ -84,6 +71,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     var imageTracker: ImageTracker?
+    var worldMapper: WorldMapper?
     
     var attachToImagePlane: SCNNode?            // to attach scriblle to a tracked detection image plane
     
@@ -117,6 +105,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         currentState = DrawingState()
         imageTracker = ImageTracker(imageGroup: "DetectionImages_cards")
+        worldMapper = WorldMapper(controller: self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -154,10 +143,18 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         // new NodeAnchor placed
         if let nodeAnchor = anchor as? NodeAnchor {
-            print("Node Anchor placed at: \(anchor.transform)")
+            print("--- Node Anchor ---")
+            print("Node: \(nodeAnchor.node)")
+            print("Step: \(nodeAnchor.step)")
+            print("-------------------")
             nodeAnchor.node.simdTransform = matrix_identity_float4x4
             node.addChildNode(nodeAnchor.node)
-            nodesForStep[currentStep].append(node)
+            nodesForStep[nodeAnchor.step].append(node)
+            
+            // for when nodes get loaded from saved worldmap
+            if currentStep != nodeAnchor.step {
+                node.isHidden = true
+            }
         }
     }
     
@@ -183,6 +180,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             }
         }
         
+        // update frame, depending on the state
         currentState?.update(context: self)
     }
     
@@ -206,6 +204,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         case (.limited(.relocalizing), _):
             print("Move device to position shown in image")
             self.snapShotImage.isHidden = false
+        case (.normal, _):
+            print("Resetting to first step")
+            self.resetToFirstStep()
         default:
             print("")
         }
@@ -239,7 +240,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         let plane = Plane(anchor, in: sceneView)
         node.addChildNode(plane)
         planes[anchor] = plane
-        print(planes)
+        print("New plane detected: \(plane)")
     }
     
     func updatePlane(anchor: ARPlaneAnchor) {
@@ -381,6 +382,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
         
         print("Prev step. Now in step nr: \(currentStep)")
+    }
+    
+    func resetToFirstStep() {
+        currentStep = nodesForStep.count - 1
+        while currentStep > 0 {
+            prevStep()
+        }
     }
     
     
@@ -542,73 +550,16 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     // Persisitence
     
-    func saveWorldMap(_ worldMap: ARWorldMap, to url: URL) throws {
-        let data = try NSKeyedArchiver.archivedData(withRootObject: worldMap, requiringSecureCoding: true)
-        try data.write(to: url, options: [.atomic])
-    }
-    
-    func loadWorldMap(from url: URL) throws -> ARWorldMap {
-        let data = try Data(contentsOf: url)
-        guard let worldMap = try NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data) else {
-            throw ARError(.invalidWorldMap)
-        }
-        return worldMap
-    }
+
     
     @IBAction func clickedSaveButton(_ sender: UIButton) {
-        sceneView.session.getCurrentWorldMap { (worldMap, error) in
-            guard let map = worldMap else {
-                print("Cannot get current world map \(error!.localizedDescription)")
-                return
-            }
-            
-            // add snapshot image to the worldmap
-            guard let snapshotAnchor = SnapshotAnchor(capturing: self.sceneView) else {
-                fatalError("Can't take snapshot")
-            }
-            map.anchors.append(snapshotAnchor)
-            
-            do {
-                try self.saveWorldMap(map, to: self.worldMapURL)
-                DispatchQueue.main.async {
-                    self.loadButton.isHidden = false
-                    self.loadButton.isEnabled = true
-                    print("world map is saved")
-                }
-                for anchor in map.anchors {
-                    print(anchor)
-                }
-            } catch {
-                fatalError("Can't save map: \(error.localizedDescription)")
-            }
-        }
+        guard let mapper = worldMapper else { return }
+        mapper.save()
     }
     
     @IBAction func clickedLoadButton(_ sender: UIButton) {
-        // load worldmap
-        let worldMap: ARWorldMap = {
-            do {
-                return try self.loadWorldMap(from: self.worldMapURL)
-            } catch {
-                fatalError("Can't unarchive ARWorldMap from file data: \(error)")
-            }
-        }()
-        
-        // display SnapShotImage
-        if let snapshotData = worldMap.snapshotAnchor?.imageData, let snapshot = UIImage(data: snapshotData) {
-            self.snapShotImage.image = snapshot
-            print("Move device to the location shown in the image")
-        } else {
-            print("No snapshot image stored with worldmap!")
-        }
-        
-        // remove snapshot from worldmap, not needed in scene
-        worldMap.anchors.removeAll(where: { $0 is SnapshotAnchor })
-        
-        // set configuration with initialWorldMap
-        let configuration = self.defaultConfiguration
-        configuration.initialWorldMap = worldMap
-        sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+        guard let mapper = worldMapper else { return }
+        mapper.load()
     }
     
     

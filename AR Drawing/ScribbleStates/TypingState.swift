@@ -19,7 +19,6 @@ class TypingState: State {
     func update(context: ViewController) {
         context.previewNode?.simdTransform = context.getTransformInFrontOfCamera(Float(context.defaultDistance))
         context.previewNode?.localTranslate(by: SCNVector3(0, 0.1, 0))
-        print("Textnode transform: \(context.previewNode?.simdTransform)")
     }
     
     func handleAddButton(context: ViewController) {

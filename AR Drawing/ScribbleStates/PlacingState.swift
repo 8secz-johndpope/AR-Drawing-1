@@ -117,7 +117,7 @@ class PlacingState: State {
                 anchor = ScribbleAnchor(scribble: context.previewNode!, transform: context.previewNode!.simdTransform)
             }*/
             if let node = context.previewNode {
-                anchor = NodeAnchor(node: node, transform: node.simdTransform)
+                anchor = NodeAnchor(node: node, step: context.currentStep, transform: node.simdTransform)
                 context.sceneView.session.add(anchor: anchor)
             }
         }
