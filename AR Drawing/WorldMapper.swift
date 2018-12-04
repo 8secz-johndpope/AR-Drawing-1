@@ -18,11 +18,37 @@ class WorldMapper {
         }
     }()
     
+    var snapshot: UIImage?
+    var map: ARWorldMap?
+    
     
     init(controller: ViewController) {
         self.controller = controller
     }
     
+    private func getWorldMapURL(mapname: String) -> URL {
+        do {
+            return try FileManager.default
+                .url(for: .documentDirectory,
+                     in: .userDomainMask,
+                     appropriateFor: nil,
+                     create: true)
+                .appendingPathComponent("\(mapname).arworldmap")
+        } catch {
+            fatalError("Can't get file save URL for worldmap: \(error.localizedDescription)")
+        }
+    }
+    
+    private func listDocumentsDirectory() {
+        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+        
+        do {
+            let contents = try FileManager.default.contentsOfDirectory(at: documentsDirectory, includingPropertiesForKeys: nil, options: [])
+            print(contents)
+        } catch {
+            print("Listing Documents Directory failed: \(error)")
+        }
+    }
     
     private func writeWorldMap(_ worldMap: ARWorldMap, to url: URL) throws {
         let data = try NSKeyedArchiver.archivedData(withRootObject: worldMap, requiringSecureCoding: true)
@@ -37,34 +63,45 @@ class WorldMapper {
         return worldMap
     }
     
-    
-    func save() {
+    func prepareForSave() {
         self.controller.sceneView.session.getCurrentWorldMap { (worldMap, error) in
             guard let map = worldMap else {
-                print("Cannot get current world map \(error!.localizedDescription)")
+                print("Cannot get current world map: \(error?.localizedDescription)")
                 return
             }
             
-            // add snapshot image to the worldmap
             guard let snapshotAnchor = SnapshotAnchor(capturing: self.controller.sceneView) else {
-                fatalError("Can't take snapshot")
+                fatalError("Cannot take snapshot")
             }
             map.anchors.append(snapshotAnchor)
             
-            do {
-                try self.writeWorldMap(map, to: self.worldMapURL)
-                DispatchQueue.main.async {
-                    self.controller.loadButton.isHidden = false
-                    self.controller.loadButton.isEnabled = true
-                    print("world map is saved")
-                }
-                for anchor in map.anchors {
-                    print(anchor)
-                }
-            } catch {
-                fatalError("Can't save map: \(error.localizedDescription)")
-            }
+            self.snapshot = UIImage(data: snapshotAnchor.imageData)
+            self.map = map
+            
+            self.controller.performSegue(withIdentifier: "savemap", sender: self)
         }
+    }
+    
+    func save(mapname: String) {
+        guard let map = self.map else { return }
+        
+        let url = getWorldMapURL(mapname: mapname)
+        
+        do {
+            try self.writeWorldMap(map, to: url)
+            DispatchQueue.main.async {
+                self.controller.loadButton.isHidden = false
+                self.controller.loadButton.isEnabled = true
+                print("world map saved: \(url.relativeString)")
+            }
+            for anchor in map.anchors {
+                print(anchor)
+            }
+        } catch {
+            fatalError("Can't save map: \(error.localizedDescription)")
+        }
+        
+        self.listDocumentsDirectory()
     }
     
     func load() {

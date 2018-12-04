@@ -6,8 +6,8 @@ import PDColorPicker
 
 
 extension UIColor {
-    static let planeColor = UIColor.green.withAlphaComponent(0.2)
-    static let planeColorHover = UIColor.blue.withAlphaComponent(0.2)
+    static let planeColor = UIColor.green.withAlphaComponent(0.4)
+    static let planeColorHover = UIColor.blue.withAlphaComponent(0.4)
     static let imagePlaneColor = UIColor.red.withAlphaComponent(0.3)
     static let imagePlaneColorHover = UIColor.blue.withAlphaComponent(0.3)
 }
@@ -87,7 +87,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         sceneView.delegate = self
         sceneView.showsStatistics = true
-        sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints]
+        //sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints]
         
         let scene = SCNScene()
         sceneView.scene = scene
@@ -106,6 +106,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         currentState = DrawingState()
         imageTracker = ImageTracker(imageGroup: "DetectionImages_cards")
         worldMapper = WorldMapper(controller: self)
+        
+        self.navigationController?.navigationBar.isHidden = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -120,6 +122,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         super.viewWillDisappear(animated)
         
         sceneView.session.pause()
+        
+        self.navigationController?.navigationBar.isHidden = false
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -149,6 +153,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             print("-------------------")
             nodeAnchor.node.simdTransform = matrix_identity_float4x4
             node.addChildNode(nodeAnchor.node)
+            let node = SCNNode(geometry: SCNSphere(radius: 4.0))
             nodesForStep[nodeAnchor.step].append(node)
             
             // for when nodes get loaded from saved worldmap
@@ -227,7 +232,17 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         return true
     }
     
+    // ViewController Segues
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        
+        if let mapper = sender as? WorldMapper {
+            let saveMapViewController = segue.destination as! SaveMapViewController
+            saveMapViewController.mapName = ""
+            saveMapViewController.mapper = mapper
+        }
+    }
     
     //MARK: Functions
     
@@ -526,7 +541,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     @objc func hiddenTextFieldChanged(_ textField: UITextField) {
         if let node = self.previewNode as? TextNode {
-            print("Text changed: \(textField.text)")
             node.text = textField.text ?? ""
         }
     }
@@ -554,12 +568,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     @IBAction func clickedSaveButton(_ sender: UIButton) {
         guard let mapper = worldMapper else { return }
-        mapper.save()
+        //mapper.save()
+        mapper.prepareForSave()
     }
     
     @IBAction func clickedLoadButton(_ sender: UIButton) {
         guard let mapper = worldMapper else { return }
-        mapper.load()
+        //mapper.load()
+        
     }
     
     
