@@ -10,7 +10,7 @@ class LoadMapTableViewController: UITableViewController {
     }
     var mapInfo = [MapInfo]()
     
-    var cellSelectedHandler: ((ARWorldMap)->Void)?
+    var cellSelectedHandler: ((MapInfo)->Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,7 +62,7 @@ class LoadMapTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if cellSelectedHandler != nil {
-            cellSelectedHandler!(self.mapInfo[indexPath.row].map)
+            cellSelectedHandler!(self.mapInfo[indexPath.row])
         }
         dismiss(animated: true, completion: nil)
     }

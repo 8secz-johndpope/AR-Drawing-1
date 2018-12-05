@@ -75,6 +75,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     var imageTracker: ImageTracker?
     var worldMapper: WorldMapper?
     
+    var currentMapName = "map"
+    
     var attachToImagePlane: SCNNode?            // to attach scriblle to a tracked detection image plane
     
     var imagePicker = UIImagePickerController()
@@ -241,7 +243,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         if let mapper = sender as? WorldMapper {
             let saveMapViewController = segue.destination as! SaveMapViewController
-            saveMapViewController.mapName = ""
+            saveMapViewController.mapName = self.currentMapName
             saveMapViewController.mapper = mapper
         }
         
@@ -619,9 +621,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         self.performSegue(withIdentifier: "selectWorldMap", sender: self)
     }
     
-    func selectedWorldMap(map: ARWorldMap) {
+    func selectedWorldMap(mapInfo: LoadMapTableViewController.MapInfo) {
         guard let mapper = worldMapper else { return }
-        mapper.loadMap(worldMap: map)
+        mapper.loadMap(worldMap: mapInfo.map)
+        currentMapName = mapInfo.name
     }
     
     

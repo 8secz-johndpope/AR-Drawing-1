@@ -21,7 +21,6 @@ class WorldMapper {
     var snapshot: UIImage?
     var map: ARWorldMap?
     
-    
     init(controller: ViewController) {
         self.controller = controller
     }
@@ -136,6 +135,8 @@ class WorldMapper {
     }
     
     func newMap() {
+        controller.currentMapName = "map"
+        
         // set configuration with initialWorldMap
         let configuration = self.controller.defaultConfiguration
         self.controller.sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
