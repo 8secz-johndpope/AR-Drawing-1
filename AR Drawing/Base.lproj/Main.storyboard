@@ -172,7 +172,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Yry-Kk-yNr">
-                                        <rect key="frame" x="10" y="636" width="80" height="82"/>
+                                        <rect key="frame" x="10" y="590" width="80" height="128"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gfd-e3-hNq">
                                                 <rect key="frame" x="0.0" y="0.0" width="80" height="36"/>
@@ -188,6 +188,14 @@
                                                 <state key="normal" title="Load"/>
                                                 <connections>
                                                     <action selector="clickedLoadButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="2UR-EJ-Xkb"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uek-5D-0TD">
+                                                <rect key="frame" x="0.0" y="92" width="80" height="36"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                <state key="normal" title="New"/>
+                                                <connections>
+                                                    <action selector="clickedNewMapButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="c2d-3p-2yL"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -283,6 +291,7 @@
                         <outlet property="imageButton" destination="iIm-vS-9iE" id="J6w-ID-GmX"/>
                         <outlet property="infoLabel" destination="gdk-dW-dzr" id="CdG-GJ-4ff"/>
                         <outlet property="loadButton" destination="WeI-mS-YQb" id="m3P-o2-uiI"/>
+                        <outlet property="newMapButton" destination="Uek-5D-0TD" id="nzs-Dj-5Wv"/>
                         <outlet property="nextButton" destination="uq7-qR-JeK" id="2Uw-Hj-BSB"/>
                         <outlet property="panGesture" destination="umo-8y-Sdh" id="MIe-3a-DAh"/>
                         <outlet property="pinchGesture" destination="HQo-pc-BE3" id="j82-Ad-Aj9"/>

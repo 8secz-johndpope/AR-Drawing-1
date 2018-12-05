@@ -33,6 +33,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var deleteButton: UIButton!
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var loadButton: UIButton!
+    @IBOutlet weak var newMapButton: UIButton!
     @IBOutlet weak var imageButton: UIButton!
     @IBOutlet weak var textButton: UIButton!
     @IBOutlet weak var nextButton: UIButton!
@@ -517,6 +518,18 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             
             self.present(imagePicker, animated: true, completion: nil)
         }
+    }
+    
+    
+    @IBAction func clickedNewMapButton(_ sender: UIButton) {
+        let msg = "By clicking OK all changes in the current map will be lost and a new map will be created.\nDo you wish to continue?"
+        let alert = UIAlertController(title: "Warning", message: msg, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+            guard let mapper = self.worldMapper else { return }
+            mapper.newMap()
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
     
