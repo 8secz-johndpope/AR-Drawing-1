@@ -31,6 +31,7 @@
 		D6A97F542175CEF600EC7AAB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D6A97F532175CEF600EC7AAB /* Assets.xcassets */; };
 		D6A97F572175CEF600EC7AAB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D6A97F552175CEF600EC7AAB /* LaunchScreen.storyboard */; };
 		D6BD159F2192F63300DCB3F5 /* Assets.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = D6BD159E2192F63300DCB3F5 /* Assets.scnassets */; };
+		D6C58A8B21B8022C00A29760 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6C58A8A21B8022C00A29760 /* SettingsTableViewController.swift */; };
 		D6F1FDCC21A4031100D326A7 /* WorldMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6F1FDCB21A4031100D326A7 /* WorldMapper.swift */; };
 /* End PBXBuildFile section */
 
@@ -62,6 +63,7 @@
 		D6A97F562175CEF600EC7AAB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D6A97F582175CEF600EC7AAB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D6BD159E2192F63300DCB3F5 /* Assets.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = Assets.scnassets; sourceTree = "<group>"; };
+		D6C58A8A21B8022C00A29760 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		D6F1FDCB21A4031100D326A7 /* WorldMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldMapper.swift; sourceTree = "<group>"; };
 		F59F0BF50DD75A1461100350 /* Pods-AR Drawing.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AR Drawing.release.xcconfig"; path = "Pods/Target Support Files/Pods-AR Drawing/Pods-AR Drawing.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -116,6 +118,7 @@
 				D6A97F4E2175CEF600EC7AAB /* ViewController.swift */,
 				D63CBDF921B68A0D00874672 /* SaveMapViewController.swift */,
 				D63CBE0221B6ADC800874672 /* LoadMapTableViewController.swift */,
+				D6C58A8A21B8022C00A29760 /* SettingsTableViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -307,6 +310,7 @@
 				D60CD09C219EEDCC00E63228 /* SnapshotAnchor.swift in Sources */,
 				D60CD08F219EBF5100E63228 /* PlacingState.swift in Sources */,
 				D63CBDFA21B68A0D00874672 /* SaveMapViewController.swift in Sources */,
+				D6C58A8B21B8022C00A29760 /* SettingsTableViewController.swift in Sources */,
 				D60CD09E219EEE3E00E63228 /* ImageNode.swift in Sources */,
 				D60CD08B219EBF1400E63228 /* DrawingState.swift in Sources */,
 				D62CBA6221809998006D27C0 /* Plane.swift in Sources */,

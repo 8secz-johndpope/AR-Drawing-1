@@ -50,6 +50,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     var planes = [ARPlaneAnchor: Plane]()       // to store auto detected planes
     var previewNode: SCNNode?                   // to preview where the scribble will be placed
+    var hidePlanes = false                      // to show/hide detected planes
     
     var lastScaleFactor: CGFloat = 1.0          // for scale and rotation gestures
     var scaleFactor: CGFloat = 1.0
@@ -250,6 +251,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 tableController.cellSelectedHandler = self.selectedWorldMap
             }
         }
+        
+        else if segue.identifier == "settings" {
+            let settingsController = segue.destination as! SettingsTableViewController
+            settingsController.controller = self
+        }
     }
     
     //MARK: Functions
@@ -264,11 +270,21 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         node.addChildNode(plane)
         planes[anchor] = plane
         print("New plane detected: \(plane)")
+        if hidePlanes {
+            plane.isHidden = hidePlanes
+        }
     }
     
     func updatePlane(anchor: ARPlaneAnchor) {
         if let plane = planes[anchor] {
             plane.update(anchor)
+        }
+    }
+    
+    func setPlanesVisible(_ visible: Bool) {
+        self.hidePlanes = !visible
+        for plane in planes {
+            plane.value.isHidden = !visible
         }
     }
     

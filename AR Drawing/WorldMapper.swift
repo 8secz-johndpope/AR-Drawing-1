@@ -138,7 +138,6 @@ class WorldMapper {
     func newMap() {
         // set configuration with initialWorldMap
         let configuration = self.controller.defaultConfiguration
-        configuration.initialWorldMap = nil
         self.controller.sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
         self.controller.resetToFirstStep()
         
