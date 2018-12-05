@@ -188,9 +188,6 @@
                                                 <state key="normal" title="Load"/>
                                                 <connections>
                                                     <action selector="clickedLoadButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="2UR-EJ-Xkb"/>
-                                                    <segue destination="lWX-dM-Dz5" kind="popoverPresentation" popoverAnchorView="WeI-mS-YQb" id="7rD-zl-22N">
-                                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                                                    </segue>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -298,6 +295,9 @@
                         <outlet property="textButton" destination="mCx-xT-uTe" id="k3Q-fa-17h"/>
                         <outlet property="undoButton" destination="tZo-9i-cCO" id="VLk-19-dId"/>
                         <segue destination="DWh-et-HPe" kind="popoverPresentation" identifier="savemap" popoverAnchorView="gfd-e3-hNq" id="ibA-8Y-Sl0">
+                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                        </segue>
+                        <segue destination="lWX-dM-Dz5" kind="popoverPresentation" identifier="selectWorldMap" popoverAnchorView="WeI-mS-YQb" id="Y2p-Gq-A0H">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
                     </connections>
@@ -412,10 +412,10 @@
             </objects>
             <point key="canvasLocation" x="1508" y="-326"/>
         </scene>
-        <!--Load Map View Controller Table View Controller-->
+        <!--Load Map Table View Controller-->
         <scene sceneID="e1t-3C-VaA">
             <objects>
-                <tableViewController id="lWX-dM-Dz5" customClass="LoadMapViewControllerTableViewController" customModule="AR_Drawing" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="lWX-dM-Dz5" customClass="LoadMapTableViewController" customModule="AR_Drawing" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Ifb-ge-aYK">
                         <rect key="frame" x="0.0" y="0.0" width="800" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

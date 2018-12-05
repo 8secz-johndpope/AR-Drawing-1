@@ -22,7 +22,7 @@
 		D62CBA64218099CF006D27C0 /* DrawingScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = D62CBA63218099CF006D27C0 /* DrawingScene.sks */; };
 		D63CBDFA21B68A0D00874672 /* SaveMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D63CBDF921B68A0D00874672 /* SaveMapViewController.swift */; };
 		D63CBE0121B6AB0C00874672 /* WorldMapTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D63CBE0021B6AB0C00874672 /* WorldMapTableViewCell.swift */; };
-		D63CBE0321B6ADC800874672 /* LoadMapViewControllerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D63CBE0221B6ADC800874672 /* LoadMapViewControllerTableViewController.swift */; };
+		D63CBE0321B6ADC800874672 /* LoadMapTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D63CBE0221B6ADC800874672 /* LoadMapTableViewController.swift */; };
 		D651CC4D217F630F002E15AF /* DrawingSceneColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = D651CC4C217F630F002E15AF /* DrawingSceneColors.swift */; };
 		D651CC51218065F7002E15AF /* BrushSizeSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D651CC50218065F7002E15AF /* BrushSizeSlider.swift */; };
 		D6A97F4B2175CEF600EC7AAB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A97F4A2175CEF600EC7AAB /* AppDelegate.swift */; };
@@ -51,7 +51,7 @@
 		D62CBA63218099CF006D27C0 /* DrawingScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = DrawingScene.sks; sourceTree = "<group>"; };
 		D63CBDF921B68A0D00874672 /* SaveMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveMapViewController.swift; sourceTree = "<group>"; };
 		D63CBE0021B6AB0C00874672 /* WorldMapTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldMapTableViewCell.swift; sourceTree = "<group>"; };
-		D63CBE0221B6ADC800874672 /* LoadMapViewControllerTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadMapViewControllerTableViewController.swift; sourceTree = "<group>"; };
+		D63CBE0221B6ADC800874672 /* LoadMapTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadMapTableViewController.swift; sourceTree = "<group>"; };
 		D651CC4C217F630F002E15AF /* DrawingSceneColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingSceneColors.swift; sourceTree = "<group>"; };
 		D651CC50218065F7002E15AF /* BrushSizeSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrushSizeSlider.swift; sourceTree = "<group>"; };
 		D6A97F472175CEF600EC7AAB /* AR Drawing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AR Drawing.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -115,7 +115,7 @@
 			children = (
 				D6A97F4E2175CEF600EC7AAB /* ViewController.swift */,
 				D63CBDF921B68A0D00874672 /* SaveMapViewController.swift */,
-				D63CBE0221B6ADC800874672 /* LoadMapViewControllerTableViewController.swift */,
+				D63CBE0221B6ADC800874672 /* LoadMapTableViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -295,7 +295,7 @@
 				D6F1FDCC21A4031100D326A7 /* WorldMapper.swift in Sources */,
 				D60CD099219ED58300E63228 /* ImageTracker.swift in Sources */,
 				D60CD093219EC07700E63228 /* State.swift in Sources */,
-				D63CBE0321B6ADC800874672 /* LoadMapViewControllerTableViewController.swift in Sources */,
+				D63CBE0321B6ADC800874672 /* LoadMapTableViewController.swift in Sources */,
 				D6A97F4F2175CEF600EC7AAB /* ViewController.swift in Sources */,
 				D651CC51218065F7002E15AF /* BrushSizeSlider.swift in Sources */,
 				D651CC4D217F630F002E15AF /* DrawingSceneColors.swift in Sources */,

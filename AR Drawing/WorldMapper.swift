@@ -113,6 +113,10 @@ class WorldMapper {
             }
         }()
         
+        loadMap(worldMap: worldMap)
+    }
+    
+    func loadMap(worldMap: ARWorldMap) {
         // display SnapShotImage
         if let snapshotData = worldMap.snapshotAnchor?.imageData, let snapshot = UIImage(data: snapshotData) {
             self.controller.snapShotImage.image = snapshot

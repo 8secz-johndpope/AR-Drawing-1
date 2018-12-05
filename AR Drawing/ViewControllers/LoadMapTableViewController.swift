@@ -1,12 +1,12 @@
 import UIKit
 import ARKit
 
-class LoadMapViewControllerTableViewController: UITableViewController {
+class LoadMapTableViewController: UITableViewController {
 
     var maps = [ARWorldMap]()
     var names = [String]()
     
-    var cellSelectedHandler: ((String)->Void)?
+    var cellSelectedHandler: ((ARWorldMap)->Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,10 +57,11 @@ class LoadMapViewControllerTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if cellSelectedHandler != nil {
+            cellSelectedHandler!(maps[indexPath.row])
+        }
         dismiss(animated: true, completion: nil)
     }
-    
-    
     
     
 

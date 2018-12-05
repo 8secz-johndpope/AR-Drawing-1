@@ -242,6 +242,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             saveMapViewController.mapName = ""
             saveMapViewController.mapper = mapper
         }
+        
+        else if segue.identifier == "selectWorldMap" {
+            let tableViewController = segue.destination as! LoadMapTableViewController
+            tableViewController.cellSelectedHandler = self.selectedWorldMap
+        }
     }
     
     //MARK: Functions
@@ -568,14 +573,16 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     @IBAction func clickedSaveButton(_ sender: UIButton) {
         guard let mapper = worldMapper else { return }
-        //mapper.save()
         mapper.prepareForSave()
     }
     
     @IBAction func clickedLoadButton(_ sender: UIButton) {
+        self.performSegue(withIdentifier: "selectWorldMap", sender: self)
+    }
+    
+    func selectedWorldMap(map: ARWorldMap) {
         guard let mapper = worldMapper else { return }
-        //mapper.load()
-        
+        mapper.loadMap(worldMap: map)
     }
     
     
