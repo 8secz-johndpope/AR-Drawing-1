@@ -109,6 +109,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         worldMapper = WorldMapper(controller: self)
         
         self.navigationController?.navigationBar.isHidden = true
+        self.prevButton.isHidden = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -154,7 +155,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             print("-------------------")
             nodeAnchor.node.simdTransform = matrix_identity_float4x4
             node.addChildNode(nodeAnchor.node)
-            let node = SCNNode(geometry: SCNSphere(radius: 4.0))
             nodesForStep[nodeAnchor.step].append(node)
             
             // for when nodes get loaded from saved worldmap
@@ -245,8 +245,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
         
         else if segue.identifier == "selectWorldMap" {
-            let tableViewController = segue.destination as! LoadMapTableViewController
-            tableViewController.cellSelectedHandler = self.selectedWorldMap
+            let navController = segue.destination as! UINavigationController
+            if let tableController = navController.topViewController as? LoadMapTableViewController {
+                tableController.cellSelectedHandler = self.selectedWorldMap
+            }
         }
     }
     
@@ -387,6 +389,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 node.isHidden = false
             }
         }
+        
+        if currentStep > 0 {
+            prevButton.isHidden = false
+        }
         print("Next step. Now in step nr: \(currentStep)")
     }
     
@@ -400,6 +406,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         for node in nodesForStep[currentStep] {
             node.isHidden = false
+        }
+        
+        if currentStep == 0 {
+            prevButton.isHidden = true
         }
         
         print("Prev step. Now in step nr: \(currentStep)")

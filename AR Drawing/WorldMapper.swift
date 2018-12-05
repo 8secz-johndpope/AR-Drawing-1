@@ -141,5 +141,8 @@ class WorldMapper {
         configuration.initialWorldMap = nil
         self.controller.sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
         self.controller.resetToFirstStep()
+        
+        controller.nodesForStep = [[SCNNode]]()
+        controller.nodesForStep.append([])
     }
 }

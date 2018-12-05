@@ -2,9 +2,13 @@ import UIKit
 import ARKit
 
 class LoadMapTableViewController: UITableViewController {
-
-    var maps = [ARWorldMap]()
-    var names = [String]()
+    
+    struct MapInfo {
+        var name: String
+        var file: URL
+        var map: ARWorldMap
+    }
+    var mapInfo = [MapInfo]()
     
     var cellSelectedHandler: ((ARWorldMap)->Void)?
     
@@ -19,7 +23,7 @@ class LoadMapTableViewController: UITableViewController {
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -37,7 +41,7 @@ class LoadMapTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return maps.count
+        return mapInfo.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -47,9 +51,9 @@ class LoadMapTableViewController: UITableViewController {
             fatalError("The dequeued cell is not an instance of WorldMapTableCell")
         }
 
-        let map = maps[indexPath.row]
+        let map = mapInfo[indexPath.row].map
         if let imagedata = map.snapshotAnchor?.imageData, let snapshotImage = UIImage(data: imagedata) {
-            cell.mapName.text = names[indexPath.row]
+            cell.mapName.text = mapInfo[indexPath.row].name
             cell.mapImage.image = snapshotImage
         }
         
@@ -58,9 +62,25 @@ class LoadMapTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if cellSelectedHandler != nil {
-            cellSelectedHandler!(maps[indexPath.row])
+            cellSelectedHandler!(self.mapInfo[indexPath.row].map)
         }
         dismiss(animated: true, completion: nil)
+    }
+    
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            do {
+                try FileManager.default.removeItem(at: self.mapInfo[indexPath.row].file)
+                mapInfo.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+            } catch {
+                print("Error deleting worldmap: \(error.localizedDescription)")
+            }
+        }
     }
     
     
@@ -91,8 +111,8 @@ class LoadMapTableViewController: UITableViewController {
                     }
                 }()
                 
-                maps += [worldmap]
-                names += [url.pathComponents.last!]
+                let info = MapInfo(name: url.pathComponents.last!, file: url, map: worldmap)
+                mapInfo.append(info)
                 
                 print("added worldmap to table")
             }
