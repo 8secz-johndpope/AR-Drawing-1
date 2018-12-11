@@ -7,6 +7,7 @@ class LoadMapTableViewController: UITableViewController {
         var name: String
         var file: URL
         var map: ARWorldMap
+        var date: Date
     }
     var mapInfo = [MapInfo]()
     
@@ -50,10 +51,16 @@ class LoadMapTableViewController: UITableViewController {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? WorldMapTableViewCell else {
             fatalError("The dequeued cell is not an instance of WorldMapTableCell")
         }
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd-MM-yyyy"
 
         let map = mapInfo[indexPath.row].map
+        cell.mapName.text = mapInfo[indexPath.row].name
+        cell.mapDateCreated.text = formatter.string(from: mapInfo[indexPath.row].date)
+        cell.mapDescription.text = "\(map.anchors.count) anchors\n\(map.rawFeaturePoints.points.count) features"
+        
         if let imagedata = map.snapshotAnchor?.imageData, let snapshotImage = UIImage(data: imagedata) {
-            cell.mapName.text = mapInfo[indexPath.row].name
             cell.mapImage.image = snapshotImage
         }
         
@@ -94,9 +101,6 @@ class LoadMapTableViewController: UITableViewController {
     }
     
     func loadMaps() {
-        
-        print("in load maps function")
-        
         guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
         
         do {
@@ -111,13 +115,27 @@ class LoadMapTableViewController: UITableViewController {
                     }
                 }()
                 
-                let info = MapInfo(name: url.pathComponents.last!, file: url, map: worldmap)
-                mapInfo.append(info)
+                let name = url.pathComponents.last!.components(separatedBy: ".").first!
                 
+                do {
+                    let values = try url.resourceValues(forKeys: [.creationDateKey])
+                    let date = values.creationDate!
+
+                    let info = MapInfo(name: name, file: url, map: worldmap, date: date)
+                    mapInfo.append(info)
+                } catch {
+                    fatalError("Cannot get attributes of \(url.absoluteString)")
+                }
+    
                 print("added worldmap to table")
             }
         } catch {
             print("Error loading maps form filesystem: \(error.localizedDescription)")
         }
     }
+    
+    
+    // MARK: Content size of the popover
+    
+    
 }

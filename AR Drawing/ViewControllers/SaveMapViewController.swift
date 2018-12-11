@@ -20,7 +20,14 @@ class SaveMapViewController: UIViewController {
     
     
     @IBAction func clickedSaveButton(_ sender: Any) {
-        mapper?.save(mapname: txtMapName.text ?? "map")
+        guard let name = txtMapName.text, name != "" else {
+            let alert = UIAlertController(title: "No map name", message: "Please enter a name for the map before saving.", preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            return
+        }
+        
+        mapper?.save(mapname: name)
         self.dismiss(animated: true, completion: nil)
     }
     

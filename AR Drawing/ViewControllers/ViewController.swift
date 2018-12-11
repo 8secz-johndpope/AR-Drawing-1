@@ -211,7 +211,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         self.snapShotImage.isHidden = true
         switch (trackingState, frame.worldMappingStatus) {
         case (.limited(.relocalizing), _):
-            print("Move device to position shown in image")
+            print("Relocalising, move device to area shown in image")
             self.snapShotImage.isHidden = false
         case (.normal, _):
             print("Resetting to first step")

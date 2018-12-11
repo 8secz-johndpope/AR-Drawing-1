@@ -4,7 +4,8 @@ class WorldMapTableViewCell: UITableViewCell {
 
     @IBOutlet weak var mapImage: UIImageView!
     @IBOutlet weak var mapName: UILabel!
-    
+    @IBOutlet weak var mapDescription: UILabel!
+    @IBOutlet weak var mapDateCreated: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

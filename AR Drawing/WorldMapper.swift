@@ -85,6 +85,7 @@ class WorldMapper {
         guard let map = self.map else { return }
         
         let url = getWorldMapURL(mapname: mapname)
+        print("Description of saved map: \(map.description)")
         
         do {
             try self.writeWorldMap(map, to: url)
