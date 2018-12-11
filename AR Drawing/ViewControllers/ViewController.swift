@@ -75,7 +75,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     var imageTracker: ImageTracker?
     var worldMapper: WorldMapper?
     
-    var currentMapName = "map"
+    var currentMapName = ""
     
     var attachToImagePlane: SCNNode?            // to attach scriblle to a tracked detection image plane
     
@@ -83,6 +83,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     var nodesForStep = [[SCNNode]]()
     var currentStep = 0
+    
+    var objectCount = 0
     
     //MARK: View Life Cycle Methods
     
@@ -159,6 +161,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             nodeAnchor.node.simdTransform = matrix_identity_float4x4
             node.addChildNode(nodeAnchor.node)
             nodesForStep[nodeAnchor.step].append(node)
+            objectCount += 1
             
             // for when nodes get loaded from saved worldmap
             if currentStep != nodeAnchor.step {
@@ -514,6 +517,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBAction func clickedDeleteButton(_ sender: UIButton) {
         if(currentState is PlacingState) {
             previewNode?.removeFromParentNode()
+            objectCount -= 1
             setState(DrawingState())
         }
     }

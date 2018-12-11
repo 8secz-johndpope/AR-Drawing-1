@@ -1,6 +1,20 @@
 import SceneKit
 import ARKit
 
+extension ARWorldMap {
+    var objectCount: Int {
+        get {
+            return anchors.compactMap { $0 as? NodeAnchor }.count
+        }
+    }
+    
+    var planeCount: Int {
+        get {
+            return anchors.compactMap { $0 as? ARPlaneAnchor }.count
+        }
+    }
+}
+
 class WorldMapper {
     
     var controller: ViewController

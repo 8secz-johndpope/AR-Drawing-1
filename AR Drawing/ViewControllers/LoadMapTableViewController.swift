@@ -58,7 +58,12 @@ class LoadMapTableViewController: UITableViewController {
         let map = mapInfo[indexPath.row].map
         cell.mapName.text = mapInfo[indexPath.row].name
         cell.mapDateCreated.text = formatter.string(from: mapInfo[indexPath.row].date)
-        cell.mapDescription.text = "\(map.anchors.count) anchors\n\(map.rawFeaturePoints.points.count) features"
+        cell.mapDescription.text = """
+            \(map.anchors.count) anchors
+            \(map.rawFeaturePoints.points.count) features
+            \(map.objectCount) objects
+            \(map.planeCount) planes
+        """
         
         if let imagedata = map.snapshotAnchor?.imageData, let snapshotImage = UIImage(data: imagedata) {
             cell.mapImage.image = snapshotImage

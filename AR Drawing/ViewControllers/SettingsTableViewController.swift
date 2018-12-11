@@ -3,6 +3,10 @@ import ARKit
 
 class SettingsTableViewController: UITableViewController {
 
+    @IBOutlet weak var txtMapName: UILabel!
+    @IBOutlet weak var txtObjectCount: UILabel!
+    @IBOutlet weak var txtPlaneCount: UILabel!
+    
     @IBOutlet weak var featurePointsSwitch: UISwitch!
     @IBOutlet weak var planeSwitch: UISwitch!
     
@@ -13,6 +17,9 @@ class SettingsTableViewController: UITableViewController {
         
         guard let controller = controller else { return }
         
+        txtMapName.text = controller.currentMapName
+        txtObjectCount.text = String(controller.objectCount)
+        txtPlaneCount.text = String(controller.planes.count)
         featurePointsSwitch.isOn = controller.sceneView.debugOptions.contains(ARSCNDebugOptions.showFeaturePoints)
         planeSwitch.isOn = !controller.hidePlanes
     }
