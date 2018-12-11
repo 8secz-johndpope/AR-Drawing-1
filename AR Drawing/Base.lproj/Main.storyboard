@@ -246,6 +246,11 @@
                                     <action selector="clickedPrevButton:" destination="BV1-FR-VrT" eventType="touchUpInside" id="ZRc-3Z-GOZ"/>
                                 </connections>
                             </button>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Relocalizing..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R0w-Rb-p9V">
+                                <rect key="frame" x="154" y="130" width="214" height="43"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="36"/>
+                                <color key="highlightedColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -263,6 +268,7 @@
                             <constraint firstItem="KXm-AA-Xwd" firstAttribute="top" secondItem="U0K-SW-4ec" secondAttribute="top" id="Odm-5E-085"/>
                             <constraint firstItem="uq7-qR-JeK" firstAttribute="centerY" secondItem="iOC-sJ-73Z" secondAttribute="centerY" id="Pl9-k1-90E"/>
                             <constraint firstItem="KXm-AA-Xwd" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="QSi-04-nlS"/>
+                            <constraint firstItem="R0w-Rb-p9V" firstAttribute="top" secondItem="wYQ-O5-ZFu" secondAttribute="top" constant="10" id="S5n-8m-bOb"/>
                             <constraint firstItem="5vb-ke-nF0" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="TDj-TK-Prs"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="bottom" secondItem="fQZ-KI-GVf" secondAttribute="bottom" id="VpT-BR-CcM"/>
                             <constraint firstItem="kuz-J5-HZV" firstAttribute="height" secondItem="iOC-sJ-73Z" secondAttribute="height" id="VsC-Ne-Aad"/>
@@ -270,6 +276,7 @@
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="trailing" secondItem="fQZ-KI-GVf" secondAttribute="trailing" id="XyZ-9z-H8e"/>
                             <constraint firstItem="7Jl-GI-BJp" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="YLY-4l-ZgF"/>
                             <constraint firstItem="5vb-ke-nF0" firstAttribute="top" secondItem="fQZ-KI-GVf" secondAttribute="top" id="Zwq-8D-DBD"/>
+                            <constraint firstItem="R0w-Rb-p9V" firstAttribute="centerX" secondItem="wYQ-O5-ZFu" secondAttribute="centerX" id="cJg-0s-wmb"/>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="trailing" secondItem="gdk-dW-dzr" secondAttribute="trailing" id="dkI-by-ndd"/>
                             <constraint firstItem="uq7-qR-JeK" firstAttribute="height" secondItem="iOC-sJ-73Z" secondAttribute="height" id="eHV-FC-Y0a"/>
                             <constraint firstItem="wYQ-O5-ZFu" firstAttribute="top" secondItem="gdk-dW-dzr" secondAttribute="bottom" constant="8" id="edG-MB-9X0"/>
@@ -306,6 +313,7 @@
                         <outlet property="panGesture" destination="umo-8y-Sdh" id="MIe-3a-DAh"/>
                         <outlet property="pinchGesture" destination="HQo-pc-BE3" id="j82-Ad-Aj9"/>
                         <outlet property="prevButton" destination="kuz-J5-HZV" id="t8m-Ht-ZTL"/>
+                        <outlet property="relocalizingText" destination="R0w-Rb-p9V" id="OEn-n0-rmI"/>
                         <outlet property="rotationGesture" destination="hDg-Vn-hBJ" id="uVD-Rt-Fty"/>
                         <outlet property="saveButton" destination="gfd-e3-hNq" id="MZF-Bl-QaA"/>
                         <outlet property="sceneView" destination="BrB-h1-WRS" id="5nT-qQ-ynl"/>

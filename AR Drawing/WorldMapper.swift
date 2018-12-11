@@ -99,14 +99,12 @@ class WorldMapper {
         guard let map = self.map else { return }
         
         let url = getWorldMapURL(mapname: mapname)
-        print("Description of saved map: \(map.description)")
         
         do {
             try self.writeWorldMap(map, to: url)
             DispatchQueue.main.async {
                 self.controller.loadButton.isHidden = false
                 self.controller.loadButton.isEnabled = true
-                print("world map saved: \(url.relativeString)")
             }
             for anchor in map.anchors {
                 print(anchor)
@@ -115,7 +113,7 @@ class WorldMapper {
             fatalError("Can't save map: \(error.localizedDescription)")
         }
         
-        self.listDocumentsDirectory()
+        controller.currentMapName = mapname
     }
     
     func load() {
@@ -150,7 +148,7 @@ class WorldMapper {
     }
     
     func newMap() {
-        controller.currentMapName = "map"
+        controller.currentMapName = ""
         
         // set configuration with initialWorldMap
         let configuration = self.controller.defaultConfiguration

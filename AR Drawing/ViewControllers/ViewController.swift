@@ -24,6 +24,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var sidebar: UIView!
     @IBOutlet weak var snapShotImage: UIImageView!
     @IBOutlet weak var hiddenTextField: UITextField!
+    @IBOutlet weak var relocalizingText: UILabel!
     
     @IBOutlet weak var addButton: UIButton!
     @IBOutlet weak var colorButton: UIButton!
@@ -85,6 +86,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     var currentStep = 0
     
     var objectCount = 0
+    var relocalizing = false
     
     //MARK: View Life Cycle Methods
     
@@ -142,6 +144,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     // MARK: ARSCNViewDelegate
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+
+        if relocalizing == true {
+            print("")
+            print("Tracking state is limited due to relocalization, skipping add node function")
+            print("")
+            return
+        }
+        
         // new plane detected
         if let planeAnchor = anchor as? ARPlaneAnchor {
             self.addPlane(node: node, anchor: planeAnchor)
@@ -206,19 +216,33 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
-        print("Camera tracking state changed: \(camera.trackingState)")
+        //print("Camera tracking state changed: \(camera.trackingState)")
         
         let trackingState = camera.trackingState
         let frame = session.currentFrame!
         
         self.snapShotImage.isHidden = true
+        self.relocalizing = false
+        
         switch (trackingState, frame.worldMappingStatus) {
+        case (.limited(.initializing), _):
+            print("  [TRACKING] .limited, .initializing")
         case (.limited(.relocalizing), _):
-            print("Relocalising, move device to area shown in image")
+            // TODO: offer a way out of relocalizing state    (reset tracking?)
+            print("  [TRACKING] .limited, .relocalizing")
+            self.relocalizing = true
             self.snapShotImage.isHidden = false
+            if self.snapShotImage.image == nil {
+                self.relocalizingText.isHidden = false
+            }
+        case (.limited(.insufficientFeatures), _):
+            print("  [TRACKING] .limited, .insufficientFeatures")
         case (.normal, _):
+            print("  [TRACKING] .normal")
             print("Resetting to first step")
             self.resetToFirstStep()
+            self.sceneView.scene.rootNode.isHidden = false
+            self.relocalizingText.isHidden = true
         default:
             print("")
         }
@@ -232,6 +256,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func sessionInterruptionEnded(_ session: ARSession) {
         // Reset tracking and/or remove existing anchors if consistent tracking is required
         print("Session interruption ended")
+        sceneView.scene.rootNode.isHidden = true
     }
     
     func sessionShouldAttemptRelocalization(_ session: ARSession) -> Bool {
