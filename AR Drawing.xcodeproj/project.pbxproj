@@ -32,6 +32,7 @@
 		D6A97F572175CEF600EC7AAB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D6A97F552175CEF600EC7AAB /* LaunchScreen.storyboard */; };
 		D6BD159F2192F63300DCB3F5 /* Assets.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = D6BD159E2192F63300DCB3F5 /* Assets.scnassets */; };
 		D6C58A8B21B8022C00A29760 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6C58A8A21B8022C00A29760 /* SettingsTableViewController.swift */; };
+		D6C58A8D21E6416800A29760 /* CameraState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6C58A8C21E6416800A29760 /* CameraState.swift */; };
 		D6F1FDCC21A4031100D326A7 /* WorldMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6F1FDCB21A4031100D326A7 /* WorldMapper.swift */; };
 /* End PBXBuildFile section */
 
@@ -64,6 +65,7 @@
 		D6A97F582175CEF600EC7AAB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D6BD159E2192F63300DCB3F5 /* Assets.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = Assets.scnassets; sourceTree = "<group>"; };
 		D6C58A8A21B8022C00A29760 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
+		D6C58A8C21E6416800A29760 /* CameraState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraState.swift; sourceTree = "<group>"; };
 		D6F1FDCB21A4031100D326A7 /* WorldMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldMapper.swift; sourceTree = "<group>"; };
 		F59F0BF50DD75A1461100350 /* Pods-AR Drawing.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AR Drawing.release.xcconfig"; path = "Pods/Target Support Files/Pods-AR Drawing/Pods-AR Drawing.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -96,6 +98,7 @@
 				D60CD08E219EBF5100E63228 /* PlacingState.swift */,
 				D60CD090219EBF6000E63228 /* EditingState.swift */,
 				D60CD092219EC07700E63228 /* State.swift */,
+				D6C58A8C21E6416800A29760 /* CameraState.swift */,
 			);
 			path = ScribbleStates;
 			sourceTree = "<group>";
@@ -297,6 +300,7 @@
 				D60CD08D219EBF4300E63228 /* TypingState.swift in Sources */,
 				D6F1FDCC21A4031100D326A7 /* WorldMapper.swift in Sources */,
 				D60CD099219ED58300E63228 /* ImageTracker.swift in Sources */,
+				D6C58A8D21E6416800A29760 /* CameraState.swift in Sources */,
 				D60CD093219EC07700E63228 /* State.swift in Sources */,
 				D63CBE0321B6ADC800874672 /* LoadMapTableViewController.swift in Sources */,
 				D6A97F4F2175CEF600EC7AAB /* ViewController.swift in Sources */,

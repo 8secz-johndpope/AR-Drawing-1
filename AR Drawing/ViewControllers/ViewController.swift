@@ -318,6 +318,18 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     
+    func setFeaturePointsVisible(_ visible: Bool) {
+        if visible {
+            sceneView.debugOptions.formUnion(ARSCNDebugOptions.showFeaturePoints)
+        } else {
+            sceneView.debugOptions.remove(ARSCNDebugOptions.showFeaturePoints)
+        }
+    }
+    
+    func setObjectsVisible(_ visible: Bool) {
+        sceneView.scene.rootNode.isHidden = !visible
+    }
+    
     func getTransformInFrontOfCamera(_ distance: Float) -> simd_float4x4 {
         var translation = matrix_identity_float4x4
         translation.columns.3.z = -distance
@@ -567,6 +579,40 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func clickedImageButton(_ sender: UIButton) {
+        let alert = UIAlertController(title: "Select Image Type", message: nil, preferredStyle: .actionSheet)
+        
+        alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { _ in
+            self.openCamera()
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Gallery", style: .default, handler: { _ in
+            self.openGallery()
+        }))
+        
+        alert.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
+
+        /*If you want work actionsheet on ipad
+        then you have to use popoverPresentationController to present the actionsheet,
+        otherwise app will crash on iPad */
+        switch UIDevice.current.userInterfaceIdiom {
+        case .pad:
+            alert.popoverPresentationController?.sourceView = sender
+            alert.popoverPresentationController?.sourceRect = sender.bounds
+            alert.popoverPresentationController?.permittedArrowDirections = .up
+        default:
+            break
+        }
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func openCamera() {
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            setState(CameraState())
+        }
+    }
+    
+    func openGallery() {
         if UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum) {
             imagePicker.delegate = self
             imagePicker.sourceType = .savedPhotosAlbum
@@ -599,7 +645,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         let node = ImageNode(image: image, size: CGSize(width: image.size.width / 20000, height: image.size.height / 20000))
         node.simdTransform *= float4x4(simd_quatf(angle: Float.pi / 2, axis: float3(1,0,0)))
         
-        picker.dismiss(animated: true, completion: nil)
+        picker.dismiss(animated: false, completion: nil)
         
         makePreviewNode(node)
         setState(PlacingState())

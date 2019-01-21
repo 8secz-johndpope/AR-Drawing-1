@@ -27,17 +27,12 @@ class SettingsTableViewController: UITableViewController {
     @IBAction func toggledFeaturePoints(_ sender: UISwitch) {
         guard let controller = controller else { return }
         
-        if sender.isOn {
-            controller.sceneView.debugOptions.formUnion(ARSCNDebugOptions.showFeaturePoints)
-        } else {
-            controller.sceneView.debugOptions.remove(ARSCNDebugOptions.showFeaturePoints)
-        }
+        controller.setFeaturePointsVisible(sender.isOn)
     }
     
     @IBAction func toggledPlanes(_ sender: UISwitch) {
         guard let controller = controller else { return }
         
-        print("toggle planes")
         controller.setPlanesVisible(sender.isOn)
     }
     

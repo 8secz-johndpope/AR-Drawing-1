@@ -84,7 +84,8 @@ class WorldMapper {
             }
             
             guard let snapshotAnchor = SnapshotAnchor(capturing: self.controller.sceneView) else {
-                fatalError("Cannot take snapshot")
+                print("Cannot take snapshot")
+                return
             }
             map.anchors.append(snapshotAnchor)
             

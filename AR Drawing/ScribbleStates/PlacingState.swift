@@ -76,9 +76,62 @@ class PlacingState: State {
                 
                 context.setDebugText("hitting plane")
                 context.planes[anchor]?.setColor(UIColor.planeColorHover)
-                context.previewNode?.simdTransform = (target?.worldTransform)!
-                let rotation = float4x4(simd_quatf(angle: -Float.pi / 2, axis: float3(1, 0, 0)))
-                context.previewNode?.simdTransform *= rotation
+                
+                
+                if anchor.alignment == ARPlaneAnchor.Alignment.horizontal {
+                    // horizontal planes
+                    
+                    context.previewNode?.simdTransform = transform
+                    if context.sceneView.pointOfView!.eulerAngles.x <= 0 {
+                        context.previewNode?.eulerAngles.x = -Float.pi / 2
+                        context.previewNode?.eulerAngles.z = 0
+                    }
+                    else {
+                        context.previewNode?.eulerAngles.x = Float.pi / 2
+                        context.previewNode?.eulerAngles.z = Float.pi
+                    }
+                    
+                    // bug correction
+                    if context.sceneView.pointOfView!.eulerAngles.z == 0 {
+                        let rotation = float4x4(simd_quatf(angle: Float.pi, axis: float3(0, 0 , 1)))
+                        context.previewNode?.simdTransform *= rotation
+                        print("correcting")
+                    }
+                    
+                    
+                    print("previewNode: ", context.previewNode?.eulerAngles)
+                    print("pointOfView: ", context.sceneView.pointOfView!.eulerAngles)
+                    print("plane: ", context.planes[anchor]!.eulerAngles)
+                
+                } else {
+                    // Vertical planes
+                    context.previewNode?.simdTransform = target!.worldTransform
+                    
+                    let rotation = float4x4(simd_quatf(angle: -Float.pi / 2, axis: float3(1, 0, 0)))
+                    context.previewNode?.simdTransform *= rotation
+                }
+            
+                /*
+                 R=atan2(m12, m22)
+                 c2 = sqrt(m00^2 + m01^2)
+                 P = atan2(-m02, c2)
+                 s1 = sin(R), c1 = cos(R)
+                 Y = atan2(s1*m20 - c1*m10, c1*m11-s1*m21)
+                 */
+                
+                /*
+                let roll: Double = Double(atan2(anchor.transform.columns.2.y, anchor.transform.columns.2.z))
+                let c2: Double = Double(sqrt(anchor.transform.columns.0.x * anchor.transform.columns.0.x + anchor.transform.columns.1.x * anchor.transform.columns.1.x))
+                let pitch = atan2(Double(-anchor.transform.columns.2.x), c2)
+                let s1: Double = sin(roll)
+                let c1: Double = cos(roll)
+                let yaw = atan2(s1 * anchor.transform.columns.0.z - c1 * anchor.transform.columns.0.y, c1 * anchor.transform.columns.1.y - s1 * anchor.transform.columns.1.z)
+                */
+                
+                //let rotation2 = float4x4(simd_quatf(angle: povAngle - planeAngle, axis: float3(0, 0, 1)))
+                //context.previewNode?.simdTransform *= rotation2
+                
+                
                 
             case ARHitTestResult.ResultType.featurePoint:
                 context.setDebugText("hitting feature point  \(distance)m")
